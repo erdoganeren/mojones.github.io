@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>301 permanent redirect with Tomcat - Martin's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/301-permanent-redirect-with-tomcat.html">
+
+        <meta name="author" content="Martin" />
+        <meta name="keywords" content="java,javascript,seo,servlets,http" />
+        <meta name="description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted ..." />
+
+        <meta property="og:site_name" content="Martin's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="301 permanent redirect with Tomcat"/>
+        <meta property="og:url" content="/301-permanent-redirect-with-tomcat.html"/>
+        <meta property="og:description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted ..."/>
+        <meta property="article:published_time" content="2015-11-02" />
+            <meta property="article:section" content="web" />
+            <meta property="article:tag" content="java" />
+            <meta property="article:tag" content="javascript" />
+            <meta property="article:tag" content="seo" />
+            <meta property="article:tag" content="servlets" />
+            <meta property="article:tag" content="http" />
+            <meta property="article:author" content="Martin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Martin's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/diy.html">Diy</a>
+                        </li>
+                        <li >
+                            <a href="/category/programming.html">Programming</a>
+                        </li>
+                        <li >
+                            <a href="/category/science.html">Science</a>
+                        </li>
+                        <li >
+                            <a href="/category/tech.html">Tech</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/web.html">Web</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/301-permanent-redirect-with-tomcat.html"
+                       rel="bookmark"
+                       title="Permalink to 301 permanent redirect with Tomcat">
+                        301 permanent redirect with Tomcat
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-02T15:45:28.586907+00:00"> Mon 02 November 2015</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/java.html">java</a>
+        /
+	<a href="/tag/javascript.html">javascript</a>
+        /
+	<a href="/tag/seo.html">seo</a>
+        /
+	<a href="/tag/servlets.html">servlets</a>
+        /
+	<a href="/tag/http.html">http</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out <a href="https://web.archive.org/web/20100727065239/http://www.kalzumeus.com/2007/10/07/dont-make-my-really-elementary-seo-mistake/">this link</a> for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server.</p>
+<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position.</p>
+<p>The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet.</p>
+<p>The tricky part is getting the config file <code>WEB-INF/urlrewrite.xml</code> just right, so here’s the configuration that worked for me:</p>
+<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
+<span class="nt">&lt;rule&gt;</span>
+    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
+    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
+<span class="nt">&lt;/rule&gt;</span>
+<span class="nt">&lt;/urlrewrite&gt;</span>
+</pre></div>
+
+
+<p>The <code>condition</code> element tells us that we want to trigger this rule when the HTTP request host header is not equal to <code>www.example.com</code>. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The <code>from</code> element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for <code>example.com</code> (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So <code>example.com/tour.jsp</code> should redirect to <code>www.example.com/tour.jsp</code>.</p>
+<h2>Update</h2>
+<p>A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to <code>localhost:8080</code>. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads <code>www.mywebsite.com</code>. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour:</p>
+<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
+<span class="nt">&lt;rule&gt;</span>
+    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^localhost<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
+    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
+<span class="nt">&lt;/rule&gt;</span>
+<span class="nt">&lt;/urlrewrite&gt;</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
+                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
+              </ul>
+            </li>
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="#" target="_blank">
+                You can modify those links in your config file
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container-fluid">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Martin Jones
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

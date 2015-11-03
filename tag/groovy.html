@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>groovy - Martin's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+    <meta name="author" content="Martin Jones" />
+    <meta name="keywords" content="groovy" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Martin's blog" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Martin's blog"/>
+        <meta property="og:url" content=""/>
+        <meta property="og:description" content="Martin's blog"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Martin's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/diy.html">Diy</a>
+                        </li>
+                        <li >
+                            <a href="/category/programming.html">Programming</a>
+                        </li>
+                        <li >
+                            <a href="/category/science.html">Science</a>
+                        </li>
+                        <li >
+                            <a href="/category/tech.html">Tech</a>
+                        </li>
+                        <li >
+                            <a href="/category/web.html">Web</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9">
+            <article>
+                <h2><a href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></h2>
+                <div class="summary"><p>This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the <a href="https://web.archive.org/web/20130624115433/http://www.json.org/json2.js">JSON parser/creator</a> from ...</p>
+                    <a class="btn btn-default btn-xs" href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></h2>
+                <div class="summary"><p>I’ve just run across this phenomenon for the first time and it turns out that hibernate can be even lazier than I thought!  To illustrate lets use this time-honoured example in Grails.  </p>
+<p>Here are our domain objects:</p>
+<div class="highlight"><pre><span class="kd">class</span> <span class="nc">Book</span> <span class="o">{</span>  
+    <span class="n">String</span> <span class="n">title</span>  
+    <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span><span class="n">author</span> <span class="o">:</span> <span class="n">Author</span><span class="o">]</span>  
+    <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>  
+<span class="kd">class</span> <span class="nc">Author ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/hibernate-magic-with-lazy-evaluation.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></h2>
+                <div class="summary"><p>A quick warning to anyone who’s using the excellent <a href="https://grails.org/plugin/ui-performance">UIPerformance</a> plugin for grails:  don’t do what I did, and set up your bundles with identical names:</p>
+<div class="highlight"><pre><span class="n">uiperformance</span><span class="o">.</span><span class="na">bundles</span> <span class="o">=</span> <span class="o">[</span>
+
+    <span class="o">[</span><span class="nl">type:</span> <span class="s1">&#39;css&#39;</span><span class="o">,</span>
+        <span class="nl">name:</span> <span class="s1">&#39;bundled&#39;</span><span class="o">,</span>
+        <span class="nl">files:</span> <span class="o">[</span><span class="s1">&#39;reset&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;style&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;invalid&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;jquery.jcarousel&#39;</span><span class="o">]],</span>
+
+    <span class="o">[</span><span class="nl">type:</span> <span class="s1">&#39;js&#39;</span><span class="o">,</span>
+        <span class="nl">name:</span> <span class="s1">&#39;bundled&#39;</span><span class="o">,</span>
+        <span class="nl">files:</span> <span class="o">[</span>
+            <span class="s1">&#39;jquery-1.3.2.min&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;simpla ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></h2>
+                <div class="summary"><p>I've been checking out the legendary MIT <a href="http://www.youtube.com/watch?v=2Op3QLzMgSY&amp;feature=list_related&amp;playnext=1&amp;list=SPE18841CABEA24090">Structure and Interpretation of Computer Programs</a> course from 1986 on YouTube, and it's fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don't think I will ever be able to hear <em>Jesu, joy of ...</em></p>
+                    <a class="btn btn-default btn-xs" href="/functional-abstraction-examples-from-scip-in-groovy.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc ...</p>
+                    <a class="btn btn-default btn-xs" href="/extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></h2>
+                <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the ...</p>
+                    <a class="btn btn-default btn-xs" href="/beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
+                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
+              </ul>
+            </li>
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="#" target="_blank">
+                You can modify those links in your config file
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container-fluid">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Martin Jones
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
