@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Articles by Martin - Martin's blog</title>
+    <title>Articles by Martin - mojones.net</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -13,19 +13,20 @@
         <meta name="author" content="Martin Jones" />
 
     <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Martin's blog" />
+        <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Martin's blog"/>
+        <meta property="og:title" content="mojones.net"/>
         <meta property="og:url" content=""/>
-        <meta property="og:description" content="Martin's blog"/>
+        <meta property="og:description" content="mojones.net"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="/theme/css/bootstrap.simplex.min.css" type="text/css"/>
     <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
     <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/static/custom.css" rel="stylesheet">
 
 
 
@@ -44,7 +45,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/" class="navbar-brand">
-Martin's blog            </a>
+mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
@@ -77,7 +78,207 @@ Martin's blog            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:56.562785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/processing.html">processing</a>
+        /
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/java.html">java</a>
+        /
+	<a href="/tag/computer-art.html">computer art</a>
+        /
+	<a href="/tag/metaprogramming.html">metaprogramming</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
+<div class="highlight"><pre><span class="n">myNoisyNumber</span>  <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="o">(</span><span class="n">myNumber</span> <span class="o">-</span> <span class="mi">10</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">)</span>
+</pre></div>
+
+
+<p>which is not exactly concise. If we want to call a Processing function that takes several such variables as arguments, then it gets worse:</p>
+<div class="highlight"><pre><span class="c1">// draw a slightly-random ellipse</span>
+<span class="n">ellipse</span><span class="o">(</span>  
+<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
+<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
+<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">),</span>  
+<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">)</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<p>Thinking about a Groovy solution to the problem I remembered reading about the meta-programming features that let us dynamically add methods to core Java classes at runtime. So here’s my solution – let’s modify the <code>Integer</code>, <code>Float</code> and <code>BigDecimal</code> classes to include an extra method, <code>jiggle()</code>, that will add or subtract a bit of random variation to the number and return it as a <code>float</code>. Here is the magic code, that must be called at runtime (the <code>setup()</code> method of a processing applet does the job very nicely):</p>
+<div class="highlight"><pre><span class="n">Float</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
+    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
+    <span class="o">}</span>  
+    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
+<span class="o">}</span>
+
+<span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
+    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
+    <span class="o">}</span>  
+    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
+<span class="o">}</span>
+
+<span class="n">BigDecimal</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
+    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
+    <span class="o">}</span>  
+    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
+<span class="o">}</span>
+</pre></div>
+
+
+<p>The <code>jiggle()</code> method (actually it is a closure) itself is pretty straightforward. We take random number, scale it by the argument, invert it half the time, add it to the number, and cast the result to a <code>Float</code> before returning it. </p>
+<p>Two things are of interest here; firstly, we need to have a <code>Random</code> object called <code>random</code> in the scope where this code is run (we could get round this by creating a new <code>Random</code> object inside the closure, but I find it easier for debugging to have a single <code>Random</code> object for the whole sketch, making it easy to reproduce). Secondly, when we want to refer to the object to which the closure belongs (i.e. the <code>Integer</code>, <code>Float</code> or <code>BigDecimal</code>) we use <code>delegate</code>.</p>
+<p>Having run this little snippet, our little ellipse example becomes much more concise:</p>
+<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">y</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">))</span>
+</pre></div>
+
+
+<p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
+<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:56.446785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/grails.html">grails</a>
+        /
+	<a href="/tag/webdev.html">webdev</a>
+        /
+	<a href="/tag/postgresql.html">postgresql</a>
+        /
+	<a href="/tag/acegi.html">acegi</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the acegi plugin will, by default, create a domain class with the name <code>User</code>.  When you try to run the application with a postgresql datasource, GORM will try to create a table with the name <code>user</code>, which postgresql will not like as it is a reserved word.</p>
+<p>This is a particularly annoying bug, because <code>user</code> is <strong>not</strong> a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to <code>Users</code> scattered throughout your application.</p>
+<p>Thankfully, the fix is not too onerous; either rename your <code>User</code> class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping:</p>
+<div class="highlight"><pre><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+  <span class="o">..</span>
+  <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
+      <span class="n">table</span> <span class="s1">&#39;myappname_user&#39;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/how-to-drill-holes-in-sea-shells-or-sea-glass.html">How to drill holes in sea shells or sea glass</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:56.330785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/diy.html">diy</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/craft.html">craft</a>
+        /
+	<a href="/tag/diy.html">diy</a>
+        /
+	<a href="/tag/glass.html">glass</a>
+        /
+	<a href="/tag/shells.html">shells</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Time for a bit of non-photography craft now. I spent some time last night drilling a collection of shells and sea glass to make hanging decorations, and I had to search around a fair bit looking for instructions, so I’m going to lay out how I did it to help other people in the same situation.
+Before I start let’s just get this out of the way:</p>
+<p><strong>Warning! Drilling stuff is dangerous! If you accidentally drill a hole in your hand/get shell in your eye/inhale silica dust/lose your hearing using these instructions, I am not responsible!</strong></p>
+<h2>Tools</h2>
+<p>You’ll need some sort of rotary tool. I used a Dremel, but there are many other brands which I’m sure would work just as well.</p>
+<p>The choice of bit is far more important. You want a diamond wheel point bit – this is basically a shaft with a sphere on the end which is covered in tiny diamonds. The diamonds are hard enough to cut through the glass and shell. They come in various sizes; the 4.4mm one is the best one for this job – it makes a nice-sized hole for threading onto twine, etc. but more importantly, it’s the only one where the cutting bit is smaller than the shaft:</p>
+<p><img alt="Photo" src="http://i.imgur.com/vmxLeLy.jpg" /></p>
+<p>This is important, because it means that once you’ve drilled your hole, it doesn’t matter if you accidentally keep pushing and push the shaft through the hole you have just made. In contrast, if you use one of the smaller bits, the shaft will not fit through the hole, and if you don’t stop as soon as the hole has been drilled, the conical bit of the shaft will crash into the edges of the hole and probably make a mess.</p>
+<p>The 4.4mm diamond bit has a 2.4mm collet, which I think is not the one that you get when you buy a Dremel. So you’ll need to buy the right sized collet as well. Might as well get the set, they’re cheap.</p>
+<p>To replace the collet that’s currently in the Dremel with the right-sized one, just unscrew the chuck all the way and the collet will drop out.
+You’ll also want a shallow container, since the actual cutting needs to be done under water to stop the shell and drill from overheating. A shallow plastic food tray will do the trick.</p>
+<p>Ear and eye protection would also be a good idea. You probably got a pair of safety goggles when you bought your roatary tool, so there’s no excuse for not wearing them. Also, you won’t believe how loud this tiny drill gets when you’re cutting your way through a thick shell or piece of glass. It’s like a dentist’s drill but much louder. So wear earmuffs if you’ve got them.  If you have a dust mask, use it too. There shouldn’t be a much of an issue with dust for this particular job, as all the cutting will be done under water, but it’s a good habit to have.</p>
+<h2>Technique</h2>
+<p>Take your shell or bit of glass and figure out where you’re going to drill your hole. Hold it at the bottom of your shallow container and figure out where the water level needs to be. This is the only tricky part of this job; you have to get the water level so that the bit of the shell you’re drilling is completely covered, but making sure that the drill itself doesn’t go in the water. </p>
+<p>You want the water to come about half way up the shaft of the drill bit. If you have a bunch of shells to drill, you can put a bit of tile or spare shell underneath smaller shells to raise them up – that way you won’t be topping up or emptying the water every 30 seconds.</p>
+<p>Once you have the water level correct, start drilling. Figure out how you are going to hold the shell steady in such a way that you don’t drill into your hand. Because the speed of the drill is so high, there isn’t much torque, but there’s still enough to spin the shell around if you don’t steady it. Be sure to start the drill before it’s touching the surface of the shell – if you start it when the bit is in contact with the shell it will just skid off. Use the slowest setting and don’t apply very much force – let the drill bit do the work.</p>
+<p>You’ll be able to feel once the drill bit has broken through. Turn off the drill and wait for it to come to a stop before lifting the shell off the shaft. If you just pull the drill out while it’s still spinning, the cutting bit will nick the edges of the hole and make a mess.</p>
+<p>If you have a very delicate shell with multiple layers, the underneath of the hole might be messy. The trick to drilling a nice neat hole in shells like this is to drill until the hole has just broken through the back side, then turn the shell over and widen the hole by drilling from the other side. This technique is very time-consuming, as you have to keep stopping to check the depth of the hole, so only use it if you have to.</p>
+<p>Remember to change the cooling water when it gets too cloudy to see. You don’t want to be plunging your drill into the murky depths only to find out that you’ve drilled through the bottom of your container, or your table. Also, if you have a bit batch of shells to drill, you might want to stop every few minutes and let the drill cool down.</p>
+<p>That’s pretty much it – if you have questions, just leave them in the comments.</p>
+                        <a class="btn btn-default btn-xs" href="/how-to-drill-holes-in-sea-shells-or-sea-glass.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:56.166785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/grails.html">grails</a>
+        /
+	<a href="/tag/uiperformance.html">UIPerformance</a>
+        /
+	<a href="/tag/schoolboy-error.html">schoolboy error</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>A quick warning to anyone who’s using the excellent <a href="https://grails.org/plugin/ui-performance">UIPerformance</a> plugin for grails:  don’t do what I did, and set up your bundles with identical names:</p>
 <div class="highlight"><pre><span class="n">uiperformance</span><span class="o">.</span><span class="na">bundles</span> <span class="o">=</span> <span class="o">[</span>
 
@@ -92,29 +293,36 @@ Martin's blog            </a>
         <span class="nl">name:</span> <span class="s1">&#39;bundled&#39;</span><span class="o">,</span>
         <span class="nl">files:</span> <span class="o">[</span>
             <span class="s1">&#39;jquery-1.3.2.min&#39;</span><span class="o">,</span>
-            <span class="s1">&#39;simpla ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></h2>
-                <div class="summary"><p>I've been checking out the legendary MIT <a href="http://www.youtube.com/watch?v=2Op3QLzMgSY&amp;feature=list_related&amp;playnext=1&amp;list=SPE18841CABEA24090">Structure and Interpretation of Computer Programs</a> course from 1986 on YouTube, and it's fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don't think I will ever be able to hear <em>Jesu, joy of ...</em></p>
-                    <a class="btn btn-default btn-xs" href="/functional-abstraction-examples-from-scip-in-groovy.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
-                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc ...</p>
-                    <a class="btn btn-default btn-xs" href="/extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></h2>
-                <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the ...</p>
-                    <a class="btn btn-default btn-xs" href="/beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
+            <span class="s1">&#39;simpla.jquery.configuration&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;facebox&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;jquery.jcarousel.pack&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;cert&#39;</span><span class="o">]]</span>
+<span class="o">]</span>
+</pre></div>
+
+
+<p>Unsurprisingly, this causes the plugin to get confused; the following works much better:</p>
+<div class="highlight"><pre><span class="n">uiperformance</span><span class="o">.</span><span class="na">bundles</span> <span class="o">=</span> <span class="o">[</span>
+
+    <span class="o">[</span><span class="nl">type:</span> <span class="s1">&#39;css&#39;</span><span class="o">,</span>
+        <span class="nl">name:</span> <span class="s1">&#39;bundled_css&#39;</span><span class="o">,</span>
+        <span class="nl">files:</span> <span class="o">[</span><span class="s1">&#39;reset&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;style&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;invalid&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;jquery.jcarousel&#39;</span><span class="o">]],</span>
+
+    <span class="o">[</span><span class="nl">type:</span> <span class="s1">&#39;js&#39;</span><span class="o">,</span>
+        <span class="nl">name:</span> <span class="s1">&#39;bundled_javascript&#39;</span><span class="o">,</span>
+        <span class="nl">files:</span> <span class="o">[</span>
+            <span class="s1">&#39;jquery-1.3.2.min&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;simpla.jquery.configuration&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;facebox&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;jquery.jcarousel.pack&#39;</span><span class="o">,</span>
+            <span class="s1">&#39;cert&#39;</span><span class="o">]]</span>
+<span class="o">]</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
@@ -131,43 +339,104 @@ Martin's blog            </a>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="images/avatar.jpg"/>
+        </p>
+    <p>
+        <strong>About Martin Jones</strong><br/>
+        Coding, writing and teaching
+    </p>
+</div>
 <section class="well well-sm">
+
+
+
     <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
-                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
-              </ul>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pythonforbiologists.com" target="_blank">
+                Python for Biologists
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&field-keywords=&field-author=&field-title=&field-isbn=1514376989+%7C+1492346136+%7C+1495244377&field-publisher=&node=&field-p_n_condition-type=&p_n_feature_browse-bin=&field-subject=&field-language=&field-dateop=During&field-datemod=&field-dateyear=&sort=relevanceexprank&Adv-Srch-Books-Submit.x=20&Adv-Srch-Books-Submit.y=19" target="_blank">
+                My Python books
+            </a>
+        </li>
+      </ul>
+    </li>
+
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
+                            How to build a high-quality audio system in Ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/301-permanent-redirect-with-tomcat.html">
+                            301 permanent redirect with Tomcat
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">
+                            How to fix an infinite 301 redirect loop in WordPress
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">
+                            How to remove a broken or stripped screw: ultimate protip collection!
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">
+                            How to build raiser legs for chairs or sofas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="/category/diy.html">
+                            <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/programming.html">
+                            <i class="fa fa-folder-open fa-lg"></i> programming
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/science.html">
+                            <i class="fa fa-folder-open fa-lg"></i> science
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/tech.html">
+                            <i class="fa fa-folder-open fa-lg"></i> tech
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/web.html">
+                            <i class="fa fa-folder-open fa-lg"></i> web
+                        </a>
+                    </li>
+                </ul>
             </li>
 
 
 
 
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://jinja.pocoo.org/" target="_blank">
-                Jinja2
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="#" target="_blank">
-                You can modify those links in your config file
-            </a>
-        </li>
-      </ul>
+    <li class="list-group-item"><h4><i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub Repos</span></h4>
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/mojones">@mojones</a> on GitHub
     </li>
     </ul>
 </section>
@@ -195,6 +464,43 @@ Martin's blog            </a>
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="/theme/js/respond.min.js"></script>
 
+    <script src="/theme/js/bodypadding.js"></script>
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = '/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'mojones',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mojones.net'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
 
 </body>
 </html>

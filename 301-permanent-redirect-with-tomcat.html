@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>301 permanent redirect with Tomcat - Martin's blog</title>
+    <title>301 permanent redirect with Tomcat - mojones.net</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -13,14 +13,14 @@
 
         <meta name="author" content="Martin" />
         <meta name="keywords" content="java,javascript,seo,servlets,http" />
-        <meta name="description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted ..." />
+        <meta name="description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server. After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called URLRewriteFilter. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position. The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet. The tricky part is getting the config file WEB-INF/urlrewrite.xml just right, so here’s the configuration that worked for me: &lt;urlrewrite&gt; &lt;rule&gt; &lt;name&gt;seo redirect&lt;/name&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^www\.example\.com&lt;/condition&gt; &lt;from&gt;^/(.*)&lt;/from&gt; &lt;to type=&#34;permanent-redirect&#34; last=&#34;true&#34;&gt;http://www.example.com/$1&lt;/to&gt; &lt;/rule&gt; &lt;/urlrewrite&gt; The condition element tells us that we want to trigger this rule when the HTTP request host header is not equal to www.example.com. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The from element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for example.com (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So example.com/tour.jsp should redirect to www.example.com/tour.jsp. Update A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to localhost:8080. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads www.mywebsite.com. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour: &lt;urlrewrite&gt; &lt;rule&gt; &lt;name&gt;seo redirect&lt;/name&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^www\.example\.com&lt;/condition&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^localhost&lt;/condition&gt; &lt;from&gt;^/(.*)&lt;/from&gt; &lt;to type=&#34;permanent-redirect&#34; last=&#34;true&#34;&gt;http://www.example.com/$1&lt;/to&gt; &lt;/rule&gt; &lt;/urlrewrite&gt;" />
 
-        <meta property="og:site_name" content="Martin's blog" />
+        <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="301 permanent redirect with Tomcat"/>
         <meta property="og:url" content="/301-permanent-redirect-with-tomcat.html"/>
-        <meta property="og:description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted ..."/>
-        <meta property="article:published_time" content="2015-11-02" />
+        <meta property="og:description" content="Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out this link for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server. After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called URLRewriteFilter. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position. The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet. The tricky part is getting the config file WEB-INF/urlrewrite.xml just right, so here’s the configuration that worked for me: &lt;urlrewrite&gt; &lt;rule&gt; &lt;name&gt;seo redirect&lt;/name&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^www\.example\.com&lt;/condition&gt; &lt;from&gt;^/(.*)&lt;/from&gt; &lt;to type=&#34;permanent-redirect&#34; last=&#34;true&#34;&gt;http://www.example.com/$1&lt;/to&gt; &lt;/rule&gt; &lt;/urlrewrite&gt; The condition element tells us that we want to trigger this rule when the HTTP request host header is not equal to www.example.com. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The from element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for example.com (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So example.com/tour.jsp should redirect to www.example.com/tour.jsp. Update A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to localhost:8080. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads www.mywebsite.com. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour: &lt;urlrewrite&gt; &lt;rule&gt; &lt;name&gt;seo redirect&lt;/name&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^www\.example\.com&lt;/condition&gt; &lt;condition name=&#34;host&#34; operator=&#34;notequal&#34;&gt;^localhost&lt;/condition&gt; &lt;from&gt;^/(.*)&lt;/from&gt; &lt;to type=&#34;permanent-redirect&#34; last=&#34;true&#34;&gt;http://www.example.com/$1&lt;/to&gt; &lt;/rule&gt; &lt;/urlrewrite&gt;"/>
+        <meta property="article:published_time" content="2015-11-04" />
             <meta property="article:section" content="web" />
             <meta property="article:tag" content="java" />
             <meta property="article:tag" content="javascript" />
@@ -31,11 +31,12 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="/theme/css/bootstrap.simplex.min.css" type="text/css"/>
     <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
     <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/static/custom.css" rel="stylesheet">
 
 
 
@@ -54,7 +55,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/" class="navbar-brand">
-Martin's blog            </a>
+mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
@@ -103,11 +104,13 @@ Martin's blog            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-02T15:45:28.586907+00:00"> Mon 02 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:24:34.101321+00:00"> Wed 04 November 2015</time>
     </span>
 
 
 
+        <span class="label label-default">Category</span>
+        <a href="/category/web.html">web</a>
 
 
 <span class="label label-default">Tags</span>
@@ -153,49 +156,146 @@ Martin's blog            </a>
 </pre></div>
             </div>
             <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mojones.net'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = '301-permanent-redirect-with-tomcat';
+                var disqus_url = '/301-permanent-redirect-with-tomcat.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
         </article>
     </section>
 
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="images/avatar.jpg"/>
+        </p>
+    <p>
+        <strong>About Martin Jones</strong><br/>
+        Coding, writing and teaching
+    </p>
+</div>
 <section class="well well-sm">
+
+
+
     <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
-                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
-              </ul>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pythonforbiologists.com" target="_blank">
+                Python for Biologists
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&field-keywords=&field-author=&field-title=&field-isbn=1514376989+%7C+1492346136+%7C+1495244377&field-publisher=&node=&field-p_n_condition-type=&p_n_feature_browse-bin=&field-subject=&field-language=&field-dateop=During&field-datemod=&field-dateyear=&sort=relevanceexprank&Adv-Srch-Books-Submit.x=20&Adv-Srch-Books-Submit.y=19" target="_blank">
+                My Python books
+            </a>
+        </li>
+      </ul>
+    </li>
+
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
+                            How to build a high-quality audio system in Ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/301-permanent-redirect-with-tomcat.html">
+                            301 permanent redirect with Tomcat
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">
+                            How to fix an infinite 301 redirect loop in WordPress
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">
+                            How to remove a broken or stripped screw: ultimate protip collection!
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">
+                            How to build raiser legs for chairs or sofas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="/category/diy.html">
+                            <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/programming.html">
+                            <i class="fa fa-folder-open fa-lg"></i> programming
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/science.html">
+                            <i class="fa fa-folder-open fa-lg"></i> science
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/tech.html">
+                            <i class="fa fa-folder-open fa-lg"></i> tech
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/web.html">
+                            <i class="fa fa-folder-open fa-lg"></i> web
+                        </a>
+                    </li>
+                </ul>
             </li>
 
 
 
 
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://jinja.pocoo.org/" target="_blank">
-                Jinja2
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="#" target="_blank">
-                You can modify those links in your config file
-            </a>
-        </li>
-      </ul>
+    <li class="list-group-item"><h4><i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub Repos</span></h4>
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/mojones">@mojones</a> on GitHub
     </li>
     </ul>
 </section>
@@ -223,6 +323,43 @@ Martin's blog            </a>
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="/theme/js/respond.min.js"></script>
 
+    <script src="/theme/js/bodypadding.js"></script>
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = '/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'mojones',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mojones.net'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
 
 </body>
 </html>

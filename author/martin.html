@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Articles by Martin - Martin's blog</title>
+    <title>Articles by Martin - mojones.net</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -13,19 +13,20 @@
         <meta name="author" content="Martin Jones" />
 
     <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Martin's blog" />
+        <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Martin's blog"/>
+        <meta property="og:title" content="mojones.net"/>
         <meta property="og:url" content=""/>
-        <meta property="og:description" content="Martin's blog"/>
+        <meta property="og:description" content="mojones.net"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="/theme/css/bootstrap.simplex.min.css" type="text/css"/>
     <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
     <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/static/custom.css" rel="stylesheet">
 
 
 
@@ -44,7 +45,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/" class="navbar-brand">
-Martin's blog            </a>
+mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
@@ -77,72 +78,428 @@ Martin's blog            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/301-permanent-redirect-with-tomcat.html">301 permanent redirect with Tomcat</a></h2>
-                <div class="summary"><p>Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out <a href="https://web.archive.org/web/20100727065239/http://www.kalzumeus.com/2007/10/07/dont-make-my-really-elementary-seo-mistake/">this link</a> for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted ...</p>
-                    <a class="btn btn-default btn-xs" href="/301-permanent-redirect-with-tomcat.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">How to remove a broken or stripped screw: ultimate protip collection!</a></h2>
-                <div class="summary"><p>I was inspired to put this post together when searching for ways to remove a broken screw recently – there are so many different tricks that I thought it would be fun to collect them all in the same place. I have tried to put them in order of try-ability, with ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">How to build raiser legs for chairs or sofas</a></h2>
-                <div class="summary"><p>Recently I got a new set of sofas and armchairs to go in my living room. They were perfect apart from one small problem – the legs were too short. By that I mean that the underside of the sofas were too close to the ground to allow my Roomba vacuum ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
                 <h2><a href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">How to build a high-quality audio system in Ubuntu</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:24:41.021321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/tech.html">tech</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/audio.html">audio</a>
+        /
+	<a href="/tag/hardware.html">hardware</a>
+        /
+	<a href="/tag/ubuntu.html">ubuntu</a>
+        /
+	<a href="/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Note: this post is about high-quality audio under Linux; however, the set-up will work just as well on a Windows or Mac machine.</p>
-<p>Historically, sound has always been a weak point for Linux, with many devices refusing to work due to a lack of drivers. The appearance of Ubuntu improved ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">more ...</a>
+<p>Historically, sound has always been a weak point for Linux, with many devices refusing to work due to a lack of drivers. The appearance of Ubuntu improved matters, but I have always found support for high-quality audio to be lacking. However, the development of USB sound cards has made a big difference and I have finally found a way to get high-quality audio on Ubuntu on a budget. The set up I’m about to describe will give you fantastic, detailed sound for music listening for around $200.  Briefly, the recipe is</p>
+<ol>
+<li>use an external USB soundcard</li>
+<li>get a line-out signal from the soundcard and</li>
+<li>use active monitor speakers, NOT multimedia speakers</li>
+</ol>
+<h2>The sound card</h2>
+<p>There are two main reasons to use a USB sound card. Firstly it means that the digital-to-analog conversion is taking place outside the computer, where it can’t be affected by all the electrical noise inside. Secondly, the quality of the conversion (which will ultimately determine the quality of the sound) is far better than can be achieved by your computer’s built-in sound card.</p>
+<p>The best low-cost USB audio device I have found is the FIIO E7. It’s actually designed and marketed as a headphone amplifier, but it’s perfect for our purposes because it’s actually a high-quality USB soundcard as well. It is recognized by Ubuntu as a USB audio device so it doesn’t need any drivers and will work out of the box.</p>
+<h2>The line-out signal</h2>
+<p>Because the E7 is designed to drive headphones, you can’t take the output and use it to drive a pair of speakers. Instead you need to get a line-out signal which you can feed to an amplifier. There are two products that let you get a line out signal from the E7 – a rather cool looking separate headphone amp, and a line out dock. The headphone amp looks extremely cool, but will set you back another hundred bucks and take up a chunk of space on your desk.  The line out kit (called the L7), on the other hand, costs ten bucks and does the job perfectly.</p>
+<p>It clips to the bottom of the E7, then you plug a USB cable in one side, and get a line out signal from the other side. This will allow us to use the DAC part of the E7 while bypassing the amplifier part.</p>
+<h2>Active monitors</h2>
+<p>Now you have your line-out signal you need a amplifier and a pair of speakers. The best value solution is a pair of active speakers (also called powered speakers); these have an integrated amplifier so you can connect them directly to a line out source. Active speakers come in two main flavours. Multimedia speakers are designed for computer games and movies, so they tend to be loud and dynamic, but are lacking in detail for music. A much better choice is a set of monitor speakers; these are specifically designed to accurately reproduce music and are often used for recording and mixing.</p>
+<p>M-audio make a few models of budget speakers that are ideal for our purposes. I am currently using a pair of AV40 speakers￼ . They are nicely sized, comfortably loud enough to fill a large room and have wonderful sound reproduction.</p>
+<h2>Setting up</h2>
+<p>Hooking up a system like the one I’ve described above is very simple. The L7 plus into the bottom of the E7, then the USB cable runs from the L7 to your computer. The line out cable runs from the other side of the L7 to the active speakers. Be sure to arrange your speakers for best sound from your normal listening position – follow <a href="https://web.archive.org/web/20120127175411/http://www.tweakshop.com/Speaker%20Placement.html">a guide like this one</a> and you can’t go wrong.</p>
+<p>A set up like this should keep you happy for a long time; the only thing I have found I needed to upgrade is the line out cable which goes between the L7 and the speakers. The supplied one is a little loose, but even a high-quality gold-plated, shielded cable is only about $10, will sound great, and will last practically forever.</p>
+                        <a class="btn btn-default btn-xs" href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/301-permanent-redirect-with-tomcat.html">301 permanent redirect with Tomcat</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:24:34.101321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/web.html">web</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/java.html">java</a>
+        /
+	<a href="/tag/javascript.html">javascript</a>
+        /
+	<a href="/tag/seo.html">seo</a>
+        /
+	<a href="/tag/servlets.html">servlets</a>
+        /
+	<a href="/tag/http.html">http</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out <a href="https://web.archive.org/web/20100727065239/http://www.kalzumeus.com/2007/10/07/dont-make-my-really-elementary-seo-mistake/">this link</a> for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server.</p>
+<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position.</p>
+<p>The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet.</p>
+<p>The tricky part is getting the config file <code>WEB-INF/urlrewrite.xml</code> just right, so here’s the configuration that worked for me:</p>
+<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
+<span class="nt">&lt;rule&gt;</span>
+    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
+    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
+<span class="nt">&lt;/rule&gt;</span>
+<span class="nt">&lt;/urlrewrite&gt;</span>
+</pre></div>
+
+
+<p>The <code>condition</code> element tells us that we want to trigger this rule when the HTTP request host header is not equal to <code>www.example.com</code>. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The <code>from</code> element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for <code>example.com</code> (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So <code>example.com/tour.jsp</code> should redirect to <code>www.example.com/tour.jsp</code>.</p>
+<h2>Update</h2>
+<p>A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to <code>localhost:8080</code>. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads <code>www.mywebsite.com</code>. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour:</p>
+<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
+<span class="nt">&lt;rule&gt;</span>
+    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^localhost<span class="nt">&lt;/condition&gt;</span>
+    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
+    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
+<span class="nt">&lt;/rule&gt;</span>
+<span class="nt">&lt;/urlrewrite&gt;</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/301-permanent-redirect-with-tomcat.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
             <article>
                 <h2><a href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">How to fix an infinite 301 redirect loop in WordPress</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:24:34.097321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/web.html">web</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/wordpress.html">wordpress</a>
+        /
+	<a href="/tag/web.html">web</a>
+        /
+	<a href="/tag/config.html">config</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I just ran into this problem today; thought I should post the solution in case anybody else finds themselves in the same boat.</p>
-<p>I moved a WordPress blog from one server to another which was running lighttpd with a blanket 301 redirect to from www to non-www URLs. When I ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">more ...</a>
+<p>I moved a WordPress blog from one server to another which was running lighttpd with a blanket 301 redirect to from www to non-www URLs. When I fired up a browser to test it, I got the dreaded “this website is responding in a way that will never resolve” message. A quick look at the lighttpd logs confirmed that I was bouncing from <strong>www.example.com</strong> to <strong>example.com</strong> then back to <strong>www.example.com</strong>.</p>
+<p>I expected the first redirect but not the second, and checking in my lighttpd conf showed no rule that could possibly be triggering it. Thinking maybe I had left a redirection plugin running, I logged on the blog (by temporarily disabling the redirect rules) and checked, but couldn’t find anything.</p>
+<p>Turns out that WordPress itself is capable of generating 301 redirects according to the “Blog URL” field in the General settings page. If the URL is set to <strong>http://www.example.com</strong> and a request comes in for <strong>http://example.com/some/page</strong>, then WordPress will automatically respond with a 301 redirect to <strong>http://www.example.com/some/page</strong> (which in my case, would get caught by my lighttpd rule and bounced back to the original request URL, and so on).</p>
+<p>Moral of the story: make sure that your WordPress URL settings and any manual redirection you are carrying out are in agreement as to what the ‘correct’ URL should be!</p>
+                        <a class="btn btn-default btn-xs" href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">How to remove a broken or stripped screw: ultimate protip collection!</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:24:04.569321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/diy.html">diy</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/diy.html">diy</a>
+        /
+	<a href="/tag/stripped-screws.html">stripped screws</a>
+        /
+	<a href="/tag/threaded-screws.html">threaded screws</a>
+        /
+	<a href="/tag/protips.html">protips</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>I was inspired to put this post together when searching for ways to remove a broken screw recently – there are so many different tricks that I thought it would be fun to collect them all in the same place. I have tried to put them in order of try-ability, with those that use tools you probably already have at the top.</p>
+<p>First of all, are you dealing with a stripped screw or a broken one? A stripped screw is where the slots in the head have become worn and rounded so that the screwdriver can’t grip it and looks like this:</p>
+<p><img alt="" src="https://web.archive.org/web/20120127184439im_/http://redrowstudio.com/wp-content/uploads/2011/12/stripped.jpg" /></p>
+<p>A broken screw is one where the head has sheared off, and looks like this:</p>
+<p><img alt="" src="https://web.archive.org/web/20120127184439im_/http://redrowstudio.com/wp-content/uploads/2011/12/Kozzi-broken-screw-441x294.jpg" /></p>
+<p>If you have a broken screw then the techniques for dealing with a stripped screw won’t help you, so jump down to the methods for broken screws. On the other hand, if you have a stripped screw, then you can use any of the techniques on this page so just start reading.</p>
+<h2>Methods for stripped screws</h2>
+<h3>Tap or heat the screw to loosen</h3>
+<p>The idea here is to loosen the screw so that you can use what little grip remains in the head to unscrew it. Tapping can help to free a seized screw, while heating a metal screw can loosen it by making the metal expand then contract. To loosen the screw by tapping, place the tip of a screwdriver in the screw head (as if you were going to turn it) then tap the butt of the screwdriver with a hammer. To loosen it by heating, place the tip of a hot soldering iron in the screw head and press down for a few seconds.</p>
+<h3>Drill a small hole in the centre of the screw</h3>
+<p>By drilling a hole just a couple of millimetres deep in the middle of the screw head, you can allow the tip of your screwdriver to go deeper in the head and get a little bit more grip. Use a very small drill bit that will work on metal. </p>
+<h3>Use a rubber band to get more grip</h3>
+<p>This one is simple; just place a rubber band over the screw head and unscrew it normally. The rubber can help to give just enough extra grip to get the screw to turn.</p>
+<h3>Use aluminium carbide or valve grinding paste</h3>
+<p>The idea here is the same as above – give the screwdriver a little more grip on the screw head. Just spread a little of the paste into the slots in the screw head and unscrew as normal.</p>
+<h3>Use a hammer to reshape the slots in the screw head</h3>
+<p>An unsophisticated trick :-) Seat the tip of a screwdriver in the screw head and whack the base of the screwdriver with a hammer. This is only likely to work on screws made out of soft metal (but hey, maybe that’s the reason they get stripped in the first place!)</p>
+<h3>Use a flat-head screwdriver on a cross-head screw</h3>
+<p>Sometimes a flat-head screwdriver can get a better grip on a stripped cross-head screw than the correct screwdriver can get, due to the way that cross-head screws are designed to “cam-out”. Use plenty of pressure to keep the screwdriver seated.</p>
+<h3>Use a screwdriver that's too big</h3>
+<p>Very similar to the trick above. Instead of using a flat-head screwdriver, use a cross-head screwdriver, but pick a size that’s too big for the screw. If the slots have been worn, this can often give a better grip than using the correct size.</p>
+<h3>Use a steel punch to hit the screw off-centre</h3>
+<p>This is only likely to work on screws that have a large head. Take a small hardened steel punch and use it to hit the screw off-centre so that it rotates anti-clockwise. This sometimes works to start a screw moving; as soon as it’s loosened, move on to one of the other methods.</p>
+<h2>Methods for broken screws</h2>
+<h3>Grip the screw with a pair of pliers and turn it</h3>
+<p>If the screw isn’t secured too tightly, and there’s enough of it protruding, you may be able to get enough purchase with a normal pair of pliers￼ to remove it. Be sure to clamp the screw in the sample place with the pliers each time you grip it so you don’t round off the screw.</p>
+<p>Of course, the more leverage you can get to grip the screw with the better, so if you’ve got a pair of pliers with long handles and an adjustable jaw, then use them. And if you are lucky enough to have a pair of locking pliers (AKA vise grips, vice grips, or mole grips, depending on where you live) then you can use them to apply much more pressure and to clamp down on the screw while you turn it.</p>
+<h3>Clamp the screw shaft in a drill chuck and turn slowly</h3>
+<p>The chuck of a drill is designed to hold the shaft of a drill bit securely, so it often also does a pretty good job of holding the shaft of a broken screw. Tighten up the chuck of the drill as hard as you can around the screw – you will need both hands for this so get someone to help by holding the drill in place as you do it. Don’t plug the drill in until you’ve finished clamping the screw, and make sure it’s in reverse  before you turn it on. Any cheap drill should work for this, or you can also use an electric screwdriver if it has a chuck. Don’t try this trick with a rotary tool like a Dremel – they are designed for high-speed, low-torque so will be useless (but if you have a Dremel, see the next method!)</p>
+<h3>Use a rotary tool to cut a slot in the screw</h3>
+<p>If there is enough of the screw protruding above the surface it’s screwed into, you can use a Dremel or other rotary tool ...</p>
+                        <a class="btn btn-default btn-xs" href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">How to build raiser legs for chairs or sofas</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:23:56.117321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/diy.html">diy</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/diy.html">diy</a>
+        /
+	<a href="/tag/furniture.html">furniture</a>
+        /
+	<a href="/tag/sawdust.html">sawdust</a>
+        /
+	<a href="/tag/danger.html">danger</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Recently I got a new set of sofas and armchairs to go in my living room. They were perfect apart from one small problem – the legs were too short. By that I mean that the underside of the sofas were too close to the ground to allow my Roomba vacuum cleaner to fit underneath. As you can see from this picture, a Roomba will happily clean underneath furniture, but only if there’s enough room – in the case of my model, about three and a half inches (90mm).</p>
+<p><img alt="" src="https://web.archive.org/web/20120118043922im_/http://redrowstudio.com/wp-content/uploads/2011/12/roomba.jpeg" /></p>
+<p>I definitely wanted to make sure that my Roomba could fit underneath the new sofas – I have three dogs and hardwood floors, so hair will inevitably gather if it’s not being picked up. I started looking at chair raisers – there are some very nice hardwood ones available – but quickly realised that there were two problems. Firstly, I would need three sets, which would set me back the best part of $100. Secondly, there’s no way to adjust the height – I wanted to raise my sofas and chairs up by only the minimum amount necessary. So I decided to make my own.</p>
+<h2>Design</h2>
+<p>The basic plan is to use a hole saw to cut a bunch of circular wooden disks out of cheap timber planks, and then stack the disks together until they’re the right height. Then, to securely hold the legs of the sofa, you’ll cut a final disk with a cut-out section in the middle where the sofa leg will go. A photo of the rough finished product should make things clearer:</p>
+<p><img alt="" src="https://web.archive.org/web/20120118043922im_/http://redrowstudio.com/wp-content/uploads/2011/12/P1140763.jpg" /></p>
+<p>This one was made from 3/4 inch (18mm) planed timber, and I used three layers to give a total height of  2¼ inches (54mm). The top layer was made from the same piece of wood, but doesn’t contribute to the height of the sofa – the sofa leg just sits in the round depression so that it’s held securely. This is the rough version – if you’re going to be able to see the leg raisers, you could sand the outside and stain or paint for a nicer finish.</p>
+<h2>Construction</h2>
+<p>The trick to cutting out these perfectly circular disks of wood is to use a hole saw -  a circular blade that fits into a normal drill and cuts round holes.</p>
+<p>For this project we need to cut two sizes of hole – a big one for the main layers, and a smaller one for the sofa/chair leg to fit into. Rather than buying two individual saws, it’s cheaper to buy a set that contains a range of sizes. You’ll also need an electric drill and some smooth planed timber – try to get a plank that’s 3/4 inches thick and about 5 inches wide.</p>
+<p>Now, on to the cutting. Disclaimer: power tools are dangerous – take care!</p>
+<p>If you look at your hole saw, you’ll see that the central drill bit protrudes a bit beyond the cutting saw part. The trick to cutting nice neat holes is to drill through your wood until the central bit emerges on the other side, but before the saw part has cut all the way through. Then, turn the wood over and finish off the cut from the other side, using the central hole to make sure that you’re cutting in exactly the same place. If you just cut all the way through from one side, then you’ll get a load of splinters where the saw breaks through the wood. Most hole saws have a small hole in the back that you can use to poke out the circular disk if it is stuck – do this gently, as you don’t want to dent the wood.</p>
+<p>While you’re cutting, watch out for any sign of overheating, like smoke. The friction between the saw and the wood can cause it to get very hot. Also, be careful not to touch the blade immediately after you’ve finished a cut as it will probably be hot. A hole saw generates a large amount of sawdust – much more than normal drilling – so make sure you do it somewhere that will be easy to clean up. Also, when you're using the larger size hole saws, the torque on the drill is going to be much greater than when drilling a normal-sized hole, so don't break your wrist. If you have a drill press, use it. </p>
+<p>The easiest way to figure how how many layers you need is by trial and error. Cut out four disks using the largest hole saw in your set, and put them underneath the four legs of your sofa. If it’s still not high enough, cut another four and repeat. Be careful, because at this stage there is nothing holding the disks together, so they could easily slip.</p>
+<p>Once you’ve got enough layers to raise your sofa to the right height, cut one more set of disks for the top layer that will hold the legs. Now comes the clever bit – we will use a hole saw to cut another disk from inside the first one, leaving us with a ring-shaped bit of wood that will hold the leg securely. The trick to this is to cut the inner hole just big enough to hold the existing sofa leg, so measure it and pick the hole saw from your set that is just big enough to fit. If your existing sofa leg is round, then just measure across it; if it is square then measure on the diagonal. If the size is in between two of your hole saws, then pick the smaller one and enlarge the inner hole after glueing. Use the drill bit hole in the centre of your wooden disk to make sure that you drill the inner hole in the exact middle. You’ll probably want to clamp the wooden disk when drilling it, as there might not be much clearance between the ...</p>
+                        <a class="btn btn-default btn-xs" href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
             <article>
                 <h2><a href="/which-is-harder-walking-or-flying.html">Which is harder, walking or flying?</a></h2>
-                <div class="summary"><p>One of the nice things about having a reliable knowledge of the relationships between groups of organisms is that it lets us figure out when different traits have evolved. This can be of great practical importance – for instance, if we see that a particular mutation has evolved independently in several ...</p>
-                    <a class="btn btn-default btn-xs" href="/which-is-harder-walking-or-flying.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/how-to-drill-holes-in-sea-shells-or-sea-glass.html">How to drill holes in sea shells or sea glass</a></h2>
-                <div class="summary"><p>Time for a bit of non-photography craft now. I spent some time last night drilling a collection of shells and sea glass to make hanging decorations, and I had to search around a fair bit looking for instructions, so I’m going to lay out how I did it to ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-drill-holes-in-sea-shells-or-sea-glass.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
-                <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses ...</p>
-                    <a class="btn btn-default btn-xs" href="/radial-transparent-gradients-in-processingorg.html">more ...</a>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T08:23:03.877321+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/science.html">science</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/biology.html">biology</a>
+        /
+	<a href="/tag/evolution.html">evolution</a>
+        /
+	<a href="/tag/wild-speculation.html">wild speculation</a>
+        /
+	<a href="/tag/life-on-earth.html">life on earth</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>One of the nice things about having a reliable knowledge of the relationships between groups of organisms is that it lets us figure out when different traits have evolved. This can be of great practical importance – for instance, if we see that a particular mutation has evolved independently in several species that are all parasites, then it suggests that the mutation might be important for parasitism. It also lets us make more general statements about the history of life on earth – for example, we can say with great certainty that complex eyes have evolved independently multiple times.</p>
+<p>Another trait that has evolved multiple times is powered flight. We know that there are four groups of organisms that can fly – birds, bats, insects, and (extinct) pterosaurs. And we know that each of these groups evolved flight independently because, in each case, the most closely-related group cannot fly. For example, bats are most closely related to carnivores like dogs and cats than they are to any other flying animal. (The situation with birds is slightly more complex because their closest relatives are all extinct, but the principal is the same). We can be pretty confident that powered flight evolved independently four times.</p>
+<p>This seems on the low side; after all, many traits that sound just as complicated have evolved much more often than that – sophisticated eyes, complex social living arrangements (as seen in bees) and multicellularity have all been estimated to have arisen independently at least a dozen times. You might expect that something like flying, which offers such obvious benefits – escaping from predators; access to food; being able to migrate long distances – would have evolved many times as well. So why is it so uncommon? Perhaps it requires a degree of specialization that is rarely justified by the benefits it confers. Perhaps it requires a very unusual set of anatomical adaptations to happen simultaneously – this idea is given credence by the fact that gliding, as opposed to powered flight, has evolved independently many times. Maybe gliding offers enough of the benefits of flying, without the need for radical specialization, that it is more adaptive for the majority of animals.</p>
+<p>Of course, perhaps it only seems rare to us because of our land-bound nature – flying seems like a big deal because we can’t do it. Let’s forget flying for a moment; how many times has walking evolved? I’m going to rule out animals like tardigrades, that live in tiny films of water – they don’t count. Neither do annelid worms; some of them have leg-like protuberances, but they still move by wiggling. By my count, walking has evolved independently just three times in the history of life – in arthropods (like insects and crustaceans), tetrapods (like humans and crocodiles) and velvet-worms (rather than try to describe them, <a href="https://web.archive.org/web/20120127173552/http://en.wikipedia.org/wiki/Onychophora">here’s a wikipedia link</a>. In fact, it seems likely that velvet-worms and arthropods form a closely-related group, which means that walking has evolved independently just twice. So as per the title of this post walking is, from an evolutionary point of view, twice as difficult as flying!</p>
+                        <a class="btn btn-default btn-xs" href="/which-is-harder-walking-or-flying.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
             <article>
                 <h2><a href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></h2>
-                <div class="summary"><p>This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the <a href="https://web.archive.org/web/20130624115433/http://www.json.org/json2.js">JSON parser/creator</a> from ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:52:03.730785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/grails.html">grails</a>
+        /
+	<a href="/tag/jquery.html">jquery</a>
+        /
+	<a href="/tag/json.html">json</a>
+        /
+	<a href="/tag/ajax.html">ajax</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the <a href="https://web.archive.org/web/20130624115433/http://www.json.org/json2.js">JSON parser/creator</a> from <a href="https://web.archive.org/web/20130624115433/http://www.json.org/js.html">json.org</a>. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code.</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">postTreeData</span><span class="p">(){</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;savedata&quot;</span><span class="p">,</span>
+        <span class="nx">contentType</span> <span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+        <span class="nx">dataType</span><span class="o">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">tree</span><span class="p">.</span><span class="nx">focused</span><span class="p">().</span><span class="nx">get</span><span class="p">()),</span>
+        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">){</span>
+            <span class="nx">alert</span><span class="p">(</span> <span class="s2">&quot;Data Saved: &quot;</span> <span class="o">+</span> <span class="nx">msg</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>And on the server end, here’s the code from the relevant controller.</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="n">savedata</span> <span class="o">=</span> <span class="o">{</span>
+        <span class="kt">def</span> <span class="n">json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">JSON</span>
+        <span class="c1">// do something useful with the data</span>
+        <span class="n">text</span><span class="o">.</span><span class="na">children</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
+               <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">data</span><span class="o">.</span><span class="na">title</span>
+         <span class="o">}</span>
+         <span class="n">render</span> <span class="s2">&quot;OK&quot;</span>
+ <span class="o">}</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:52:03.718785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/processing.html">processing</a>
+        /
+	<a href="/tag/computer-art.html">computer art</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
+<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it to get the distance from the edge and then use the square of that value to determine the transparency. This gives a smoother effect – if we don’t use the square then the edges don’t transition smoothly (probably something to do with the sensitivity of human vision / LCD monitors to colour being non-linear). Anyway, here’s the code:</p>
+<p>UPDATE – turns out that using <code>Math.hypot()</code> is very slow – switching to <code>Math.sqrt()</code> speeds up the code x10. The new code is below.</p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="nf">radialGradient</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">PGraphics</span> <span class="n">pg</span> <span class="o">=</span> <span class="n">createGraphics</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">JAVA2D</span><span class="o">);</span>
+  <span class="n">pg</span><span class="o">.</span><span class="na">beginDraw</span><span class="o">();</span>
+  <span class="n">pg</span><span class="o">.</span><span class="na">background</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+  <span class="kt">int</span> <span class="n">halfsize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// calculate distance to center</span>
+      <span class="c1">//float distance = (float) Math.hypot(i - size / 2, j - size / 2) / (size / 2);</span>
+      <span class="c1">//float distance = (float) sqrt(sq(i-size/2) + sq(j-size/2)) / (size/2);</span>
+      <span class="kt">float</span> <span class="n">xDist</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
+                <span class="kt">float</span> <span class="n">yDist</span> <span class="o">=</span>  <span class="n">j</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
+                <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">xDist</span><span class="o">*</span><span class="n">xDist</span> <span class="o">+</span> <span class="n">yDist</span><span class="o">*</span><span class="n">yDist</span><span class="o">)</span> <span class="o">/</span> <span class="n">halfsize</span><span class="o">;</span>
+      <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">scale</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="kt">float</span> <span class="n">transparency</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="o">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span><span class="o">);</span>
+      <span class="kt">int</span> <span class="n">thisColour</span> <span class="o">=</span> <span class="n">color</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kt">int</span><span class="o">(</span><span class="n">transparency</span><span class="o">));</span>
+      <span class="n">pg</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">thisColour</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="n">pg</span><span class="o">.</span><span class="na">endDraw</span><span class="o">();</span>
+  <span class="n">imageMode</span><span class="o">(</span><span class="n">CENTER</span><span class="o">);</span>
+  <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/radial-transparent-gradients-in-processingorg.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
             <article>
                 <h2><a href="/hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:52:03.546785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/grails.html">grails</a>
+        /
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/hibernate.html">hibernate</a>
+        /
+	<a href="/tag/lazyness.html">lazyness</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I’ve just run across this phenomenon for the first time and it turns out that hibernate can be even lazier than I thought!  To illustrate lets use this time-honoured example in Grails.  </p>
 <p>Here are our domain objects:</p>
 <div class="highlight"><pre><span class="kd">class</span> <span class="nc">Book</span> <span class="o">{</span>  
@@ -151,8 +508,306 @@ Martin's blog            </a>
     <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>  
     <span class="o">}</span>  
 <span class="o">}</span>  
-<span class="kd">class</span> <span class="nc">Author ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/hibernate-magic-with-lazy-evaluation.html">more ...</a>
+<span class="kd">class</span> <span class="nc">Author</span> <span class="o">{</span>  
+    <span class="n">String</span> <span class="n">name</span>  
+    <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span><span class="n">books</span> <span class="o">:</span> <span class="n">Book</span><span class="o">]</span>  
+    <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+</pre></div>
+
+
+<p>and we’ll add some sample data in our <code>bootstrap.groovy</code>:</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="n">init</span> <span class="o">=</span> <span class="o">{</span> <span class="n">servletContext</span> <span class="o">-&gt;</span>  
+    <span class="kt">def</span> <span class="n">alice</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Author</span><span class="o">(</span><span class="nl">name:</span> <span class="s1">&#39;alice&#39;</span><span class="o">).</span><span class="na">save</span><span class="o">()</span>  
+    <span class="kt">def</span> <span class="n">book1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Book</span><span class="o">(</span><span class="nl">title:</span> <span class="s1">&#39;book1&#39;</span><span class="o">)</span>  
+    <span class="kt">def</span> <span class="n">book2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Book</span><span class="o">(</span><span class="nl">title:</span> <span class="s1">&#39;book2&#39;</span><span class="o">)</span>  
+    <span class="n">alice</span><span class="o">.</span><span class="na">addToBooks</span><span class="o">(</span><span class="n">book1</span><span class="o">)</span>  
+    <span class="n">alice</span><span class="o">.</span><span class="na">addToBooks</span><span class="o">(</span><span class="n">book2</span><span class="o">)</span>  
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Now we’ll turn on SQL logging in <code>Datasource.groovy</code>, so we can see exactly when hibernate is issuing SQL queries:</p>
+<div class="highlight"><pre><span class="n">dataSource</span> <span class="o">{</span>  
+    <span class="n">dbCreate</span> <span class="o">=</span> <span class="s2">&quot;create-drop&quot;</span> <span class="c1">// one of &#39;create&#39;, &#39;create-drop&#39;,&#39;update&#39;  </span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:hsqldb:mem:devDB&quot;</span>  
+    <span class="n">loggingSql</span> <span class="o">=</span> <span class="kc">true</span>  
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Now let’s create a controller to hold our test code (just for convenience, this could also be done in a groovy console):</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">class</span> <span class="nc">TestController</span> <span class="o">{</span>
+
+    <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="o">{</span>
+
+        <span class="n">println</span> <span class="s2">&quot;starting controller&quot;</span>  
+        <span class="kt">def</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">Author</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="s1">&#39;alice&#39;</span><span class="o">)</span>  
+        <span class="n">println</span> <span class="s2">&quot;author name is $alice.name&quot;</span>  
+        <span class="kt">def</span> <span class="n">myBooks</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="na">books</span>  
+        <span class="n">println</span> <span class="s2">&quot;books are now stored in a variable&quot;</span>  
+        <span class="n">myBooks</span><span class="o">.</span><span class="na">each</span><span class="o">({</span><span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">title</span><span class="o">})</span>  
+        <span class="n">println</span> <span class="n">myBooks</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">name</span>  
+        <span class="n">render</span> <span class="s2">&quot;OK!&quot;</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+</pre></div>
+</td></tr></table>
+
+<p>This is pretty straightforward – we’re using a dynamic finder to retrieve the <code>Author</code> we added in the bootstrap script, then getting the list of <code>Books</code> and storing them in a variable, then printing the title of each book.</p>
+<p>Question: when do we expect to see the SQL query issued to retrieve the books? Grails uses lazy evaluation by default, so it won’t be at line 6, because we haven’t actually asked for the <code>books</code> field yet. I expected to see it at line 8 – here we are asking for the <code>books</code> field, so surely this is where hibernate will retrieve them. I was wrong – in fact the books are not retrieved until line 10, where we actually want to do something with the books. The output make this clear:</p>
+<div class="highlight"><pre>starting controller  
+Hibernate:  
+select  
+this_.id as id0_0_,  
+this_.version as version0_0_,  
+this_.name as name0_0_  
+from  
+author this_  
+where  
+this_.name=?  
+author name is alice  
+books are now stored in a variable  
+Hibernate:  
+select  
+books0_.author_id as author3_1_,  
+books0_.id as id1_,  
+books0_.id as id1_0_,  
+books0_.version as version1_0_,  
+books0_.author_id as author3_1_0_,  
+books0_.title as title1_0_  
+from  
+book books0_  
+where  
+books0_.author_id=?  
+book2  
+book1  
+org.hibernate.collection.PersistentSet  
+</pre></div>
+
+
+<p>So hibernate does not actually execute the SQL query to get the books when we ask for <code>alice.books</code>, but it is lazy enough to wait until we actually we try to iterate over the results. The last line of the output reveals how the magic happens – the object that <code>myBooks</code> points to is not a straightforward <code>List</code>, but a <a href="https://web.archive.org/web/20130624115433/https://www.hibernate.org/hib_docs/v3/api/org/hibernate/collection/PersistentSet.html"><code>PersistentSet</code></a>.</p>
+<p>This caused me a fair amount of confusion when I was trying to optimise a Grails action by minimising the number of SQL queries issued when retrieving a large number of objects from a database. Now that I know the way that it really works, I find it both cool, and a little bit scary that this is going on behind the scenes. A nice illustration of the trade-offs involved in using an ORM framework.</p>
+                        <a class="btn btn-default btn-xs" href="/hibernate-magic-with-lazy-evaluation.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:57.314785+00:00"> Fri 30 October 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/groovy.html">groovy</a>
+        /
+	<a href="/tag/functional-programming.html">functional programming</a>
+        /
+	<a href="/tag/higher-order-programming.html">higher order programming</a>
+        /
+	<a href="/tag/recursion.html">recursion</a>
+        /
+	<a href="/tag/sicp.html">sicp</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>I've been checking out the legendary MIT <a href="http://www.youtube.com/watch?v=2Op3QLzMgSY&amp;feature=list_related&amp;playnext=1&amp;list=SPE18841CABEA24090">Structure and Interpretation of Computer Programs</a> course from 1986 on YouTube, and it's fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don't think I will ever be able to hear <em>Jesu, joy of man's desiring</em> again without seeing that purple wizard. What's really striking to me is how quickly the course gets into territory that I (coming from a self-taught Perl/Java background) think of as pretty advanced. In the first three lectures we are introduced to:</p>
+<ul>
+<li>Recursive subroutines</li>
+<li>big-O notation</li>
+<li>passing functions around as variables</li>
+<li>building functions using higher-order programming</li>
+</ul>
+<p>Anyway, I thought that the example used to illustrate higher-order programming was pretty cool, so I decided to see if I could implement it in Groovy. The example involves writing a function to calculate the square root of a number using the <a href="http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method">Babylonian method </a>- start with a guess and repeatedly average the guess with the number divided by the guess, until the answer is close enough.</p>
+<p>Here it is in Groovy:</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="nf">abs</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>  
+        <span class="o">-</span><span class="n">x</span>  
+    <span class="k">else</span>  
+        <span class="n">x</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">guess</span><span class="o">){</span>  
+    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
+    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
+        <span class="k">return</span> <span class="n">guess</span>  
+    <span class="o">}</span>  
+    <span class="k">else</span><span class="o">{</span>  
+        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="mi">2</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
+        <span class="k">return</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">new_guess</span><span class="o">)</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+
+<span class="n">sqrt2</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+</pre></div>
+
+
+<p>and the output:</p>
+<div class="highlight"><pre>guess is 1  
+guess is 1.5  
+guess is 1.41666666665  
+guess is 1.414215686275 
+</pre></div>
+
+
+<p>I've defined an <code>abs()</code> closure because the built-in <code>.abs()</code> method complains about different types of numbers. The <code>sqrt2()</code> method itself is easy to read – given a guess, calculate how far off it is by squaring it, and either return the guess (it it's close enough) or use the averaging procedure to make a new guess and call <code>sqrt2()</code> again. We could make it a bit more concise by leaving off the explicit return statements – a Groovy method returns the value of the last expression that was evaluated, so we don't really need them (this is what I've done with my <code>abs()</code> method). Note that when we call the method in the last line, we have to supply it with an initial guess.</p>
+<p>The first step in abstraction is pretty obvious – let's do away with the hard-coded 2 and let the method take the number for which we want to take the square root as an argument.</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
+    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
+    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
+        <span class="n">guess</span>  
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>  
+        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
+        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span> <span class="o">-&gt;</span>  
+    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
+<span class="o">}</span>  
+<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</pre></div>
+
+
+<p>To make things a a little more convenient I’ve moved the iterative code to a closure called <code>sqrt_iter()</code>; the job of <code>sqrt()</code> now is just to supply the initial guess. Now we can ask for the square root of exotic numbers like five:</p>
+<div class="highlight"><pre>guess is 1  
+guess is 3  
+guess is 2.33333333335  
+guess is 2.238095238095  
+guess is 2.2360688956435
+</pre></div>
+
+
+<p>Up to this point there’s no higher-order programming going on. But now it starts to get interesting; we can extract the bits of code that are responsible for checking if the answer is good enough and for generating the next guess:</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="nf">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
+    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
+    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
+    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
+    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
+        <span class="n">guess</span>  
+    <span class="o">}</span>  
+    <span class="k">else</span><span class="o">{</span>  
+        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
+        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
+    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
+<span class="o">}</span>  
+<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</pre></div>
+
+
+<p>Now, what we are left with in <code>sqrt_iter()</code> is a generic procedure for solving a problem by generating successively better guesses until we get close enough. We can make this abstraction explicit by turning our improve / good enough methods into closures and having them as arguments to the main iteration method:</p>
+<div class="highlight"><pre><span class="n">sqrt_improve</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
+    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
+<span class="o">}</span>
+
+<span class="n">sqrt_goodEnough</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
+    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
+    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
+    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
+    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
+        <span class="n">guess</span>  
+    <span class="o">}</span>  
+    <span class="k">else</span><span class="o">{</span>  
+        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
+        <span class="n">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
+    <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
+<span class="o">}</span>  
+<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</pre></div>
+
+
+<p>I’ve changed the names of the closures to make things clearer. <code>sqrt_improve()</code> and <code>sqrt_goodEnough()</code> are the particular type of <code>improve</code> and <code>goodEnough</code> routines that are for solving square roots. Our iteration routine is now a generic one that take four arguments – a closure that can tell if a guess is good enough; a closure that can improve an existing guess, a number for which we’re trying to find the answer, and a guess. Note that the <code>generic_iter()</code> method now contains absolutely no logic to do with calculating square roots – it is completely generic. We can use it to solve any problem which we can express in terms of a way of checking if a guess is good enough, and a way of improving a guess.</p>
+<p>Here’s a completely brain-dead example; using the <code>generic_iter()</code> method to solve the problem of finding the smallest integer that is bigger than a given number:</p>
+<div class="highlight"><pre><span class="n">biggerThan_improve</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
+    <span class="n">guess</span> <span class="o">+</span> <span class="mi">1</span>  
+<span class="o">}</span>
+
+<span class="n">biggerThan_goodEnough</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
+   <span class="n">guess</span> <span class="o">&gt;</span> <span class="n">x</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">biggerThan</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
+    <span class="n">generic_iter</span><span class="o">(</span><span class="n">biggerThan_goodEnough</span><span class="o">,</span> <span class="n">biggerThan_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>  
+<span class="o">}</span>
+
+<span class="n">biggerThan</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</pre></div>
+
+
+<p>The <code>improve</code> closure just increments the guess by one; the good enough closure just checks whether the guess is bigger than the target number. The output is not particularly surprising:</p>
+<div class="highlight"><pre>guess is 0  
+guess is 1  
+guess is 2  
+guess is 3  
+guess is 4  
+guess is 5  
+guess is 6 
+</pre></div>
+
+
+<p>One final point: because we can return closures as values from methods in Groovy, we can redefine <code>generic_iter</code> so that rather than executing the iteration procedure, it returns it. So we can assign the result to another variable and use it later on:</p>
+<div class="highlight"><pre><span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">){</span>  
+    <span class="kt">def</span> <span class="n">returnClosure</span>  
+    <span class="n">returnClosure</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
+        <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
+        <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
+            <span class="n">guess</span>  
+        <span class="o">}</span>  
+        <span class="k">else</span><span class="o">{</span>  
+            <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
+            <span class="n">returnClosure</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
+        <span class="o">}</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">)</span>
+
+<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">1 ...</span></pre></div>
+                        <a class="btn btn-default btn-xs" href="/functional-abstraction-examples-from-scip-in-groovy.html">more ...</a>
+    
                 </div>
             </article>
             <hr/>
@@ -169,43 +824,104 @@ Martin's blog            </a>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
-
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="images/avatar.jpg"/>
+        </p>
+    <p>
+        <strong>About Martin Jones</strong><br/>
+        Coding, writing and teaching
+    </p>
+</div>
 <section class="well well-sm">
+
+
+
     <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
-                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
-              </ul>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pythonforbiologists.com" target="_blank">
+                Python for Biologists
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&field-keywords=&field-author=&field-title=&field-isbn=1514376989+%7C+1492346136+%7C+1495244377&field-publisher=&node=&field-p_n_condition-type=&p_n_feature_browse-bin=&field-subject=&field-language=&field-dateop=During&field-datemod=&field-dateyear=&sort=relevanceexprank&Adv-Srch-Books-Submit.x=20&Adv-Srch-Books-Submit.y=19" target="_blank">
+                My Python books
+            </a>
+        </li>
+      </ul>
+    </li>
+
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
+                            How to build a high-quality audio system in Ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/301-permanent-redirect-with-tomcat.html">
+                            301 permanent redirect with Tomcat
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">
+                            How to fix an infinite 301 redirect loop in WordPress
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-remove-a-broken-or-stripped-screw-ultimate-protip-collection.html">
+                            How to remove a broken or stripped screw: ultimate protip collection!
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/how-to-build-raiser-legs-for-chairs-or-sofas.html">
+                            How to build raiser legs for chairs or sofas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="/category/diy.html">
+                            <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/programming.html">
+                            <i class="fa fa-folder-open fa-lg"></i> programming
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/science.html">
+                            <i class="fa fa-folder-open fa-lg"></i> science
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/tech.html">
+                            <i class="fa fa-folder-open fa-lg"></i> tech
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/category/web.html">
+                            <i class="fa fa-folder-open fa-lg"></i> web
+                        </a>
+                    </li>
+                </ul>
             </li>
 
 
 
 
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://jinja.pocoo.org/" target="_blank">
-                Jinja2
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="#" target="_blank">
-                You can modify those links in your config file
-            </a>
-        </li>
-      </ul>
+    <li class="list-group-item"><h4><i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub Repos</span></h4>
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/mojones">@mojones</a> on GitHub
     </li>
     </ul>
 </section>
@@ -233,6 +949,43 @@ Martin's blog            </a>
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="/theme/js/respond.min.js"></script>
 
+    <script src="/theme/js/bodypadding.js"></script>
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = '/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'mojones',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mojones.net'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
 
 </body>
 </html>
