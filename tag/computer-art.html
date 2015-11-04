@@ -17,17 +17,17 @@
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="mojones.net"/>
-        <meta property="og:url" content=""/>
+        <meta property="og:url" content="http://mojones.net"/>
         <meta property="og:description" content="mojones.net"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.simplex.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://mojones.net/theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="http://mojones.net/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-        <link href="/static/custom.css" rel="stylesheet">
+    <link href="http://mojones.net/theme/css/pygments/solarizedlight.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://mojones.net/theme/css/style.css" type="text/css"/>
+        <link href="http://mojones.net/static/custom.css" rel="stylesheet">
 
 
 
@@ -45,29 +45,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://mojones.net/" class="navbar-brand">
 mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/diy.html">Diy</a>
+                            <a href="http://mojones.net/category/diy.html">Diy</a>
                         </li>
                         <li >
-                            <a href="/category/programming.html">Programming</a>
+                            <a href="http://mojones.net/category/programming.html">Programming</a>
                         </li>
                         <li >
-                            <a href="/category/science.html">Science</a>
+                            <a href="http://mojones.net/category/science.html">Science</a>
                         </li>
                         <li >
-                            <a href="/category/tech.html">Tech</a>
+                            <a href="http://mojones.net/category/tech.html">Tech</a>
                         </li>
                         <li >
-                            <a href="/category/web.html">Web</a>
+                            <a href="http://mojones.net/category/web.html">Web</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://mojones.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -76,7 +76,7 @@ mojones.net            </a>
 <!-- Banner -->
 <style>
 	#banner{
-	    background-image:url("/images/header.jpg");
+	    background-image:url("http://mojones.net/images/header.jpg");
 	}
 </style>
 
@@ -91,7 +91,7 @@ mojones.net            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
+                <h2><a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
@@ -102,19 +102,19 @@ mojones.net            </a>
 
 
         <span class="label label-default">Category</span>
-        <a href="/category/programming.html">programming</a>
+        <a href="http://mojones.net/category/programming.html">programming</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/processing.html">processing</a>
+	<a href="http://mojones.net/tag/processing.html">processing</a>
         /
-	<a href="/tag/groovy.html">groovy</a>
+	<a href="http://mojones.net/tag/groovy.html">groovy</a>
         /
-	<a href="/tag/java.html">java</a>
+	<a href="http://mojones.net/tag/java.html">java</a>
         /
-	<a href="/tag/computer-art.html">computer art</a>
+	<a href="http://mojones.net/tag/computer-art.html">computer art</a>
         /
-	<a href="/tag/metaprogramming.html">metaprogramming</a>
+	<a href="http://mojones.net/tag/metaprogramming.html">metaprogramming</a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
@@ -170,13 +170,13 @@ mojones.net            </a>
 <p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
 <div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
 </pre></div>
-                        <a class="btn btn-default btn-xs" href="/extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
+                        <a class="btn btn-default btn-xs" href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
     
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
+                <h2><a href="http://mojones.net/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
@@ -187,13 +187,13 @@ mojones.net            </a>
 
 
         <span class="label label-default">Category</span>
-        <a href="/category/programming.html">programming</a>
+        <a href="http://mojones.net/category/programming.html">programming</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/processing.html">processing</a>
+	<a href="http://mojones.net/tag/processing.html">processing</a>
         /
-	<a href="/tag/computer-art.html">computer art</a>
+	<a href="http://mojones.net/tag/computer-art.html">computer art</a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
@@ -228,7 +228,7 @@ mojones.net            </a>
   <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
 <span class="o">}</span>
 </pre></div>
-                        <a class="btn btn-default btn-xs" href="/radial-transparent-gradients-in-processingorg.html">more ...</a>
+                        <a class="btn btn-default btn-xs" href="http://mojones.net/radial-transparent-gradients-in-processingorg.html">more ...</a>
     
                 </div>
             </article>
@@ -270,42 +270,42 @@ mojones.net            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="/extending-java-number-classes-with-random-functions-in-groovy.html">
+                        <a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">
                             Extending Java number classes with random functions in Groovy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/radial-transparent-gradients-in-processingorg.html">
+                        <a href="http://mojones.net/radial-transparent-gradients-in-processingorg.html">
                             Radial transparent gradients in Processing.org
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+            <li class="list-group-item"><a href="http://mojones.net/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
                     <li class="list-group-item">
-                        <a href="/category/diy.html">
+                        <a href="http://mojones.net/category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/programming.html">
+                        <a href="http://mojones.net/category/programming.html">
                             <i class="fa fa-folder-open fa-lg"></i> programming
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/science.html">
+                        <a href="http://mojones.net/category/science.html">
                             <i class="fa fa-folder-open fa-lg"></i> science
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/tech.html">
+                        <a href="http://mojones.net/category/tech.html">
                             <i class="fa fa-folder-open fa-lg"></i> tech
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/web.html">
+                        <a href="http://mojones.net/category/web.html">
                             <i class="fa fa-folder-open fa-lg"></i> web
                         </a>
                     </li>
@@ -339,22 +339,22 @@ mojones.net            </a>
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://mojones.net/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://mojones.net/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://mojones.net/theme/js/respond.min.js"></script>
 
-    <script src="/theme/js/bodypadding.js"></script>
+    <script src="http://mojones.net/theme/js/bodypadding.js"></script>
     <!-- GitHub JS -->
     <script type="text/javascript">
         $(document).ready(function () {
             if (!window.jXHR) {
                 var jxhr = document.createElement('script');
                 jxhr.type = 'text/javascript';
-                jxhr.src = '/theme/js/jXHR.js';
+                jxhr.src = 'http://mojones.net/theme/js/jXHR.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(jxhr, s);
             }
@@ -367,7 +367,7 @@ mojones.net            </a>
             });
         });
     </script>
-    <script src="/theme/js/github.js" type="text/javascript"></script>
+    <script src="http://mojones.net/theme/js/github.js" type="text/javascript"></script>
     <!-- End GitHub JS Code -->
     <!-- Disqus -->
     <script type="text/javascript">

@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="/functional-abstraction-examples-from-scip-in-groovy.html">
+<link rel="canonical" href="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html">
 
         <meta name="author" content="Martin" />
         <meta name="keywords" content="groovy,functional programming,higher order programming,recursion,sicp" />
@@ -18,7 +18,7 @@
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Functional Abstraction examples from SCIP in Groovy"/>
-        <meta property="og:url" content="/functional-abstraction-examples-from-scip-in-groovy.html"/>
+        <meta property="og:url" content="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html"/>
         <meta property="og:description" content="I&#39;ve been checking out the legendary MIT Structure and Interpretation of Computer Programs course from 1986 on YouTube, and it&#39;s fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don&#39;t think I will ever be able to hear Jesu, joy of man&#39;s desiring again without seeing that purple wizard. What&#39;s really striking to me is how quickly the course gets into territory that I (coming from a self-taught Perl/Java background) think of as pretty advanced. In the first three lectures we are introduced to: Recursive subroutines big-O notation passing functions around as variables building functions using higher-order programming Anyway, I thought that the example used to illustrate higher-order programming was pretty cool, so I decided to see if I could implement it in Groovy. The example involves writing a function to calculate the square root of a number using the Babylonian method - start with a guess and repeatedly average the guess with the number divided by the guess, until the answer is close enough. Here it is in Groovy: def abs(x){ if (x &lt; 0) -x else x } def sqrt2(guess){ println &#34;guess is $guess&#34; def difference = abs((guess * guess) - 2) if (difference &lt; 0.001){ return guess } else{ def new_guess = ((2 / guess) + guess) / 2 return sqrt2(new_guess) } } sqrt2(1) and the output: guess is 1 guess is 1.5 guess is 1.41666666665 guess is 1.414215686275 I&#39;ve defined an abs() closure because the built-in .abs() method complains about different types of numbers. The sqrt2() method itself is easy to read – given a guess, calculate how far off it is by squaring it, and either return the guess (it it&#39;s close enough) or use the averaging procedure to make a new guess and call sqrt2() again. We could make it a bit more concise by leaving off the explicit return statements – a Groovy method returns the value of the last expression that was evaluated, so we don&#39;t really need them (this is what I&#39;ve done with my abs() method). Note that when we call the method in the last line, we have to supply it with an initial guess. The first step in abstraction is pretty obvious – let&#39;s do away with the hard-coded 2 and let the method take the number for which we want to take the square root as an argument. def sqrt_iter(x, guess){ println &#34;guess is $guess&#34; def difference = abs((guess * guess) - x) if (difference &lt; 0.001){ guess } else { def new_guess = ((x / guess) + guess) / 2 sqrt_iter(x, new_guess) } } def sqrt = { x -&gt; sqrt_iter(x, 1) } sqrt(5) To make things a a little more convenient I’ve moved the iterative code to a closure called sqrt_iter(); the job of sqrt() now is just to supply the initial guess. Now we can ask for the square root of exotic numbers like five: guess is 1 guess is 3 guess is 2.33333333335 guess is 2.238095238095 guess is 2.2360688956435 Up to this point there’s no higher-order programming going on. But now it starts to get interesting; we can extract the bits of code that are responsible for checking if the answer is good enough and for generating the next guess: def improve(x, guess){ ((x / guess) + guess) / 2 } def goodEnough(x, guess){ def difference = abs((guess * guess) - x) difference &lt; 0.001 } def sqrt_iter(x, guess){ println &#34;guess is $guess&#34; if (goodEnough(x, guess)){ guess } else{ def new_guess = improve(x, guess) sqrt_iter(x, new_guess) } } def sqrt(x){ sqrt_iter(x, 1) } sqrt(5) Now, what we are left with in sqrt_iter() is a generic procedure for solving a problem by generating successively better guesses until we get close enough. We can make this abstraction explicit by turning our improve / good enough methods into closures and having them as arguments to the main iteration method: sqrt_improve = { x, guess -&gt; ((x / guess) + guess) / 2 } sqrt_goodEnough = { x, guess -&gt; def difference = abs((guess * guess) - x) difference &lt; 0.001 } def generic_iter(goodEnough, improve, x, guess){ println &#34;guess is $guess&#34; if (goodEnough(x, guess)){ guess } else{ def new_guess = improve(x, guess) generic_iter(goodEnough, improve, x, new_guess) } } def sqrt(x){ generic_iter(sqrt_goodEnough, sqrt_improve, x, 1) } sqrt(5) I’ve changed the names of the closures to make things clearer. sqrt_improve() and sqrt_goodEnough() are the particular type of improve and goodEnough routines that are for solving square roots. Our iteration routine is now a generic one that take four arguments – a closure that can tell if a guess is good enough; a closure that can improve an existing guess, a number for which we’re trying to find the answer, and a guess. Note that the generic_iter() method now contains absolutely no logic to do with calculating square roots – it is completely generic. We can use it to solve any problem which we can express in terms of a way of checking if a guess is good enough, and a way of improving a guess. Here’s a completely brain-dead example; using the generic_iter() method to solve the problem of finding the smallest integer that is bigger than a given number: biggerThan_improve = {x, guess -&gt; guess + 1 } biggerThan_goodEnough = {x, guess -&gt; guess &gt; x } def biggerThan(x){ generic_iter(biggerThan_goodEnough, biggerThan_improve, x, 0) } biggerThan(5) The improve closure just increments the guess by one; the good enough closure just checks whether the guess is bigger than the target number. The output is not particularly surprising: guess is 0 guess is 1 guess is 2 guess is 3 guess is 4 guess is 5 guess is 6 One final point: because we can return closures as values from methods in Groovy, we can redefine generic_iter so that rather than executing the iteration procedure, it returns it. So we can assign the result to another variable and use it later on: def generic_iter(goodEnough, improve){ def returnClosure returnClosure = { x, guess -&gt; println &#34;guess is $guess&#34; if (goodEnough(x, guess)){ guess } else{ def new_guess = improve(x, guess) returnClosure(x, new_guess) } } } def sqrt = generic_iter(sqrt_goodEnough, sqrt_improve) sqrt(5, 1 ..."/>
         <meta property="article:published_time" content="2015-11-04" />
             <meta property="article:section" content="programming" />
@@ -31,12 +31,12 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.simplex.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://mojones.net/theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="http://mojones.net/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/solarizedlight.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-        <link href="/static/custom.css" rel="stylesheet">
+    <link href="http://mojones.net/theme/css/pygments/solarizedlight.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://mojones.net/theme/css/style.css" type="text/css"/>
+        <link href="http://mojones.net/static/custom.css" rel="stylesheet">
 
 
 
@@ -54,29 +54,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://mojones.net/" class="navbar-brand">
 mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/diy.html">Diy</a>
+                            <a href="http://mojones.net/category/diy.html">Diy</a>
                         </li>
                         <li class="active">
-                            <a href="/category/programming.html">Programming</a>
+                            <a href="http://mojones.net/category/programming.html">Programming</a>
                         </li>
                         <li >
-                            <a href="/category/science.html">Science</a>
+                            <a href="http://mojones.net/category/science.html">Science</a>
                         </li>
                         <li >
-                            <a href="/category/tech.html">Tech</a>
+                            <a href="http://mojones.net/category/tech.html">Tech</a>
                         </li>
                         <li >
-                            <a href="/category/web.html">Web</a>
+                            <a href="http://mojones.net/category/web.html">Web</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://mojones.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -85,7 +85,7 @@ mojones.net            </a>
 <!-- Banner -->
 <style>
 	#banner{
-	    background-image:url("/images/header.jpg");
+	    background-image:url("http://mojones.net/images/header.jpg");
 	}
 </style>
 
@@ -103,7 +103,7 @@ mojones.net            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/functional-abstraction-examples-from-scip-in-groovy.html"
+                    <a href="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html"
                        rel="bookmark"
                        title="Permalink to Functional Abstraction examples from SCIP in Groovy">
                         Functional Abstraction examples from SCIP in Groovy
@@ -122,19 +122,19 @@ mojones.net            </a>
 
 
         <span class="label label-default">Category</span>
-        <a href="/category/programming.html">programming</a>
+        <a href="http://mojones.net/category/programming.html">programming</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/groovy.html">groovy</a>
+	<a href="http://mojones.net/tag/groovy.html">groovy</a>
         /
-	<a href="/tag/functional-programming.html">functional programming</a>
+	<a href="http://mojones.net/tag/functional-programming.html">functional programming</a>
         /
-	<a href="/tag/higher-order-programming.html">higher order programming</a>
+	<a href="http://mojones.net/tag/higher-order-programming.html">higher order programming</a>
         /
-	<a href="/tag/recursion.html">recursion</a>
+	<a href="http://mojones.net/tag/recursion.html">recursion</a>
         /
-	<a href="/tag/sicp.html">sicp</a>
+	<a href="http://mojones.net/tag/sicp.html">sicp</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -319,11 +319,11 @@ guess is 6
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
-        <li><a href="/hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></li>
-        <li><a href="/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
-        <li><a href="/beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
-        <li><a href="/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
+        <li><a href="http://mojones.net/hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></li>
+        <li><a href="http://mojones.net/beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
+        <li><a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
+        <li><a href="http://mojones.net/how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
+        <li><a href="http://mojones.net/a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
     </ul>
 </section>
     <hr/>
@@ -336,7 +336,7 @@ guess is 6
             var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'functional-abstraction-examples-from-scip-in-groovy';
-                var disqus_url = '/functional-abstraction-examples-from-scip-in-groovy.html';
+                var disqus_url = 'http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -395,57 +395,57 @@ guess is 6
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="/301-permanent-redirect-with-tomcat.html">
+                        <a href="http://mojones.net/301-permanent-redirect-with-tomcat.html">
                             301 permanent redirect with Tomcat
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/beware-of-the-default-acegi-grails-plugin-setup.html">
+                        <a href="http://mojones.net/beware-of-the-default-acegi-grails-plugin-setup.html">
                             Beware of the default acegi Grails plugin setup
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/extending-java-number-classes-with-random-functions-in-groovy.html">
+                        <a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">
                             Extending Java number classes with random functions in Groovy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/functional-abstraction-examples-from-scip-in-groovy.html">
+                        <a href="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html">
                             Functional Abstraction examples from SCIP in Groovy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
+                        <a href="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
                             How to build a high-quality audio system in Ubuntu
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="list-group-item"><a href="/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+            <li class="list-group-item"><a href="http://mojones.net/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
                     <li class="list-group-item">
-                        <a href="/category/diy.html">
+                        <a href="http://mojones.net/category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/programming.html">
+                        <a href="http://mojones.net/category/programming.html">
                             <i class="fa fa-folder-open fa-lg"></i> programming
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/science.html">
+                        <a href="http://mojones.net/category/science.html">
                             <i class="fa fa-folder-open fa-lg"></i> science
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/tech.html">
+                        <a href="http://mojones.net/category/tech.html">
                             <i class="fa fa-folder-open fa-lg"></i> tech
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/category/web.html">
+                        <a href="http://mojones.net/category/web.html">
                             <i class="fa fa-folder-open fa-lg"></i> web
                         </a>
                     </li>
@@ -479,22 +479,22 @@ guess is 6
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://mojones.net/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://mojones.net/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://mojones.net/theme/js/respond.min.js"></script>
 
-    <script src="/theme/js/bodypadding.js"></script>
+    <script src="http://mojones.net/theme/js/bodypadding.js"></script>
     <!-- GitHub JS -->
     <script type="text/javascript">
         $(document).ready(function () {
             if (!window.jXHR) {
                 var jxhr = document.createElement('script');
                 jxhr.type = 'text/javascript';
-                jxhr.src = '/theme/js/jXHR.js';
+                jxhr.src = 'http://mojones.net/theme/js/jXHR.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(jxhr, s);
             }
@@ -507,7 +507,7 @@ guess is 6
             });
         });
     </script>
-    <script src="/theme/js/github.js" type="text/javascript"></script>
+    <script src="http://mojones.net/theme/js/github.js" type="text/javascript"></script>
     <!-- End GitHub JS Code -->
     <!-- Disqus -->
     <script type="text/javascript">
