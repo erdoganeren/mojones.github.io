@@ -91,70 +91,12 @@ mojones.net            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
-                    <div class="well well-sm">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:52:03.718785+00:00"> Fri 30 October 2015</time>
-    </span>
-
-
-
-        <span class="label label-default">Category</span>
-        <a href="/category/programming.html">programming</a>
-
-
-<span class="label label-default">Tags</span>
-	<a href="/tag/processing.html">processing</a>
-        /
-	<a href="/tag/computer-art.html">computer art</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
-<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it to get the distance from the edge and then use the square of that value to determine the transparency. This gives a smoother effect – if we don’t use the square then the edges don’t transition smoothly (probably something to do with the sensitivity of human vision / LCD monitors to colour being non-linear). Anyway, here’s the code:</p>
-<p>UPDATE – turns out that using <code>Math.hypot()</code> is very slow – switching to <code>Math.sqrt()</code> speeds up the code x10. The new code is below.</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">radialGradient</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">PGraphics</span> <span class="n">pg</span> <span class="o">=</span> <span class="n">createGraphics</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">JAVA2D</span><span class="o">);</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">beginDraw</span><span class="o">();</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">background</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-  <span class="kt">int</span> <span class="n">halfsize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
-
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-      <span class="c1">// calculate distance to center</span>
-      <span class="c1">//float distance = (float) Math.hypot(i - size / 2, j - size / 2) / (size / 2);</span>
-      <span class="c1">//float distance = (float) sqrt(sq(i-size/2) + sq(j-size/2)) / (size/2);</span>
-      <span class="kt">float</span> <span class="n">xDist</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">yDist</span> <span class="o">=</span>  <span class="n">j</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">xDist</span><span class="o">*</span><span class="n">xDist</span> <span class="o">+</span> <span class="n">yDist</span><span class="o">*</span><span class="n">yDist</span><span class="o">)</span> <span class="o">/</span> <span class="n">halfsize</span><span class="o">;</span>
-      <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">scale</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-      <span class="o">}</span>
-      <span class="kt">float</span> <span class="n">transparency</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="o">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span><span class="o">);</span>
-      <span class="kt">int</span> <span class="n">thisColour</span> <span class="o">=</span> <span class="n">color</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kt">int</span><span class="o">(</span><span class="n">transparency</span><span class="o">));</span>
-      <span class="n">pg</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">thisColour</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-
-  <span class="n">pg</span><span class="o">.</span><span class="na">endDraw</span><span class="o">();</span>
-  <span class="n">imageMode</span><span class="o">(</span><span class="n">CENTER</span><span class="o">);</span>
-  <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
-                        <a class="btn btn-default btn-xs" href="/radial-transparent-gradients-in-processingorg.html">more ...</a>
-    
-                </div>
-            </article>
-            <hr/>
-            <article>
                 <h2><a href="/extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-10-30T14:51:56.562785+00:00"> Fri 30 October 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T16:44:12.561255+00:00"> Wed 04 November 2015</time>
     </span>
 
 
@@ -233,6 +175,64 @@ mojones.net            </a>
                 </div>
             </article>
             <hr/>
+            <article>
+                <h2><a href="/radial-transparent-gradients-in-processingorg.html">Radial transparent gradients in Processing.org</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T16:44:12.557255+00:00"> Wed 04 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="/category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/processing.html">processing</a>
+        /
+	<a href="/tag/computer-art.html">computer art</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
+<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it to get the distance from the edge and then use the square of that value to determine the transparency. This gives a smoother effect – if we don’t use the square then the edges don’t transition smoothly (probably something to do with the sensitivity of human vision / LCD monitors to colour being non-linear). Anyway, here’s the code:</p>
+<p>UPDATE – turns out that using <code>Math.hypot()</code> is very slow – switching to <code>Math.sqrt()</code> speeds up the code x10. The new code is below.</p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="nf">radialGradient</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">PGraphics</span> <span class="n">pg</span> <span class="o">=</span> <span class="n">createGraphics</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">JAVA2D</span><span class="o">);</span>
+  <span class="n">pg</span><span class="o">.</span><span class="na">beginDraw</span><span class="o">();</span>
+  <span class="n">pg</span><span class="o">.</span><span class="na">background</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+  <span class="kt">int</span> <span class="n">halfsize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// calculate distance to center</span>
+      <span class="c1">//float distance = (float) Math.hypot(i - size / 2, j - size / 2) / (size / 2);</span>
+      <span class="c1">//float distance = (float) sqrt(sq(i-size/2) + sq(j-size/2)) / (size/2);</span>
+      <span class="kt">float</span> <span class="n">xDist</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
+                <span class="kt">float</span> <span class="n">yDist</span> <span class="o">=</span>  <span class="n">j</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
+                <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">xDist</span><span class="o">*</span><span class="n">xDist</span> <span class="o">+</span> <span class="n">yDist</span><span class="o">*</span><span class="n">yDist</span><span class="o">)</span> <span class="o">/</span> <span class="n">halfsize</span><span class="o">;</span>
+      <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">scale</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="kt">float</span> <span class="n">transparency</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="o">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span><span class="o">);</span>
+      <span class="kt">int</span> <span class="n">thisColour</span> <span class="o">=</span> <span class="n">color</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kt">int</span><span class="o">(</span><span class="n">transparency</span><span class="o">));</span>
+      <span class="n">pg</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">thisColour</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="n">pg</span><span class="o">.</span><span class="na">endDraw</span><span class="o">();</span>
+  <span class="n">imageMode</span><span class="o">(</span><span class="n">CENTER</span><span class="o">);</span>
+  <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+                        <a class="btn btn-default btn-xs" href="/radial-transparent-gradients-in-processingorg.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
 
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -270,13 +270,13 @@ mojones.net            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="/radial-transparent-gradients-in-processingorg.html">
-                            Radial transparent gradients in Processing.org
+                        <a href="/extending-java-number-classes-with-random-functions-in-groovy.html">
+                            Extending Java number classes with random functions in Groovy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/extending-java-number-classes-with-random-functions-in-groovy.html">
-                            Extending Java number classes with random functions in Groovy
+                        <a href="/radial-transparent-gradients-in-processingorg.html">
+                            Radial transparent gradients in Processing.org
                         </a>
                     </li>
                 </ul>
