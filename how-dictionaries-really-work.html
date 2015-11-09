@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>How dictionaries really work - mojones.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="./how-dictionaries-really-work.html">
+
+        <meta name="author" content="Martin" />
+        <meta name="keywords" content="Python,language agnostic,hash,dict,associative array" />
+        <meta name="description" content="Preface This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as hashes, HashMaps, dictionaries, dicts, associative arrays, or symbol tables. If you&#39;re already familiar with hash tables, you&#39;ll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved! Introduction *The manager of the nightclub is a programmer, hence the zero-indexed numbering :-) Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook. The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let&#39;s say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number. The problem with this system The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer&#39;s description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you&#39;ll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket. The name tag system One night you decide that you&#39;ve had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you&#39;ll write their name down on a tag and attach it to the coat before you put it on a hook. Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can&#39;t forget that!) and go through the coats one-at-a-time until you find the one with the correct name. We&#39;ll assume, for the purposes of this story, that you never get two customers with the same name. How does this new process compare to the old one, speed-wise? Let&#39;s say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let&#39;s also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you&#39;ll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn&#39;t as fast as the numbered-ticket system if the customer has their ticket, but it&#39;s much faster than the numbered-tickets system if the customer loses their ticket! The first letter system One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don&#39;t correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You&#39;ll still attach a name tag, just like before. Here&#39;s where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. It&#39;s likely that there will be more than one coat on the hook, but it&#39;s also likely that there will be ..." />
+
+        <meta property="og:site_name" content="mojones.net" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="How dictionaries really work"/>
+        <meta property="og:url" content="./how-dictionaries-really-work.html"/>
+        <meta property="og:description" content="Preface This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as hashes, HashMaps, dictionaries, dicts, associative arrays, or symbol tables. If you&#39;re already familiar with hash tables, you&#39;ll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved! Introduction *The manager of the nightclub is a programmer, hence the zero-indexed numbering :-) Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook. The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let&#39;s say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number. The problem with this system The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer&#39;s description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you&#39;ll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket. The name tag system One night you decide that you&#39;ve had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you&#39;ll write their name down on a tag and attach it to the coat before you put it on a hook. Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can&#39;t forget that!) and go through the coats one-at-a-time until you find the one with the correct name. We&#39;ll assume, for the purposes of this story, that you never get two customers with the same name. How does this new process compare to the old one, speed-wise? Let&#39;s say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let&#39;s also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you&#39;ll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn&#39;t as fast as the numbered-ticket system if the customer has their ticket, but it&#39;s much faster than the numbered-tickets system if the customer loses their ticket! The first letter system One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don&#39;t correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You&#39;ll still attach a name tag, just like before. Here&#39;s where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. It&#39;s likely that there will be more than one coat on the hook, but it&#39;s also likely that there will be ..."/>
+        <meta property="article:published_time" content="2015-11-09" />
+            <meta property="article:section" content="programming" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:tag" content="language agnostic" />
+            <meta property="article:tag" content="hash" />
+            <meta property="article:tag" content="dict" />
+            <meta property="article:tag" content="associative array" />
+            <meta property="article:author" content="Martin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="./theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="./theme/css/pygments/autumn.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+        <link href="./static/custom.css" rel="stylesheet">
+
+
+
+
+
+        <script src="./theme/js/jquery.min.js"></script>
+
+        <script src="./theme/js/jquery.sidenotes.js"></script>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" class="navbar-brand">
+mojones.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="./category/diy.html">Diy</a>
+                        </li>
+                        <li class="active">
+                            <a href="./category/programming.html">Programming</a>
+                        </li>
+                        <li >
+                            <a href="./category/science.html">Science</a>
+                        </li>
+                        <li >
+                            <a href="./category/tech.html">Tech</a>
+                        </li>
+                        <li >
+                            <a href="./category/web.html">Web</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<style>
+	#banner{
+	    background-image:url("./images/header.jpg");
+	}
+</style>
+
+<div id="banner">
+	<div class="container">
+		<div class="copy">
+			<h1>mojones.net</h1>
+		</div>
+	</div>
+</div><!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="./how-dictionaries-really-work.html"
+                       rel="bookmark"
+                       title="Permalink to How dictionaries really work">
+                        How dictionaries really work
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-09T15:25:40.715744+00:00"> Mon 09 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="./category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="./tag/python.html">Python</a>
+        /
+	<a href="./tag/language-agnostic.html">language agnostic</a>
+        /
+	<a href="./tag/hash.html">hash</a>
+        /
+	<a href="./tag/dict.html">dict</a>
+        /
+	<a href="./tag/associative-array.html">associative array</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Preface</h2>
+<p>This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as <strong>hashes</strong>, <strong>HashMaps</strong>, <strong>dictionaries</strong>, <strong>dicts</strong>, <strong>associative arrays</strong>, or <strong>symbol tables</strong>. </p>
+<p>If you're already familiar with hash tables, you'll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved!</p>
+<h2>Introduction</h2>
+<aside>
+<p>*The manager of the nightclub is a programmer, hence the zero-indexed numbering :-)</p>
+</aside>
+<p>Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. </p>
+<p><img alt="fig1" src="images/coat_1.png" /></p>
+<p>When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook.</p>
+<p><img alt="fig1" src="images/coat_2.png" /></p>
+<p>The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let's say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number.</p>
+<h2>The problem with this system</h2>
+<p>The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer's description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you'll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket.</p>
+<h2>The name tag system</h2>
+<p>One night you decide that you've had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you'll write their name down on a tag and attach it to the coat before you put it on a hook. </p>
+<p><img alt="fig1" src="images/coat_3.png" /></p>
+<p>Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can't forget that!) and go through the coats one-at-a-time until you find the one with the correct name. </p>
+<p><img alt="fig1" src="images/coat_4.png" /></p>
+<p>We'll assume, for the purposes of this story, that you never get two customers with the same name.</p>
+<p>How does this new process compare to the old one, speed-wise? Let's say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let's also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you'll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn't as fast as the numbered-ticket system if the customer has their ticket, but it's much faster than the numbered-tickets system if the customer loses their ticket!</p>
+<h2>The first letter system</h2>
+<p>One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don't correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You'll still attach a name tag, just like before.</p>
+<p><img alt="fig1" src="images/coat_5.png" /></p>
+<p>Here's where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. </p>
+<p><img alt="fig1" src="images/coat_6.png" /></p>
+<p>It's likely that there will be more than one coat on the hook, but it's also likely that there will be far fewer than fifty, so this approach should still be a lot faster than the original name tag system. To figure out how much faster, though, will require a bit of work, because it depends on how many coats, on average, are on each hook which, in turn, depends on the distribution of names among your customers. In the worse-case scenario, all one hundred of your customers will have names that start with the same letter, so all one hundred coats will be on the same hook and you will be no better off than under the original system! In the best-case scenario, there will be around four customers whose name starts with each letter, so there'll be four coats per hook. The reality is likely to lie somewhere between the two.</p>
+<p>To figure out the expected distribution of coats across hooks, we'll use <a href="http://names.mongabay.com/male_names.htm">this list of the 100 most common names in the US</a> (you can, of course, substitute names from any country and get similar results). Here are the names as a list:</p>
+<div class="highlight"><pre>JAMES,JOHN,ROBERT,MICHAEL,WILLIAM,DAVID,RICHARD,CHARLES,JOSEPH,THOMAS,CHRISTOPHER,DANIEL,PAUL,MARK,DONALD,GEORGE,KENNETH,STEVEN,EDWARD,BRIAN,RONALD,ANTHONY,KEVIN,JASON,MATTHEW,GARY,TIMOTHY,JOSE,LARRY,JEFFREY,FRANK,SCOTT,ERIC,STEPHEN,ANDREW,RAYMOND,GREGORY,JOSHUA,JERRY,DENNIS,WALTER,PATRICK,PETER,HAROLD,DOUGLAS,HENRY,CARL,ARTHUR,RYAN,ROGER,JOE,JUAN,JACK,ALBERT,JONATHAN,JUSTIN,TERRY,GERALD,KEITH,SAMUEL,WILLIE,RALPH,LAWRENCE,NICHOLAS,ROY,BENJAMIN,BRUCE,BRANDON,ADAM,HARRY,FRED,WAYNE,BILLY,STEVE,LOUIS,JEREMY,AARON,RANDY,HOWARD,EUGENE,CARLOS,RUSSELL,BOBBY,VICTOR,MARTIN,ERNEST,PHILLIP,TODD,JESSE,CRAIG,ALAN, SHAWN,CLARENCE,SEAN,PHILIP,CHRIS,JOHNNY,EARL,JIMMY,ANTONIO
+</pre></div>
+
+
+<p>We'll write a quick Python script to figure out the number of names that start with each letter. Don't worry if you can't read Python - we're only interested in the result. <a href="static/names.txt">Click here</a> to download the text file of names if you want to play along at home.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
+<span class="n">letter_count</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">):</span>
+ <span class="n">first_letter</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+ <span class="n">letter_count</span><span class="p">[</span><span class="n">first_letter</span><span class="p">]</span> <span class="o">=</span> <span class="n">letter_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">first_letter</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">:</span>
+ <span class="k">print</span><span class="p">(</span><span class="n">letter</span> <span class="o">+</span> <span class="s">&#39; : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">letter_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+</pre></div>
+
+
+<p>The output from the script shows that, as we expected, the distribution of first letters is far from even:</p>
+<div class="highlight"><pre><span class="n">A</span> <span class="o">:</span> <span class="mi">8</span>
+<span class="n">B</span> <span class="o">:</span> <span class="mi">6</span>
+<span class="n">C</span> <span class="o">:</span> <span class="mi">7</span>
+<span class="n">D</span> <span class="o">:</span> <span class="mi">5</span>
+<span class="n">E</span> <span class="o">:</span> <span class="mi">5</span>
+<span class="n">F</span> <span class="o">:</span> <span class="mi">2</span>
+<span class="n">G</span> <span class="o">:</span> <span class="mi">4</span>
+<span class="n">H</span> <span class="o">:</span> <span class="mi">4</span>
+<span class="n">I</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">J</span> <span class="o">:</span> <span class="mi">17</span>
+<span class="n">K</span> <span class="o">:</span> <span class="mi">3</span>
+<span class="n">L</span> <span class="o">:</span> <span class="mi">3</span>
+<span class="n">M</span> <span class="o">:</span> <span class="mi">4</span>
+<span class="n">N</span> <span class="o">:</span> <span class="mi">1</span>
+<span class="n">O</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">P</span> <span class="o">:</span> <span class="mi">5</span>
+<span class="n">Q</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">R</span> <span class="o">:</span> <span class="mi">10</span>
+<span class="n">S</span> <span class="o">:</span> <span class="mi">7</span>
+<span class="n">T</span> <span class="o">:</span> <span class="mi">4</span>
+<span class="n">U</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">V</span> <span class="o">:</span> <span class="mi">1</span>
+<span class="n">W</span> <span class="o">:</span> <span class="mi">4</span>
+<span class="n">X</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">Y</span> <span class="o">:</span> <span class="mi">0</span>
+<span class="n">Z</span> <span class="o">:</span> <span class="mi">0</span>
+</pre></div>
+
+
+<aside>
+<p>Derail for a future post: is there something about names beginning with J that make them particularly prone to being given diminutive versions? John/Johnny, Jerry/Jeremy, etc.</p>
+</aside>
+<p>The J's are particularly well-represented, partly thanks to diminutive versions of names being listed separately. Some letters, like X, Y and Z, aren't represented at all. Here's the distribution as a chart with letters along the bottom and counts up the side:</p>
+<iframe width="600" height="300" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/278.embed"></iframe>
+
+<aside>
+<p>*Figuring out the expected average time across all customers is a bit involved, since we have to take into account that different letters will have to be checked different numbers of times, so for the purposes of this story, we'll just look at best- and worse-case scenarios.</p>
+</aside>
+<p>The patterns are pretty clear. What are the timings like under this new system? For a customer who's name begins with J, the outlook is not great. It takes two seconds to go to the correct hook, and one second to check each tag. If there are 17 coats on the hook, you'll have to check 8.5 of them on average before you find the right one, so the expected time to find the customers coat is 10.5 seconds. For a customer who's name begins with N, the story is better - it takes two seconds to go to the correct hook, and there's only a single coat so you don't even need to check the tag*.</p>
+<p>So, you go on using this new system. It's not quite as fast as a perfectly-working numbered-ticket system, but it's much faster than searching through the coats one-by-one, even for those unlucky customers who's name starts with J or R.</p>
+<h2>From letters to numbers</h2>
+<p>One evening you get to work after being on holiday for a week, only to find that somebody has removed your carefully written letter labels! You are halfway through making a new set of labels when you have a sudden realization - the labels on the hooks are not important. All that matters is that you have a consistent system for translating a name to a number, and that you use the same system to figure out the hook for both dropping coats off, and picking them up.</p>
+<p>So you write down on a bit of paper "A=0, B=1, C=2", etc. and pin it up next to your desk. Now when a customer drops off their coat, you just look up the appropriate number for the first letter of their name and put their coat on the hook with that number. </p>
+<p><img alt="fig1" src="images/coat_8.png" /></p>
+<p>When a customer comes to pick their coat up, you look up the number of the hook in exactly the same way.</p>
+<p><img alt="fig1" src="images/coat_9.png" /></p>
+<h2>The first-two-letters system</h2>
+<p>Now that you've had your flash of insight about the unimportance of the labels, you start to wonder whether you could make things even faster by inventing a different system for translating names to numbers. After thinking for a while, you come up with two important criteria for such a system:</p>
+<ul>
+<li>The same name must always translate to the same number </li>
+<li>There should be an even distribution of coats across numbers, even if many of the names are similar</li>
+</ul>
+<p>The current system - using the first letter of the name - satisfies the first criterion, but doesn't do very well on the second. Similar names - i.e. ones that start with the same letter - are translated to the same number, which results in a very uneven distribution. If we look at the chart showing the distribution of coats across hooks, but this time include all one hundred (including the empty ones), we can see how bad the current system is:</p>
+<iframe width="600" height="300" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/283.embed"></iframe>
+
+<p>Because it only takes into account the first letter of each name, it will never use any of the hooks above number 25. One possible improvement would be to add together the numbers for both the first <strong>and</strong> second letters of each name. Here's a Python script that does just that:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
+<span class="n">number_count</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">letter2number</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">26</span><span class="p">):</span>
+    <span class="n">letter2number</span><span class="p">[</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">):</span>
+    <span class="n">first_letter_number</span> <span class="o">=</span> <span class="n">letter2number</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">second_letter_number</span> <span class="o">=</span> <span class="n">letter2number</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">hook_number</span> <span class="o">=</span> <span class="n">first_letter_number</span> <span class="o">+</span> <span class="n">second_letter_number</span>
+    <span class="n">number_count</span><span class="p">[</span><span class="n">hook_number</span><span class="p">]</span> <span class="o">=</span> <span class="n">number_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">hook_number</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; , &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+</pre></div>
+
+
+<p>Again, don't worry if you can't read the code - the important thing is the result:</p>
+<iframe width="600" height="300" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/289.embed"></iframe>
+
+<p>It's certainly an improvement on the first-letter-only system. Now the most crowded hook only has 9 coats on it (rather than 17) and a few more of the higher-numbered hooks are populated. But about half the hooks still have no coats at all on them at all.</p>
+<p>The next logical step is to also add on the number for the third letter, then the fourth, and so on. But it occurs to you that there is a couple of fundamental problems with this approach. At some point, you are going to get a summed number for the name that is greater than 99, at which point you won't be able to find a hook to hang the coat on. Also, the numbering approach you've been using so far doesn't do a great job of separating out names because it doesn't take into account the position of each letter. The letter C in a name results in adding 2 to the number regardless of whether it is the first letter, the last letter, or somewhere in the middle.</p>
+<h2>The all-letters system</h2>
+<p>Here's a way of solving the problem: multiply the number for each letter by its position in the name. So a letter C as the first character in the name would score 2, as the second character would score 4, etc. This should lead to a more even distribution across numbers- but how about names for which the score is greater than 99? Suddenly it occurs to you - just take the last two digits of the overall score and use that to determine the hook number. Here's some code that implements the scheme:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
+<span class="n">number_count</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">letter2number</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">26</span><span class="p">):</span>
+    <span class="n">letter2number</span><span class="p">[</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">position</span><span class="p">,</span> <span class="n">letter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)):</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="p">(</span><span class="n">letter2number</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">*</span> <span class="n">position</span><span class="p">)</span>
+    <span class="n">hook_number</span> <span class="o">=</span>  <span class="n">score</span> <span class="o">%</span> <span class="mi">100</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">hook_number</span><span class="p">))</span>
+    <span class="n">number_count</span><span class="p">[</span><span class="n">hook_number</span><span class="p">]</span> <span class="o">=</span> <span class="n">number_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">hook_number</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; , &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+</pre></div>
+
+
+<p>and here's the resulting distribution:</p>
+<iframe width="600" height="300" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/295.embed"></iframe>
+
+<p>This is clearly the best system yet! Under this scheme, the majority of hooks have one coat on them - just like we wanted - and there are relatively few empty ones. We won't bother going into the calculations, but it's clear from the chart that most of your customers will not have to wait very long to get their coats.</p>
+<h2>A general solution</h2>
+<p>Not long after you come up with this final scheme, you get a new job in a much bigger nightclub. This new nightclub has no fewer than one thousand coat hooks! On your first night working there you are nervous - how will your coat checking method work on such a large scale? - but you quickly find out that it works perfectly. All you have to do is take the last three digits of the score for a given name, rather than the last two.</p>
+<h2>Back to programming</h2>
+<p>Time to move from the story to reality and ask ourselves what any of this has to do with programming. Well:</p>
+<ul>
+<li>The customers (or rather their names) and their coats are <strong>keys</strong> and <strong>values</strong> respectively</li>
+<li>The process of dropping off a coat is equivalent to <strong>storing</strong> a value in a hash</li>
+<li>The process of picking up a coat is equivalent to <strong>retrieving</strong> a value from a hash</li>
+<li>The coat hooks are the equivalent of <strong>memory locations</strong> (just as you can quickly pick up a coat off a given hook, the computer can quickly retrieve data from a given memory location)</li>
+<li>The process of converting a customer name (a key) into a hook number (a memory location) is the equivalent of a <strong>hash function</strong></li>
+<li>When two coats are put on the same hook (i.e. two customer names translate to the same hook number), this is equivalent to a <strong>hash collision</strong></li>
+</ul>
+<p>The number of coat hooks is equivalent to the number of buckets in the hash. Just as in the code above, many real-life hash functions use the modulus operator to split items into a set number of buckets.</p>
+<p>The timings that I have used are an attempt to reflect what's going on in the computer, and to illustrate why hashes are extremely fast at inserting and retrieving data. Retrieving data from a specific memory location is very fast, just like going to a specific hook. Searching through a large number of unsorted pieces of data (like in the name tag system) is very slow. While in real life, calculating the hook number for a given name would probably be quite slow, even with a calculator, a computer can carry out a similar hash function very rapidly.</p>
+<p>Of course, most implementations of hash tables are more sophisticated that the outline we've drawn here. One big drawback of our coat-hook system is that we need to specify the number of hooks in advance, and to make sure that it's suitable for the number of items of data (coats!) we want to store. Real-life implementations are usually capable of dynamically altering the number of hooks (or memory locations), which makes them considerably more complex.</p>
+<p><strong>Image credits:</strong></p>
+<p>coat by Rocky Xie from the Noun Project,
+Hook by Thomas Hirter from the Noun Project,
+Arrow by Pham Thi Dieu Linh from the Noun Project,
+Ticket by Gonzalo Bravo from the Noun Project,
+person by Alexander Smith from the Noun Project,
+Tag by PeiYing Tang from the Noun Project,
+speech-bubble by Olyn LeRoy from the Noun Project,
+Arrow by Pham Thi Dieu Linh from the Noun Project</p>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="./how-to-pick-bad-function-and-variable-names.html">How to pick bad function and variable names</a></li>
+    </ul>
+</section>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'how-dictionaries-really-work';
+                var disqus_url = './how-dictionaries-really-work.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="images/avatar.jpg"/>
+        </p>
+    <p>
+        <strong>About Martin Jones</strong><br/>
+        Coding, writing and teaching
+    </p>
+</div>
+<section class="well well-sm">
+
+
+
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pythonforbiologists.com" target="_blank">
+                Python for Biologists
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&field-keywords=&field-author=&field-title=&field-isbn=1514376989+%7C+1492346136+%7C+1495244377&field-publisher=&node=&field-p_n_condition-type=&p_n_feature_browse-bin=&field-subject=&field-language=&field-dateop=During&field-datemod=&field-dateyear=&sort=relevanceexprank&Adv-Srch-Books-Submit.x=20&Adv-Srch-Books-Submit.y=19" target="_blank">
+                My Python books
+            </a>
+        </li>
+      </ul>
+    </li>
+
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="./how-dictionaries-really-work.html">
+                            How dictionaries really work
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./how-to-pick-bad-function-and-variable-names.html">
+                            How to pick bad function and variable names
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">
+                            How to use jQuery to send JSON data to a Grails app
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./radial-transparent-gradients-in-processingorg.html">
+                            Radial transparent gradients in Processing.org
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./hibernate-magic-with-lazy-evaluation.html">
+                            Hibernate magic with lazy evaluation
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="./"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="./category/diy.html">
+                            <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/programming.html">
+                            <i class="fa fa-folder-open fa-lg"></i> programming
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/science.html">
+                            <i class="fa fa-folder-open fa-lg"></i> science
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/tech.html">
+                            <i class="fa fa-folder-open fa-lg"></i> tech
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/web.html">
+                            <i class="fa fa-folder-open fa-lg"></i> web
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub Repos</span></h4>
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/mojones">@mojones</a> on GitHub
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Martin Jones
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="./theme/js/respond.min.js"></script>
+
+    <script src="./theme/js/bodypadding.js"></script>
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = './theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'mojones',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+
+</body>
+</html>
