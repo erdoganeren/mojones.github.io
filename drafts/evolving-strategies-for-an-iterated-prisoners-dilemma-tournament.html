@@ -9,38 +9,48 @@
 
 
 
-<link rel="canonical" href="http://mojones.net/drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
+<link rel="canonical" href="../drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
 
         <meta name="author" content="Martin" />
-        <meta name="description" content="Content goes here" />
+        <meta name="keywords" content="python,evolution,axelrod,prisoners dilemma,game theory" />
+        <meta name="description" content="Introduction This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner&#39;s Dilemma game (actually, the version known as Iterated Prisoner&#39;s Dilemma, hereafter referred to as IPD). If you&#39;re not already familiar with the Prisoner&#39;s Dilemma, head over to the documentation and read this background. The impetus for this project was hearing about (and then working on a code sprint for) the Axelrod library at PyConUk 2015. Axelrod is a Python library which provides a framework for running IPD tournaments. This makes it very easy to play around with different strategies. Strategies are implemented as classes which have a single method, strategy() which takes as its argument an opponent object, and returns an action. Actions are represented by C for cooperate and D for defect. For example, here&#39;s the famous Tit for tat strategy that won the original Axelrod tournament in 1980, which can be summarized as &#34;co-operate on the first turn, then copy the opponent&#39;s last action&#34;: def strategy(self, opponent): &#34;&#34;&#34;This is the actual strategy&#34;&#34;&#34; # First move if len(self.history) == 0: return C # React to the opponent&#39;s last move if opponent.history[-1] == D: return D return C *So-called because it appears to cooperate for a long time, then defects near the end of the match. As we can see, the player has access to its own history through the self.history variable and to the opponent&#39;s history though the opponent.history variable. Players can implement more sophisticated strategies by examining these variables, and they also have access to the length of the match. For example, when I first encountered the Axelrod library the winning strategy was called DoubleCrosser* and worked like this (edited slightly for clarity): def strategy(self, opponent): # if there is no history, then this is the first turn, so cooperate if not opponent.history: return C # if this is either the last or second-to-last turn, defect if len(opponent.history) &gt; (self.tournament_attributes[&#39;length&#39;] - 3): return D # if the opponenet did not defect on any of the first six turns, # and we are not in the last 20 turns, cooperate if len(opponent.history) &lt; 180: if len(opponent.history) &gt; 6: if D not in opponent.history[:7]: return C # if the total number of defections by the opponent is # greater than three, always defect if opponent.defections &gt; 3: return D # failsafe; if none of the other conditions are true, # cooperate return C *This is because the best strategies mostly score through mutual cooperation, which scores 3 points The library takes care of matching up players in pairwise combinations, running the tournament for a given number of turns, and keeping score. For the sake of convenience, scores are usually expressed as average score per turn. The best possible outcome for a given turn is that a player defects and their opponent cooperates giving a score of 5 in the standard payoff matrix, so that&#39;s the theoretical best average score per turn. The best strategies in the Axelrod library currently score around 3*. Here&#39;s a chart showing the ten best strategies, plus Tit for Tat, Cooperator, and Defector for reference: Spoiler alert: these strategies are going to get soundly thrashed by the end of this article :-) The reason that we&#39;re looking at a box plot here is that some of the strategies are stochastic, i.e. there&#39;s some random variation in the action they take. When calculating the scores, the Axelrod library takes care of running the tournament multiple times (100 by default) to get an average score for each strategy. You can hover over the boxes on the chart above to see the actual scores. Using lookup tables to define a strategy Many of the strategies in the Axelrod library choose their action based on what happened on the previous turn (or possibly earlier in the history). Tit for Tat is a good example; it&#39;s play on a given turn depends entirely on the opponent&#39;s play on the previous one. We can think of this as a lookup table: Opponent&#39;s previous action My action Cooperate Cooperate Defect Defect or, in Python, as a dict where the keys are opponent&#39;s previous action, and the values are my action: lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;D&#39; } If we wanted to write a strategy that used this lookup table to decide what action to take, we could just grab the opponent&#39;s last action from its history like this: def strategy(self, opponent): lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;D&#39; } # First move if len(self.history) == 0: return C # Get the opponent&#39;s last action last_action = opponent.history[-1] # Use it to look up my action my_action = lookup_table[last_action] return my_action Notice that we still need a special case for the first turn; obviously if there is no history then we can&#39;t use the lookup table! The nice thing about expressing a strategy in this was is that we can get different behaviours by changing the lookup table and leaving the strategy code exactly the same. In other words, the strategy is completely determined by the lookup table. For our current example, this isn&#39;t very exciting - given that there are only two possibilities for the dict key there are only three other strategies that we can describe: Cooperator: # always cooperate lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;C&#39; } , Defector: # always defect lookup_table = { &#39;C&#39; : &#39;D&#39;, &#39;D&#39; : &#39;D&#39; } , and Inverse Tit for Tat, which always does the opposite of the opponents last action: # do the opposite of my opponent&#39;s last action lookup_table = { &#39;C&#39; : &#39;D&#39;, &#39;D&#39; : &#39;C&#39; } Things start to get interesting when we use the last two turns of the opponent&#39;s history as part of the key to the lookup table. Take a look at this table: Opponent&#39;s recent history My action Cooperate, Cooperate Cooperate Cooperate, Defect Cooperate Defect, Cooperate Cooperate Defect, Defect Defect There are now four different possibilities (two for each turn) which ..." />
 
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Evolving strategies for an Iterated Prisoner&#39;s Dilemma tournament"/>
-        <meta property="og:url" content="http://mojones.net/drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html"/>
-        <meta property="og:description" content="Content goes here"/>
-        <meta property="article:published_time" content="2015-11-04" />
+        <meta property="og:url" content="../drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html"/>
+        <meta property="og:description" content="Introduction This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner&#39;s Dilemma game (actually, the version known as Iterated Prisoner&#39;s Dilemma, hereafter referred to as IPD). If you&#39;re not already familiar with the Prisoner&#39;s Dilemma, head over to the documentation and read this background. The impetus for this project was hearing about (and then working on a code sprint for) the Axelrod library at PyConUk 2015. Axelrod is a Python library which provides a framework for running IPD tournaments. This makes it very easy to play around with different strategies. Strategies are implemented as classes which have a single method, strategy() which takes as its argument an opponent object, and returns an action. Actions are represented by C for cooperate and D for defect. For example, here&#39;s the famous Tit for tat strategy that won the original Axelrod tournament in 1980, which can be summarized as &#34;co-operate on the first turn, then copy the opponent&#39;s last action&#34;: def strategy(self, opponent): &#34;&#34;&#34;This is the actual strategy&#34;&#34;&#34; # First move if len(self.history) == 0: return C # React to the opponent&#39;s last move if opponent.history[-1] == D: return D return C *So-called because it appears to cooperate for a long time, then defects near the end of the match. As we can see, the player has access to its own history through the self.history variable and to the opponent&#39;s history though the opponent.history variable. Players can implement more sophisticated strategies by examining these variables, and they also have access to the length of the match. For example, when I first encountered the Axelrod library the winning strategy was called DoubleCrosser* and worked like this (edited slightly for clarity): def strategy(self, opponent): # if there is no history, then this is the first turn, so cooperate if not opponent.history: return C # if this is either the last or second-to-last turn, defect if len(opponent.history) &gt; (self.tournament_attributes[&#39;length&#39;] - 3): return D # if the opponenet did not defect on any of the first six turns, # and we are not in the last 20 turns, cooperate if len(opponent.history) &lt; 180: if len(opponent.history) &gt; 6: if D not in opponent.history[:7]: return C # if the total number of defections by the opponent is # greater than three, always defect if opponent.defections &gt; 3: return D # failsafe; if none of the other conditions are true, # cooperate return C *This is because the best strategies mostly score through mutual cooperation, which scores 3 points The library takes care of matching up players in pairwise combinations, running the tournament for a given number of turns, and keeping score. For the sake of convenience, scores are usually expressed as average score per turn. The best possible outcome for a given turn is that a player defects and their opponent cooperates giving a score of 5 in the standard payoff matrix, so that&#39;s the theoretical best average score per turn. The best strategies in the Axelrod library currently score around 3*. Here&#39;s a chart showing the ten best strategies, plus Tit for Tat, Cooperator, and Defector for reference: Spoiler alert: these strategies are going to get soundly thrashed by the end of this article :-) The reason that we&#39;re looking at a box plot here is that some of the strategies are stochastic, i.e. there&#39;s some random variation in the action they take. When calculating the scores, the Axelrod library takes care of running the tournament multiple times (100 by default) to get an average score for each strategy. You can hover over the boxes on the chart above to see the actual scores. Using lookup tables to define a strategy Many of the strategies in the Axelrod library choose their action based on what happened on the previous turn (or possibly earlier in the history). Tit for Tat is a good example; it&#39;s play on a given turn depends entirely on the opponent&#39;s play on the previous one. We can think of this as a lookup table: Opponent&#39;s previous action My action Cooperate Cooperate Defect Defect or, in Python, as a dict where the keys are opponent&#39;s previous action, and the values are my action: lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;D&#39; } If we wanted to write a strategy that used this lookup table to decide what action to take, we could just grab the opponent&#39;s last action from its history like this: def strategy(self, opponent): lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;D&#39; } # First move if len(self.history) == 0: return C # Get the opponent&#39;s last action last_action = opponent.history[-1] # Use it to look up my action my_action = lookup_table[last_action] return my_action Notice that we still need a special case for the first turn; obviously if there is no history then we can&#39;t use the lookup table! The nice thing about expressing a strategy in this was is that we can get different behaviours by changing the lookup table and leaving the strategy code exactly the same. In other words, the strategy is completely determined by the lookup table. For our current example, this isn&#39;t very exciting - given that there are only two possibilities for the dict key there are only three other strategies that we can describe: Cooperator: # always cooperate lookup_table = { &#39;C&#39; : &#39;C&#39;, &#39;D&#39; : &#39;C&#39; } , Defector: # always defect lookup_table = { &#39;C&#39; : &#39;D&#39;, &#39;D&#39; : &#39;D&#39; } , and Inverse Tit for Tat, which always does the opposite of the opponents last action: # do the opposite of my opponent&#39;s last action lookup_table = { &#39;C&#39; : &#39;D&#39;, &#39;D&#39; : &#39;C&#39; } Things start to get interesting when we use the last two turns of the opponent&#39;s history as part of the key to the lookup table. Take a look at this table: Opponent&#39;s recent history My action Cooperate, Cooperate Cooperate Cooperate, Defect Cooperate Defect, Cooperate Cooperate Defect, Defect Defect There are now four different possibilities (two for each turn) which ..."/>
+        <meta property="article:published_time" content="2015-11-08" />
             <meta property="article:section" content="programming" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="evolution" />
+            <meta property="article:tag" content="axelrod" />
+            <meta property="article:tag" content="prisoners dilemma" />
+            <meta property="article:tag" content="game theory" />
             <meta property="article:author" content="Martin" />
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://mojones.net/theme/css/bootstrap.simplex.min.css" type="text/css"/>
-    <link href="http://mojones.net/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="../theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="http://mojones.net/theme/css/pygments/solarizedlight.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://mojones.net/theme/css/style.css" type="text/css"/>
-        <link href="http://mojones.net/static/custom.css" rel="stylesheet">
-
-
+    <link href="../theme/css/pygments/autumn.css" rel="stylesheet">
+    <link rel="stylesheet" href="../theme/css/style.css" type="text/css"/>
+        <link href="../static/custom.css" rel="stylesheet">
 
 
+
+
+
+        <script src="../theme/js/jquery.min.js"></script>
+
+        <script src="../theme/js/jquery.sidenotes.js"></script>
 
 </head>
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
+	<div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -48,29 +58,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="http://mojones.net/" class="navbar-brand">
+            <a href="../" class="navbar-brand">
 mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="http://mojones.net/category/diy.html">Diy</a>
+                            <a href="../category/diy.html">Diy</a>
                         </li>
                         <li class="active">
-                            <a href="http://mojones.net/category/programming.html">Programming</a>
+                            <a href="../category/programming.html">Programming</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/science.html">Science</a>
+                            <a href="../category/science.html">Science</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/tech.html">Tech</a>
+                            <a href="../category/tech.html">Tech</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/web.html">Web</a>
+                            <a href="../category/web.html">Web</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://mojones.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="../archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -79,25 +89,25 @@ mojones.net            </a>
 <!-- Banner -->
 <style>
 	#banner{
-	    background-image:url("http://mojones.net/images/header.jpg");
+	    background-image:url("../images/header.jpg");
 	}
 </style>
 
 <div id="banner">
-	<div class="container-fluid">
+	<div class="container">
 		<div class="copy">
 			<h1>mojones.net</h1>
 		</div>
 	</div>
 </div><!-- End Banner -->
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-sm-9">
     <section id="content">
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="http://mojones.net/drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html"
+                    <a href="../drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html"
                        rel="bookmark"
                        title="Permalink to Evolving strategies for an Iterated Prisoner's Dilemma tournament">
                         Evolving strategies for an Iterated Prisoner's Dilemma tournament
@@ -110,19 +120,719 @@ mojones.net            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-04T16:44:12.557255+00:00"> Wed 04 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-08T11:43:05.340961+00:00"> Sun 08 November 2015</time>
     </span>
 
 
 
         <span class="label label-default">Category</span>
-        <a href="http://mojones.net/category/programming.html">programming</a>
+        <a href="../category/programming.html">programming</a>
 
 
+<span class="label label-default">Tags</span>
+	<a href="../tag/python.html">python</a>
+        /
+	<a href="../tag/evolution.html">evolution</a>
+        /
+	<a href="../tag/axelrod.html">axelrod</a>
+        /
+	<a href="../tag/prisoners-dilemma.html">prisoners dilemma</a>
+        /
+	<a href="../tag/game-theory.html">game theory</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h1>Content goes here</h1>
+                <h2>Introduction</h2>
+<p>This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner's Dilemma game (actually, the version known as Iterated Prisoner's Dilemma, hereafter referred to as IPD). If you're not already familiar with the Prisoner's Dilemma, head over to the documentation and read this background. </p>
+<p>The impetus for this project was hearing about (and then working on a code sprint for) the <a href="https://github.com/Axelrod-Python/Axelrod">Axelrod library</a> at PyConUk 2015. Axelrod is a Python library which provides a framework for running IPD tournaments. This makes it very easy to play around with different strategies. </p>
+<p>Strategies are implemented as classes which have a single method, <code>strategy()</code> which takes as its argument an opponent object, and returns an action. Actions are represented by <code>C</code> for cooperate and <code>D</code> for defect. For example, here's the famous <strong>Tit for tat</strong> strategy that won the original Axelrod tournament in 1980, which can be summarized as "co-operate on the first turn, then copy the opponent's last action":</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is the actual strategy&quot;&quot;&quot;</span>
+    <span class="c"># First move</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">C</span>
+    <span class="c"># React to the opponent&#39;s last move</span>
+    <span class="k">if</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">D</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">D</span>
+    <span class="k">return</span> <span class="n">C</span>
+</pre></div>
+
+
+<aside>
+<p>*So-called because it appears to cooperate for a long time, then defects near the end of the match.</p>
+</aside>
+<p>As we can see, the player has access to its own history through the <code>self.history</code> variable and to the opponent's history though the <code>opponent.history</code> variable. Players can implement more sophisticated strategies by examining these variables, and they also have access to the length of the match. For example, when I first encountered the Axelrod library the winning strategy was called <strong>DoubleCrosser</strong>* and worked like this (edited slightly for clarity):</p>
+<div class="highlight"><pre> <span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+
+    <span class="c"># if there is no history, then this is the first turn, so cooperate</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">C</span>
+
+    <span class="c"># if this is either the last or second-to-last turn, defect</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tournament_attributes</span><span class="p">[</span><span class="s">&#39;length&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">D</span>
+
+    <span class="c"># if the opponenet did not defect on any of the first six turns,</span>
+    <span class="c"># and we are not in the last 20 turns, cooperate</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">D</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[:</span><span class="mi">7</span><span class="p">]:</span>
+                 <span class="k">return</span> <span class="n">C</span>
+
+    <span class="c"># if the total number of defections by the opponent is </span>
+    <span class="c"># greater than three, always defect</span>
+    <span class="k">if</span> <span class="n">opponent</span><span class="o">.</span><span class="n">defections</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">D</span>
+
+    <span class="c"># failsafe; if none of the other conditions are true,</span>
+    <span class="c"># cooperate</span>
+    <span class="k">return</span> <span class="n">C</span>
+</pre></div>
+
+
+<aside>*This is because the best strategies mostly score through mutual cooperation, which scores 3 points</aside>
+
+<p>The library takes care of matching up players in pairwise combinations, running the tournament for a given number of turns, and keeping score. For the sake of convenience, scores are usually expressed as average score per turn. The best possible outcome for a given turn is that a player defects and their opponent cooperates giving a score of 5 in the standard payoff matrix, so that's the theoretical best average score per turn. The best strategies in the Axelrod library currently score around 3*. Here's a chart showing the ten best strategies, plus <strong>Tit for Tat</strong>, <strong>Cooperator</strong>, and <strong>Defector</strong> for reference:</p>
+<aside>
+<p>Spoiler alert: these strategies are going to get soundly thrashed by the end of this article :-)</p>
+</aside>
+<iframe width="100%" height="500" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/107.embed"></iframe>
+
+<p>The reason that we're looking at a box plot here is that some of the strategies are <strong>stochastic</strong>, i.e. there's some random variation in the action they take. When calculating the scores, the Axelrod library takes care of running the tournament multiple times (100 by default) to get an average score for each strategy. You can hover over the boxes on the chart above to see the actual scores. </p>
+<hr />
+<h2>Using lookup tables to define a strategy</h2>
+<p>Many of the strategies in the Axelrod library choose their action based on what happened on the previous turn (or possibly earlier in the history). <strong>Tit for Tat</strong> is a good example; it's play on a given turn depends entirely on the opponent's play on the previous one. We can think of this as a lookup table:</p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's previous action</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cooperate</td>
+      <td>Cooperate</td>
+    </tr>
+    <tr>
+      <td>Defect</td>
+      <td>Defect</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>or, in Python, as a dict where the keys are opponent's previous action, and the values are my action:</p>
+<div class="highlight"><pre><span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>If we wanted to write a strategy that used this lookup table to decide what action to take, we could just grab the opponent's last action from its history like this:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+    <span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
+        <span class="p">}</span>
+
+    <span class="c"># First move</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">C</span>
+
+    <span class="c"># Get the opponent&#39;s last action</span>
+    <span class="n">last_action</span> <span class="o">=</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c"># Use it to look up my action</span>
+    <span class="n">my_action</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="n">last_action</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">my_action</span>
+</pre></div>
+
+
+<p>Notice that we still need a special case for the first turn; obviously if there is no history then we can't use the lookup table!</p>
+<p>The nice thing about expressing a strategy in this was is that we can get different behaviours by changing the lookup table and leaving the strategy code exactly the same. In other words, the strategy is completely determined by the lookup table. For our current example, this isn't very exciting - given that there are only two possibilities for the dict key there are only three other strategies that we can describe: <strong>Cooperator</strong>:</p>
+<div class="highlight"><pre><span class="c"># always cooperate</span>
+<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>, <strong>Defector</strong>:</p>
+<div class="highlight"><pre><span class="c"># always defect</span>
+<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
+        <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>, and <strong>Inverse Tit for Tat</strong>, which always does the opposite of the opponents last action:</p>
+<div class="highlight"><pre><span class="c"># do the opposite of my opponent&#39;s last action</span>
+<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
+        <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>Things start to get interesting when we use the last two turns of the opponent's history as part of the key to the lookup table. Take a look at this table:</p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's recent history</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cooperate, Cooperate</td>
+      <td>Cooperate</td>
+    </tr>
+    <tr>
+      <td>Cooperate, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+        <tr>
+      <td>Defect, Cooperate</td>
+      <td>Cooperate</td>
+    </tr>
+    <tr>
+      <td>Defect, Defect</td>
+      <td>Defect</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There are now four different possibilities (two for each turn) which allows us to express a more complex strategy. Here, we only defect if the opponent has defected twice in a row (this strategy is known as <strong>Tit for Two Tats</strong>). Here's the corresponding dict:</p>
+<div class="highlight"><pre><span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;CC&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;CD&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;DC&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;DD&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>In order to use this lookup table in a <code>strategy()</code> method, we need to get the opponent's last two actions and join them together to make a string, and we also need to decide what to do on the first two turns:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+
+    <span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;CC&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;CD&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;DC&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s">&#39;DD&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c"># First two moves</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">C</span>
+
+    <span class="c"># Get the opponent&#39;s last two actions</span>
+    <span class="n">opponent_actions</span> <span class="o">=</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="c"># Use it to look up my action</span>
+    <span class="n">my_action</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="n">opponent_actions</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">my_action</span>
+</pre></div>
+
+
+<p>We can extend this idea even further: what if we wanted to take into account our own history as well as our opponents? That gives us sixteen different possibilities (four for us multiplied by four for our opponent); here's what the first few rows of the table would look like: </p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's recent history</th>
+      <th>My recent history</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>Cooperate, Cooperate</td>
+      <td>Cooperate, Cooperate</td>
+      <td>?</td>
+    </tr>
+
+    <tr>
+      <td>Cooperate, Defect</td>
+      <td>Cooperate, Cooperate</td>
+      <td>?</td>
+    </tr>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+  </tbody>
+</table>
+
+<p>And we can now think about even more complex rules. For example, if we defected and the opponent didn't retaliate, then defect again:</p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's recent history</th>
+      <th>My recent history</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+    <tr>
+      <td>Cooperate, Cooperate</td>
+      <td>Defect, Defect</td>
+      <td>Defect</td>
+    </tr>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+  </tbody>
+</table>
+
+<p>Or we might want a rule that we never defect more than twice in a row:</p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's recent history</th>
+      <th>My recent history</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+    <tr>
+      <td>Cooperate, Cooperate</td>
+      <td>Defect, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+     <tr>
+      <td>Cooperate, Defect</td>
+      <td>Defect, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+    <tr>
+      <td>Defect, Cooperate</td>
+      <td>Defect, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+     <tr>
+      <td>Defect, Defect</td>
+      <td>Defect, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+  </tbody>
+</table>
+
+<p>To write this lookup table as a dict, we'll create a tuple consisting of our last two actions, and our opponents last two actions, and use that as the key. So the key/value pairs for the rule in the table above looks like this:</p>
+<div class="highlight"><pre><span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> 
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Mathematically-inclined readers will have noticed that as we increase the number of keys in the lookup table dict, the number of possible strategies we can describe increases rather rapidly. Each key can result in two possible values (cooperate or defect), so for <em>n</em> keys there are <em>2^n</em> possible lookup tables. The above example has 16 keys, which gives us 65,536 different strategies. </p>
+<p>Finally, let's add another factor to our lookup table: the opponent's <em>first</em> two moves. This gives us the ability to implement rules like "if we defected and the opponent didn't retaliate then defect again, but only if the opponent started off by cooperating":</p>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Opponent's first actions</th>
+      <th>Opponent's recent history</th>
+      <th>My recent history</th>
+      <th>My action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+    <tr>
+      <td>Cooperate, Cooperate</td>
+      <td>Cooperate, Cooperate</td>
+      <td>Defect, Defect</td>
+      <td>Defect</td>
+    </tr>
+
+    <tr>
+      <td>Defect, Defect</td>
+      <td>Cooperate, Cooperate</td>
+      <td>Defect, Defect</td>
+      <td>Cooperate</td>
+    </tr>
+
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+
+  </tbody>
+</table>
+
+<p>The keys for our lookup table dict are now 3-tuples consisting of the opponent's starting actions, the opponent's recent actions, and our recent actions:</p>
+<div class="highlight"><pre><span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<aside>
+<p>*The process of scoring is embarrassingly parallel, so this scales pretty well on multi-core machines using <code>multiprocessing</code>.</p>
+</aside>
+<p>This key structure gives us 64 different keys and about 10^18 different strategies. If we're interested in finding the best strategy - i.e. the one that gives the highest average score per turn - we're going to need a way of exploring the strategies. On a reasonably modern desktop it takes around 3 seconds to score a single table* so an exhaustive brute-force search will take around 90 billion years, so we're going to need something a bit more sophisticated. </p>
+<h2>Searching lookup table space to find good ones</h2>
+<aside>
+<p>*See <a href="https://github.com/Axelrod-Python/Axelrod/blob/master/axelrod/strategies/lookerup.py">here</a> for the full version, which is more complicated because it's designed to work with dicts of any size</p>
+</aside>
+<p>To search for "good" strategies that use a 64-key lookup table, we need a way to quickly create a player object for a given dict. Here's a  simplified version of the code*:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LookerUp</span><span class="p">(</span><span class="n">Player</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup_table</span><span class="p">):</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">lookup_table</span> <span class="o">=</span> <span class="n">lookup_table</span>
+
+
+    <span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+        <span class="c"># If there isn&#39;t enough history to lookup an action, cooperate.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">C</span>
+
+        <span class="c"># Get my own last two actions</span>
+        <span class="n">my_history</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="c"># Do the same for the opponent.</span>
+        <span class="n">opponent_history</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="c"># Get the opponents first two actions.</span>
+        <span class="n">opponent_start</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="c"># Put these three strings together in a tuple.</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">opponent_start</span><span class="p">,</span> <span class="n">my_history</span><span class="p">,</span> <span class="n">opponent_history</span><span class="p">)</span>
+
+        <span class="c"># Look up the action associated with that tuple in the lookup table.</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">action</span>
+</pre></div>
+
+
+<p>The idea behind this strategy is that we can pass in a lookup table to the constructor to determine what strategy our player will play. For instance, here's <strong>Cooperator</strong>:</p>
+<div class="highlight"><pre><span class="c"># this table actually has all 64 possible keys, not all shown</span>
+<span class="n">cooperator_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">cooperator</span> <span class="o">=</span> <span class="n">LookerUp</span><span class="p">(</span><span class="n">cooperator_table</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We will also need a couple of utility functions to help us calculate the score for a given lookup table. Here's a function that will take two player objects, play a match between them, and return the average per-turn score of the first one:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">score_single</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the average score per turn for a player in a single match against</span>
+<span class="sd">    an opponent.</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">axelrod</span><span class="o">.</span><span class="n">Game</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">pair</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
+        <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">me</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="p">])</span> <span class="o">/</span> <span class="n">iterations</span>
+</pre></div>
+
+
+<p>It uses the <code>Game</code> object from the Axelrod library to do the actual scoring. </p>
+<p>Of course, for a given table we're interested in the average score against all other strategies, so here's a function which will take a strategy factory function, score that strategy against all the other strategies in the library, and return the average score:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">score_for</span><span class="p">(</span><span class="n">my_strategy_factory</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a function that will return a strategy, </span>
+<span class="sd">    calculate the average score per turn</span>
+<span class="sd">    against all ordinary strategies. If the </span>
+<span class="sd">    opponent is classified as stochastic, then </span>
+<span class="sd">    run 100 repetitions and take the average to get </span>
+<span class="sd">    a good estimate. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scores_for_all_opponents</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">opponent</span> <span class="ow">in</span> <span class="n">axelrod</span><span class="o">.</span><span class="n">ordinary_strategies</span><span class="p">:</span>
+
+        <span class="c"># decide whether we need to sample or not</span>
+        <span class="k">if</span> <span class="n">opponent</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="s">&#39;stochastic&#39;</span><span class="p">]:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">scores_for_this_opponent</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># calculate an average for this opponent</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+            <span class="n">me</span> <span class="o">=</span> <span class="n">my_strategy_factory</span><span class="p">()</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">opponent</span><span class="p">()</span>
+            <span class="c"># make sure that both players know what length the match will be </span>
+            <span class="n">me</span><span class="o">.</span><span class="n">set_tournament_attributes</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">iterations</span><span class="p">)</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">set_tournament_attributes</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">iterations</span><span class="p">)</span>
+
+            <span class="n">scores_for_this_opponent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score_single</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">iterations</span><span class="p">))</span>
+
+        <span class="n">mean_vs_opponent</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">scores_for_this_opponent</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores_for_this_opponent</span><span class="p">)</span>
+        <span class="n">scores_for_all_opponents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_vs_opponent</span><span class="p">)</span>
+
+    <span class="c"># calculate the average for all opponents</span>
+    <span class="n">overall_average_score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">scores_for_all_opponents</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores_for_all_opponents</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">overall_average_score</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This one's a bit more complicated because it's got to take into account that some of the opponents will be stochastic strategies, so for those we need to repeat the match 100 times to get a good average. </p>
+<aside>
+<p>Using a lambda function in this way is a bit odd: what we're doing is supplying the <code>score_for()</code> function with a callable that it can use every time it needs to create a new player for the strategy we're testing.</p>
+</aside>
+<p>With these two functions in hand, we can take a given lookup table, and calculate its average score per turn (which from now on we will just refer to as "score") against all other strategies:</p>
+<div class="highlight"><pre><span class="c"># this table actually has all 64 possible keys, not all shown</span>
+<span class="n">cooperator_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">score</span> <span class="o">=</span> <span class="n">score_for</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">LookerUp</span><span class="p">(</span><span class="n">cooperator_table</span><span class="p">))</span>
+</pre></div>
+
+
+<p>The reason we're going to the trouble of defining our own functions for scoring rather than using the built-in tournament tools in the Axelrod library is for performance. When we come to the evolutionary algorithm we're going to want to run lots of very small tournaments, and in testing I found the overhead of creating tournament manager objects for each one to be too great. </p>
+<p>As a quick sanity check, let's make sure that our lookup-table-based <strong>Cooperator</strong> gets a similar score to Axelrod's built-in <code>Cooperator</code> class:</p>
+<div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">axelrod_utils</span><span class="o">.</span><span class="n">score_for</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">axelrod</span><span class="o">.</span><span class="n">LookerUp</span><span class="p">(</span><span class="n">cooperator_table</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">axelrod_utils</span><span class="o">.</span><span class="n">score_for</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">axelrod</span><span class="o">.</span><span class="n">Cooperator</span><span class="p">()))</span>
+
+<span class="mf">2.39160728155</span>
+<span class="mf">2.39377135922</span>
+</pre></div>
+
+
+<p>Looks good!</p>
+<h3>Search method one: sample random tables</h3>
+<p>Let's take a sample of randomly-generated lookup tables and examine their scores. Rather than type out the list of keys each time we want to create a new table, we can generate them using <code>itertools</code>. We can use <code>product()</code> to generate all the possible two-character strings of C and D:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="k">print</span><span class="p">([</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)])</span>
+
+<span class="p">[</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>and then use <code>product()</code> again to get all possible combinations of three such strings:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="n">strings</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">lookup_table_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">strings</span><span class="p">,</span><span class="n">strings</span><span class="p">,</span> <span class="n">strings</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">lookup_table_keys</span>
+
+<span class="p">[(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>To generate a complete lookup table, we just generate a random string of C and D to be the values, and zip the keys and values up into a dict:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">get_random_table</span><span class="p">():</span>
+    <span class="n">strings</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">strings</span><span class="p">,</span><span class="n">strings</span><span class="p">,</span> <span class="n">strings</span><span class="p">))</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s">&quot;CD&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">get_random_table</span><span class="p">())</span>
+
+<span class="p">{(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="s">&#39;C&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Because the keys to the tables are all going to be exactly the same, we'll write a helper function which will take a table and return the values as a string:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">id_for_table</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a string representing the values of a lookup table dict&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">items</span><span class="p">())])</span>
+</pre></div>
+
+
+<p>This will make it easier to visualize the tables, since it's only the values we care about (note that we're grabbing the items in sorted order to make sure that we always get the keys in the same order). Now we can create ten random lookup tables and score them:</p>
+<div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">random_table</span><span class="o">=</span> <span class="n">get_random_table</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">id_for_table</span><span class="p">(</span><span class="n">random_table</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">axelrod_utils</span><span class="o">.</span><span class="n">score_for</span><span class="p">(</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">axelrod</span><span class="o">.</span><span class="n">LookerUp</span><span class="p">(</span><span class="n">random_table</span><span class="p">)))</span>
+
+<span class="n">DDDCDCDDDCDDDDCCDCCDCCCDCDDDDCCDDDDDCCDCDCDCDDDCDDDDCDCDDCDDDCCD</span>
+<span class="mf">2.01603495146</span>
+<span class="n">CCDDCDDDCDDDDCDCCDDDCCCCCCCDCCDCCCCCDCDDDDCCDDDCCDCCDDDCCDDDCCCD</span>
+<span class="mf">2.62583932039</span>
+<span class="n">CCCCCDCDCCDDDDDCDDCDDDCDDDDDDDCDDCCDDDCDCDDCDCCDCDDDCDCDDCDCDDCD</span>
+<span class="mf">2.75987669903</span>
+<span class="n">CDCCCCCDDDDCDCDDCCDDCCDDDDCCCDCCCCDDDDDDCCDDDDCDCCCCDDDCDDDDCDDC</span>
+<span class="mf">2.64813640777</span>
+<span class="n">DCCDDCDDCDCDDCDCCDDDDCCCCDCCDCCCDCCDCDCDDCDCCDCCDCCDCCCDCDDDDCCD</span>
+<span class="mf">2.02994029126</span>
+<span class="n">DDCDDDDDDDCDDCDCDCDCDCCCCDCDCCDCDCDCCDDCCDCCCCCDDCCDDCCCCCDDCDDC</span>
+<span class="mf">1.9428038835</span>
+<span class="n">DDDDCCCCDCDDDCDCDCCDCDDDDDCCDDDDCCCCDDCCDDCDCCCDDCDDCDCDDDDCDCDD</span>
+<span class="mf">2.3824461165</span>
+<span class="o">...</span>
+</pre></div>
+
+
+<p>As expected, there's quite a bit of variation. We might expect that if we score many random tables their scores will form a roughly normal distribution, but surprisingly that's not the case. Here's a histogram of scores for a thousand random tables, which clearly shows a bimodal distribution:</p>
+<iframe width="600" height="400" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/133.embed"></iframe>
+
+<p>It looks like a mixture of two normal distributions centered at mean scores of 2.1 and 2.7. At this point, if I had to guess I would suspect that there's a single key whose contribution to the score is very important. To test how important a particular key is, we can take each position in the ID string and calculate the difference in mean score for those tables that had C and that position, and those that had D. Given a dict where the keys are the ID strings and the values are the scores, we can get list of all such differences:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">mean</span><span class="p">():</span>
+    <span class="o">...</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">&#39;DDDCDCDDDCDDDDCCDCCDCCCDCDDDDCCDDDDDCCDCDCDCDDDCDDDDCDCDDCDDDCCD&#39;</span> <span class="p">:</span> <span class="mf">2.0160</span><span class="p">,</span>
+  <span class="s">&#39;CCDDCDDDCDDDDCDCCDDDCCCCCCCDCCDCCCCCDCDDDDCCDDDCCDCCDDDCCDDDCCCD&#39;</span> <span class="p">:</span> <span class="mf">2.6258</span><span class="p">,</span>
+  <span class="o">...</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">get_diff</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+  <span class="n">c_score</span> <span class="o">=</span> <span class="n">mean</span><span class="p">([</span><span class="n">score</span> <span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;C&#39;</span><span class="p">])</span>
+  <span class="n">d_score</span> <span class="o">=</span> <span class="n">mean</span><span class="p">([</span><span class="n">score</span> <span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;D&#39;</span><span class="p">])</span>
+  <span class="k">return</span> <span class="n">c_score</span> <span class="o">-</span> <span class="n">d_score</span>
+
+<span class="n">diffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_diff</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>and zip this together with our original list of lookup table keys to get a dict where the keys are the normal history tuples and the values are the differences. In other words, how much higher does a table score, on average, by having Cooperate as its response to a given set of conditions as opposed to Defect:</p>
+<div class="highlight"><pre><span class="n">strings</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">strings</span><span class="p">,</span><span class="n">strings</span><span class="p">,</span> <span class="n">strings</span><span class="p">)))</span>
+<span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">diffs</span><span class="p">))</span>
+
+<span class="p">{</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.5985246110918112</span><span class="p">,</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.036229032273884965</span><span class="p">,</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DC&#39;</span><span class="p">):</span> <span class="mf">0.022587412332811585</span><span class="p">,</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">):</span> <span class="mf">0.011773214960386635</span><span class="p">,</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.03782112365374468</span><span class="p">,</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">):</span> <span class="mf">0.049968171759873226</span><span class="p">,</span>
+  <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<aside>
+<p>*Remember that the opponent's first two actions are represented by the first string in the tuple which forms the key.</p>
+</aside>
+<p>The crucially important key turns out to be the very first one: if the opponent started by cooperating twice, and both the opponent and me cooperated on both of the previous two turns, then cooperating again rather than defecting causes a massive score bonus of 0.6. This neatly explains the bimodal distribution that we saw in the histogram of scores. Intriguingly, the importance of following this rule almost completely disappears if the opponent started by doing something other that cooperating twice*:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.5985246110918112</span><span class="p">,</span>
+  <span class="o">...</span>
+  <span class="p">(</span><span class="s">&#39;CD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.008174615248195405</span><span class="p">,</span>
+  <span class="o">...</span>
+  <span class="p">(</span><span class="s">&#39;DC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.01990436367685966</span><span class="p">,</span>
+  <span class="o">...</span>
+  <span class="p">(</span><span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">):</span> <span class="mf">0.007840839408610911</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Why is this one rule so important? It's probably something to do with the frequency with which the scenario occurs. In scoring 100 random tables, the pattern of mutual cooperation on two consecutive turns occurred just over 20 million times, while the next most common scenario - two consecutive turns of mutual defection - occurred about 7.5 million times. This is probably due to the presence in the Axelrod library of a large number of so-called <strong>nice</strong> strategies, i.e. those that will never defect before its opponent does. Note, however, that the importance of the double-mutual-cooperation pattern can't be due to frequency alone - while it occurs just over twice as often as double-mutual-defection, its scoring difference as measured in the dict above is about one hundred times greater. </p>
+<p>The presence of <strong>nice</strong> strategies also neatly explains why the importance of responding correctly to double-mutual-cooperation goes away if the opponent defects any time in the first two turns. Given that our strategy always cooperates on the first two turns (regardless of what's in the lookup table), any opponent that defected on either of the first two turns is by definition not a nice strategy, so it's not so important for us to try to preserve a cycle of cooperation. </p>
+<aside>
+<p>*The zero points we get for cooperating when the opponent betrays is known in the literature as the <em>sucker's payout</em></p>
+</aside>
+<p>Looking at the results in this way is a bit unintuitive. We can visualize them better if we come up with short names for each of the four possibilities at each of the previous two turns. If both us and the opponent cooperated we'll call that <strong>mutual coop</strong>. If we both defected then we'll call it <strong>mutual defection</strong>. If we defected and the opponent cooperated (the best outcome for us) we'll call that <strong>betrayer</strong>. And if we cooperated but the opponent defected then we'll call that <strong>sucker</strong>*. </p>
+<p>This gives us a dict that looks like this, where the two elements of the tuple in the key are the opponent's first two actions and the outcome of the last two turns:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="o">...</span>
+  <span class="p">(</span><span class="s">&#39;CC&#39;</span><span class="p">,</span> <span class="s">&#39;betrayer-sucker&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span>
+  <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>So from the key/value pair in the example above if </p>
+<aside>
+<p>*Remember that the numbers are the advantage given by cooperating, so a negative number means it's better to defect.</p>
+</aside>
+<ul>
+<li>the opponent started by cooperating twice</li>
+<li>two turns ago we defected and the opponent cooperated (i.e. we were <strong>betrayer</strong>)</li>
+<li>in the last turn we cooperated and the opponent defected (i.e. we were the <strong>sucker</strong>)</li>
+</ul>
+<p>then our average score will be 0.03 higher if we defect this turn rather than cooperating*.</p>
+<p>Laying out the data like this allows us to draw a heatmap showing when it's better to cooperate and defect, and by how much:</p>
+<iframe width="900" height="450" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/156.embed"></iframe>
+
+<aside>
+<p>Hover over the squares to see the actual numbers.</p>
+</aside>
+<p>In this figure the opponent's first two actions are on the left side, and the sixteen possible outcomes of the previous two turns are arranged along the top. The colour of each square represents whether it's better to cooperate or defect, and by how much. Positive numbers (i.e. better to cooperate) are red, and the stronger the red colour the greater the increase in score given by cooperating. Negative numbers (i.e. better to defect) are blue. Positions for which there isn't much difference in score between defecting and cooperating show up in grey. The bar on the right-hand side gives the scale. </p>
+<p>The most striking thing is the square in the bottom right corner, representing the case where the opponent started by cooperating twice and both previous turns have been mutual cooperation. This is the extremely strong benefit of not breaking cycles of mutual cooperation. The next strongest-coloured square is the top right, representing the situation where the opponent started by defecting twice, and on both previous turn we have been the sucker. In this scenario, it's much better to defect (blue) rather than cooperate. </p>
+<p>The very high value in the bottom right makes it quite difficult to see the patterns in the data, because it's so much bigger than everything else. Let's get rid of those two very high value squares and redraw the figure, stretching the scale so we can see the other squares more clearly:</p>
+<iframe width="900" height="450" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/165.embed"></iframe>
+
+<p>Notice how the colour scale has changed; pure red/blue now means a score of +0.06/-0.06. These numbers seem small, but remember that the current ten best strategies are separated by an average score of only 0.1. </p>
+<p>This is a very interesting figure to look at, and I've spent quite a bit of time with it :-). The first thing that jumps out is just how different the patterns are for the different rows (i.e. how much the best thing to do in any given situation depends on the opponent's opening moves). Pretty much every column has one or two squares in it that are different to the others, sometimes with quite high scores. For example, look at the row corresponding to <strong>betrayer</strong> followed by <strong>mutual cooperation</strong> (ninth from the left). If the opponent started by defecting twice in a row, then it's a very good idea to defect (top row, a deep blue colour). But if the opponent started by defecting then cooperating, it's a very good idea to cooperate (second row, medium red). </p>
+<aside>
+<p>*Possibly because we've been "punished" and need to get back to a cycle of cooperation.</p>
+</aside>
+<p>The third row shows a surprising pattern: if the opponent started off by cooperating then defecting, then it's best to defect in <em>every single</em> scenario, except for two turns of mutual cooperation or <strong>betrayer</strong> followed by <strong>mutual defection</strong>*. Trying to come up with an explanation for all the patterns we see in this figure would be a long and tedious process, so let's move on. </p>
+<h3>Search method 2: pick the best action for each key independently</h3>
+<p>Studying this figure suggests an obvious approach to finding a high-scoring strategy: simply pick the action that maximizes the mean score at each position. If we have the differences stored in a dict as illustrated above, we can do this by just making a copy of the dict and then setting each value based on the sign of the score:</p>
+<div class="highlight"><pre><span class="n">best_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">key2diff</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">diff</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">key2diff</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">best_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;C&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">best_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;D&#39;</span>
+</pre></div>
+
+
+<p>This gives us a table with a score of around 2.95 - here it is on the chart from before (the new strategy is on the left):</p>
+<iframe width="600" height="600" frameborder="0" scrolling="no" src="https://plot.ly/~martin846/186.embed"></iframe>
+
+<p>Notice that this strategy scores better than the best of our random 1000 strategies which we plotted on the histogram earlier: the best of those scored 2.93. </p>
+<aside>
+<p>*i.e. the opponents that our strategy will face during the tournament</p>
+</aside>
+<p>How likely is it that the lookup table chosen in this way is the best possible table? It depends on how much interaction there is between different keys. If our response to a particular scenario early in a match can affect the outcome of a different scenario later in a match, then we expect there to be subtle interactions between keys. We can tell just by browsing the strategies in the Axelrod library* that many of them <em>do</em> base their actions on what happened earlier in the match, so it's very likely that keys are <strong>not</strong> independent, and that we can find a better table with a different search method. </p>
+<h3>Search method 3: a greedy hill-climbing algorithm</h3>
             </div>
             <!-- /.entry-content -->
     <hr/>
@@ -135,7 +845,7 @@ mojones.net            </a>
             var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'evolving-strategies-for-an-iterated-prisoners-dilemma-tournament';
-                var disqus_url = 'http://mojones.net/drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html';
+                var disqus_url = '../drafts/evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -194,57 +904,57 @@ mojones.net            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://mojones.net/301-permanent-redirect-with-tomcat.html">
-                            301 permanent redirect with Tomcat
+                        <a href="../how-to-pick-bad-function-and-variable-names.html">
+                            How to pick bad function and variable names
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/beware-of-the-default-acegi-grails-plugin-setup.html">
-                            Beware of the default acegi Grails plugin setup
+                        <a href="../how-to-use-jquery-to-send-json-data-to-a-grails-app.html">
+                            How to use jQuery to send JSON data to a Grails app
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">
-                            Extending Java number classes with random functions in Groovy
+                        <a href="../radial-transparent-gradients-in-processingorg.html">
+                            Radial transparent gradients in Processing.org
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html">
+                        <a href="../hibernate-magic-with-lazy-evaluation.html">
+                            Hibernate magic with lazy evaluation
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../functional-abstraction-examples-from-scip-in-groovy.html">
                             Functional Abstraction examples from SCIP in Groovy
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
-                            How to build a high-quality audio system in Ubuntu
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="list-group-item"><a href="http://mojones.net/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+            <li class="list-group-item"><a href="../"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/diy.html">
+                        <a href="../category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/programming.html">
+                        <a href="../category/programming.html">
                             <i class="fa fa-folder-open fa-lg"></i> programming
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/science.html">
+                        <a href="../category/science.html">
                             <i class="fa fa-folder-open fa-lg"></i> science
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/tech.html">
+                        <a href="../category/tech.html">
                             <i class="fa fa-folder-open fa-lg"></i> tech
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/web.html">
+                        <a href="../category/web.html">
                             <i class="fa fa-folder-open fa-lg"></i> web
                         </a>
                     </li>
@@ -267,7 +977,7 @@ mojones.net            </a>
     </div>
 </div>
 <footer>
-   <div class="container-fluid">
+   <div class="container">
       <hr>
       <div class="row">
          <div class="col-xs-10">&copy; 2015 Martin Jones
@@ -278,22 +988,22 @@ mojones.net            </a>
       </div>
    </div>
 </footer>
-<script src="http://mojones.net/theme/js/jquery.min.js"></script>
+
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://mojones.net/theme/js/bootstrap.min.js"></script>
+<script src="../theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://mojones.net/theme/js/respond.min.js"></script>
+<script src="../theme/js/respond.min.js"></script>
 
-    <script src="http://mojones.net/theme/js/bodypadding.js"></script>
+    <script src="../theme/js/bodypadding.js"></script>
     <!-- GitHub JS -->
     <script type="text/javascript">
         $(document).ready(function () {
             if (!window.jXHR) {
                 var jxhr = document.createElement('script');
                 jxhr.type = 'text/javascript';
-                jxhr.src = 'http://mojones.net/theme/js/jXHR.js';
+                jxhr.src = '../theme/js/jXHR.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(jxhr, s);
             }
@@ -306,7 +1016,7 @@ mojones.net            </a>
             });
         });
     </script>
-    <script src="http://mojones.net/theme/js/github.js" type="text/javascript"></script>
+    <script src="../theme/js/github.js" type="text/javascript"></script>
     <!-- End GitHub JS Code -->
     <!-- Disqus -->
     <script type="text/javascript">

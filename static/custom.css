@@ -11,3 +11,34 @@ h3 {
     font-size: 20px;
 }
 
+p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+article aside {
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width:30%;
+  margin-top: 0px;
+  font-size: 80%;
+}
+
+
+article {
+    width: 70%;
+}
+
+/* hide asides if the screen gets too narrow*/
+@media (max-width: 767px) {                  
+   article aside {
+      display: none;
+   }
+}
+
+.highlight pre span { 
+    white-space: pre; 
+    overflow: auto; 
+    word-wrap: normal;
+}

@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
+<link rel="canonical" href="./how-to-build-a-high-quality-audio-system-in-ubuntu.html">
 
         <meta name="author" content="Martin" />
         <meta name="keywords" content="audio,hardware,ubuntu,linux" />
@@ -18,7 +18,7 @@
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="How to build a high-quality audio system in Ubuntu"/>
-        <meta property="og:url" content="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html"/>
+        <meta property="og:url" content="./how-to-build-a-high-quality-audio-system-in-ubuntu.html"/>
         <meta property="og:description" content="Note: this post is about high-quality audio under Linux; however, the set-up will work just as well on a Windows or Mac machine. Historically, sound has always been a weak point for Linux, with many devices refusing to work due to a lack of drivers. The appearance of Ubuntu improved matters, but I have always found support for high-quality audio to be lacking. However, the development of USB sound cards has made a big difference and I have finally found a way to get high-quality audio on Ubuntu on a budget. The set up I’m about to describe will give you fantastic, detailed sound for music listening for around $200. Briefly, the recipe is use an external USB soundcard get a line-out signal from the soundcard and use active monitor speakers, NOT multimedia speakers The sound card There are two main reasons to use a USB sound card. Firstly it means that the digital-to-analog conversion is taking place outside the computer, where it can’t be affected by all the electrical noise inside. Secondly, the quality of the conversion (which will ultimately determine the quality of the sound) is far better than can be achieved by your computer’s built-in sound card. The best low-cost USB audio device I have found is the FIIO E7. It’s actually designed and marketed as a headphone amplifier, but it’s perfect for our purposes because it’s actually a high-quality USB soundcard as well. It is recognized by Ubuntu as a USB audio device so it doesn’t need any drivers and will work out of the box. The line-out signal Because the E7 is designed to drive headphones, you can’t take the output and use it to drive a pair of speakers. Instead you need to get a line-out signal which you can feed to an amplifier. There are two products that let you get a line out signal from the E7 – a rather cool looking separate headphone amp, and a line out dock. The headphone amp looks extremely cool, but will set you back another hundred bucks and take up a chunk of space on your desk. The line out kit (called the L7), on the other hand, costs ten bucks and does the job perfectly. It clips to the bottom of the E7, then you plug a USB cable in one side, and get a line out signal from the other side. This will allow us to use the DAC part of the E7 while bypassing the amplifier part. Active monitors Now you have your line-out signal you need a amplifier and a pair of speakers. The best value solution is a pair of active speakers (also called powered speakers); these have an integrated amplifier so you can connect them directly to a line out source. Active speakers come in two main flavours. Multimedia speakers are designed for computer games and movies, so they tend to be loud and dynamic, but are lacking in detail for music. A much better choice is a set of monitor speakers; these are specifically designed to accurately reproduce music and are often used for recording and mixing. M-audio make a few models of budget speakers that are ideal for our purposes. I am currently using a pair of AV40 speakers￼ . They are nicely sized, comfortably loud enough to fill a large room and have wonderful sound reproduction. Setting up Hooking up a system like the one I’ve described above is very simple. The L7 plus into the bottom of the E7, then the USB cable runs from the L7 to your computer. The line out cable runs from the other side of the L7 to the active speakers. Be sure to arrange your speakers for best sound from your normal listening position – follow a guide like this one and you can’t go wrong. A set up like this should keep you happy for a long time; the only thing I have found I needed to upgrade is the line out cable which goes between the L7 and the speakers. The supplied one is a little loose, but even a high-quality gold-plated, shielded cable is only about $10, will sound great, and will last practically forever."/>
         <meta property="article:published_time" content="2015-11-04" />
             <meta property="article:section" content="tech" />
@@ -30,22 +30,26 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://mojones.net/theme/css/bootstrap.simplex.min.css" type="text/css"/>
-    <link href="http://mojones.net/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="http://mojones.net/theme/css/pygments/solarizedlight.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://mojones.net/theme/css/style.css" type="text/css"/>
-        <link href="http://mojones.net/static/custom.css" rel="stylesheet">
-
-
+    <link href="./theme/css/pygments/autumn.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+        <link href="./static/custom.css" rel="stylesheet">
 
 
+
+
+
+        <script src="./theme/js/jquery.min.js"></script>
+
+        <script src="./theme/js/jquery.sidenotes.js"></script>
 
 </head>
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
+	<div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -53,29 +57,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="http://mojones.net/" class="navbar-brand">
+            <a href="./" class="navbar-brand">
 mojones.net            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="http://mojones.net/category/diy.html">Diy</a>
+                            <a href="./category/diy.html">Diy</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/programming.html">Programming</a>
+                            <a href="./category/programming.html">Programming</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/science.html">Science</a>
+                            <a href="./category/science.html">Science</a>
                         </li>
                         <li class="active">
-                            <a href="http://mojones.net/category/tech.html">Tech</a>
+                            <a href="./category/tech.html">Tech</a>
                         </li>
                         <li >
-                            <a href="http://mojones.net/category/web.html">Web</a>
+                            <a href="./category/web.html">Web</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://mojones.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -84,25 +88,25 @@ mojones.net            </a>
 <!-- Banner -->
 <style>
 	#banner{
-	    background-image:url("http://mojones.net/images/header.jpg");
+	    background-image:url("./images/header.jpg");
 	}
 </style>
 
 <div id="banner">
-	<div class="container-fluid">
+	<div class="container">
 		<div class="copy">
 			<h1>mojones.net</h1>
 		</div>
 	</div>
 </div><!-- End Banner -->
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-sm-9">
     <section id="content">
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html"
+                    <a href="./how-to-build-a-high-quality-audio-system-in-ubuntu.html"
                        rel="bookmark"
                        title="Permalink to How to build a high-quality audio system in Ubuntu">
                         How to build a high-quality audio system in Ubuntu
@@ -115,23 +119,23 @@ mojones.net            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-04T16:44:12.561255+00:00"> Wed 04 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-04T18:12:16.803972+00:00"> Wed 04 November 2015</time>
     </span>
 
 
 
         <span class="label label-default">Category</span>
-        <a href="http://mojones.net/category/tech.html">tech</a>
+        <a href="./category/tech.html">tech</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="http://mojones.net/tag/audio.html">audio</a>
+	<a href="./tag/audio.html">audio</a>
         /
-	<a href="http://mojones.net/tag/hardware.html">hardware</a>
+	<a href="./tag/hardware.html">hardware</a>
         /
-	<a href="http://mojones.net/tag/ubuntu.html">ubuntu</a>
+	<a href="./tag/ubuntu.html">ubuntu</a>
         /
-	<a href="http://mojones.net/tag/linux.html">linux</a>
+	<a href="./tag/linux.html">linux</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -166,7 +170,7 @@ mojones.net            </a>
             var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'how-to-build-a-high-quality-audio-system-in-ubuntu';
-                var disqus_url = 'http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html';
+                var disqus_url = './how-to-build-a-high-quality-audio-system-in-ubuntu.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -225,57 +229,57 @@ mojones.net            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://mojones.net/301-permanent-redirect-with-tomcat.html">
-                            301 permanent redirect with Tomcat
+                        <a href="./how-to-pick-bad-function-and-variable-names.html">
+                            How to pick bad function and variable names
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/beware-of-the-default-acegi-grails-plugin-setup.html">
-                            Beware of the default acegi Grails plugin setup
+                        <a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">
+                            How to use jQuery to send JSON data to a Grails app
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/extending-java-number-classes-with-random-functions-in-groovy.html">
-                            Extending Java number classes with random functions in Groovy
+                        <a href="./radial-transparent-gradients-in-processingorg.html">
+                            Radial transparent gradients in Processing.org
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/functional-abstraction-examples-from-scip-in-groovy.html">
+                        <a href="./hibernate-magic-with-lazy-evaluation.html">
+                            Hibernate magic with lazy evaluation
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./functional-abstraction-examples-from-scip-in-groovy.html">
                             Functional Abstraction examples from SCIP in Groovy
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://mojones.net/how-to-build-a-high-quality-audio-system-in-ubuntu.html">
-                            How to build a high-quality audio system in Ubuntu
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="list-group-item"><a href="http://mojones.net/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+            <li class="list-group-item"><a href="./"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/diy.html">
+                        <a href="./category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/programming.html">
+                        <a href="./category/programming.html">
                             <i class="fa fa-folder-open fa-lg"></i> programming
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/science.html">
+                        <a href="./category/science.html">
                             <i class="fa fa-folder-open fa-lg"></i> science
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/tech.html">
+                        <a href="./category/tech.html">
                             <i class="fa fa-folder-open fa-lg"></i> tech
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://mojones.net/category/web.html">
+                        <a href="./category/web.html">
                             <i class="fa fa-folder-open fa-lg"></i> web
                         </a>
                     </li>
@@ -298,7 +302,7 @@ mojones.net            </a>
     </div>
 </div>
 <footer>
-   <div class="container-fluid">
+   <div class="container">
       <hr>
       <div class="row">
          <div class="col-xs-10">&copy; 2015 Martin Jones
@@ -309,22 +313,22 @@ mojones.net            </a>
       </div>
    </div>
 </footer>
-<script src="http://mojones.net/theme/js/jquery.min.js"></script>
+
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://mojones.net/theme/js/bootstrap.min.js"></script>
+<script src="./theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://mojones.net/theme/js/respond.min.js"></script>
+<script src="./theme/js/respond.min.js"></script>
 
-    <script src="http://mojones.net/theme/js/bodypadding.js"></script>
+    <script src="./theme/js/bodypadding.js"></script>
     <!-- GitHub JS -->
     <script type="text/javascript">
         $(document).ready(function () {
             if (!window.jXHR) {
                 var jxhr = document.createElement('script');
                 jxhr.type = 'text/javascript';
-                jxhr.src = 'http://mojones.net/theme/js/jXHR.js';
+                jxhr.src = './theme/js/jXHR.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(jxhr, s);
             }
@@ -337,7 +341,7 @@ mojones.net            </a>
             });
         });
     </script>
-    <script src="http://mojones.net/theme/js/github.js" type="text/javascript"></script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
     <!-- End GitHub JS Code -->
     <!-- Disqus -->
     <script type="text/javascript">
