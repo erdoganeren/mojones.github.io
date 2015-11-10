@@ -40,5 +40,5 @@ article {
 .highlight pre span { 
     white-space: pre; 
     overflow: auto; 
-    word-wrap: normal<aside markdown="1"></aside>;
+    word-wrap: normal;
 }
