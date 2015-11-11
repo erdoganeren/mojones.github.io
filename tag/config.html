@@ -121,9 +121,7 @@ mojones.net            </a>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I just ran into this problem today; thought I should post the solution in case anybody else finds themselves in the same boat.</p>
 <p>I moved a WordPress blog from one server to another which was running lighttpd with a blanket 301 redirect to from www to non-www URLs. When I fired up a browser to test it, I got the dreaded “this website is responding in a way that will never resolve” message. A quick look at the lighttpd logs confirmed that I was bouncing from <strong>www.example.com</strong> to <strong>example.com</strong> then back to <strong>www.example.com</strong>.</p>
-<p>I expected the first redirect but not the second, and checking in my lighttpd conf showed no rule that could possibly be triggering it. Thinking maybe I had left a redirection plugin running, I logged on the blog (by temporarily disabling the redirect rules) and checked, but couldn’t find anything.</p>
-<p>Turns out that WordPress itself is capable of generating 301 redirects according to the “Blog URL” field in the General settings page. If the URL is set to <strong>http://www.example.com</strong> and a request comes in for <strong>http://example.com/some/page</strong>, then WordPress will automatically respond with a 301 redirect to <strong>http://www.example.com/some/page</strong> (which in my case, would get caught by my lighttpd rule and bounced back to the original request URL, and so on).</p>
-<p>Moral of the story: make sure that your WordPress URL settings and any manual redirection you are carrying out are in agreement as to what the ‘correct’ URL should be!</p>
+<p>I expected ...</p>
                         <a class="btn btn-default btn-xs" href="../how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">more ...</a>
     
                 </div>

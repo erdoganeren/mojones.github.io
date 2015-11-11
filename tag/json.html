@@ -130,25 +130,7 @@ mojones.net            </a>
         <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;savedata&quot;</span><span class="p">,</span>
         <span class="nx">contentType</span> <span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
         <span class="nx">dataType</span><span class="o">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
-        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">tree</span><span class="p">.</span><span class="nx">focused</span><span class="p">().</span><span class="nx">get</span><span class="p">()),</span>
-        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">){</span>
-            <span class="nx">alert</span><span class="p">(</span> <span class="s2">&quot;Data Saved: &quot;</span> <span class="o">+</span> <span class="nx">msg</span> <span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>And on the server end, here’s the code from the relevant controller.</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="n">savedata</span> <span class="o">=</span> <span class="o">{</span>
-        <span class="kt">def</span> <span class="n">json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">JSON</span>
-        <span class="c1">// do something useful with the data</span>
-        <span class="n">text</span><span class="o">.</span><span class="na">children</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
-               <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">data</span><span class="o">.</span><span class="na">title</span>
-         <span class="o">}</span>
-         <span class="n">render</span> <span class="s2">&quot;OK&quot;</span>
- <span class="o">}</span>
-</pre></div>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON ...</span></pre></div>
                         <a class="btn btn-default btn-xs" href="../how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
     
                 </div>

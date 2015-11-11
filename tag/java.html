@@ -123,59 +123,7 @@ mojones.net            </a>
 	<a href="../tag/metaprogramming.html">metaprogramming</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
-<div class="highlight"><pre><span class="n">myNoisyNumber</span>  <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="o">(</span><span class="n">myNumber</span> <span class="o">-</span> <span class="mi">10</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">)</span>
-</pre></div>
-
-
-<p>which is not exactly concise. If we want to call a Processing function that takes several such variables as arguments, then it gets worse:</p>
-<div class="highlight"><pre><span class="c1">// draw a slightly-random ellipse</span>
-<span class="n">ellipse</span><span class="o">(</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">)</span>
-<span class="o">)</span>
-</pre></div>
-
-
-<p>Thinking about a Groovy solution to the problem I remembered reading about the meta-programming features that let us dynamically add methods to core Java classes at runtime. So here’s my solution – let’s modify the <code>Integer</code>, <code>Float</code> and <code>BigDecimal</code> classes to include an extra method, <code>jiggle()</code>, that will add or subtract a bit of random variation to the number and return it as a <code>float</code>. Here is the magic code, that must be called at runtime (the <code>setup()</code> method of a processing applet does the job very nicely):</p>
-<div class="highlight"><pre><span class="n">Float</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">BigDecimal</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>The <code>jiggle()</code> method (actually it is a closure) itself is pretty straightforward. We take random number, scale it by the argument, invert it half the time, add it to the number, and cast the result to a <code>Float</code> before returning it. </p>
-<p>Two things are of interest here; firstly, we need to have a <code>Random</code> object called <code>random</code> in the scope where this code is run (we could get round this by creating a new <code>Random</code> object inside the closure, but I find it easier for debugging to have a single <code>Random</code> object for the whole sketch, making it easy to reproduce). Secondly, when we want to refer to the object to which the closure belongs (i.e. the <code>Integer</code>, <code>Float</code> or <code>BigDecimal</code>) we use <code>delegate</code>.</p>
-<p>Having run this little snippet, our little ellipse example becomes much more concise:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">y</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">))</span>
-</pre></div>
-
-
-<p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
-</pre></div>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or ...</p>
                         <a class="btn btn-default btn-xs" href="../extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
     
                 </div>
@@ -209,33 +157,7 @@ mojones.net            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out <a href="https://web.archive.org/web/20100727065239/http://www.kalzumeus.com/2007/10/07/dont-make-my-really-elementary-seo-mistake/">this link</a> for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server.</p>
-<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position.</p>
-<p>The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet.</p>
-<p>The tricky part is getting the config file <code>WEB-INF/urlrewrite.xml</code> just right, so here’s the configuration that worked for me:</p>
-<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
-<span class="nt">&lt;rule&gt;</span>
-    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
-    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
-<span class="nt">&lt;/rule&gt;</span>
-<span class="nt">&lt;/urlrewrite&gt;</span>
-</pre></div>
-
-
-<p>The <code>condition</code> element tells us that we want to trigger this rule when the HTTP request host header is not equal to <code>www.example.com</code>. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The <code>from</code> element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for <code>example.com</code> (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So <code>example.com/tour.jsp</code> should redirect to <code>www.example.com/tour.jsp</code>.</p>
-<h2>Update</h2>
-<p>A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to <code>localhost:8080</code>. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads <code>www.mywebsite.com</code>. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour:</p>
-<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
-<span class="nt">&lt;rule&gt;</span>
-    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^localhost<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
-    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
-<span class="nt">&lt;/rule&gt;</span>
-<span class="nt">&lt;/urlrewrite&gt;</span>
-</pre></div>
+<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took ...</p>
                         <a class="btn btn-default btn-xs" href="../301-permanent-redirect-with-tomcat.html">more ...</a>
     
                 </div>

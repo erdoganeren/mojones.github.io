@@ -13,13 +13,13 @@
 
         <meta name="author" content="Martin" />
         <meta name="keywords" content="groovy,grails,jquery,json,ajax" />
-        <meta name="description" content="This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the JSON parser/creator from json.org. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code. function postTreeData(){ $.ajax({ type: &#34;POST&#34;, url: &#34;savedata&#34;, contentType : &#34;text/plain&#34;, dataType: &#39;json&#39;, data: JSON.stringify($.tree.focused().get()), success: function(msg){ alert( &#34;Data Saved: &#34; + msg ); } }); } And on the server end, here’s the code from the relevant controller. def savedata = { def json = request.JSON // do something useful with the data text.children.each{ println it.data.title } render &#34;OK&#34; }" />
+        <meta name="description" content="This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the JSON parser/creator from json.org. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code. function postTreeData(){ $.ajax({ type: &#34;POST&#34;, url: &#34;savedata&#34;, contentType : &#34;text/plain&#34;, dataType: &#39;json&#39;, data: JSON ..." />
 
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="How to use jQuery to send JSON data to a Grails app"/>
         <meta property="og:url" content="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html"/>
-        <meta property="og:description" content="This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the JSON parser/creator from json.org. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code. function postTreeData(){ $.ajax({ type: &#34;POST&#34;, url: &#34;savedata&#34;, contentType : &#34;text/plain&#34;, dataType: &#39;json&#39;, data: JSON.stringify($.tree.focused().get()), success: function(msg){ alert( &#34;Data Saved: &#34; + msg ); } }); } And on the server end, here’s the code from the relevant controller. def savedata = { def json = request.JSON // do something useful with the data text.children.each{ println it.data.title } render &#34;OK&#34; }"/>
+        <meta property="og:description" content="This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the JSON parser/creator from json.org. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code. function postTreeData(){ $.ajax({ type: &#34;POST&#34;, url: &#34;savedata&#34;, contentType : &#34;text/plain&#34;, dataType: &#39;json&#39;, data: JSON ..."/>
         <meta property="article:published_time" content="2015-11-04" />
             <meta property="article:section" content="programming" />
             <meta property="article:tag" content="groovy" />
@@ -177,11 +177,11 @@ mojones.net            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="./beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
         <li><a href="./hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></li>
         <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
-        <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
+        <li><a href="./beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
         <li><a href="./functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></li>
+        <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
     </ul>
 </section>
     <hr/>

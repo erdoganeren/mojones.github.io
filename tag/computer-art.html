@@ -118,37 +118,7 @@ mojones.net            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
-<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it to get the distance from the edge and then use the square of that value to determine the transparency. This gives a smoother effect – if we don’t use the square then the edges don’t transition smoothly (probably something to do with the sensitivity of human vision / LCD monitors to colour being non-linear). Anyway, here’s the code:</p>
-<p>UPDATE – turns out that using <code>Math.hypot()</code> is very slow – switching to <code>Math.sqrt()</code> speeds up the code x10. The new code is below.</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">radialGradient</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">PGraphics</span> <span class="n">pg</span> <span class="o">=</span> <span class="n">createGraphics</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">JAVA2D</span><span class="o">);</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">beginDraw</span><span class="o">();</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">background</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-  <span class="kt">int</span> <span class="n">halfsize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
-
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-      <span class="c1">// calculate distance to center</span>
-      <span class="c1">//float distance = (float) Math.hypot(i - size / 2, j - size / 2) / (size / 2);</span>
-      <span class="c1">//float distance = (float) sqrt(sq(i-size/2) + sq(j-size/2)) / (size/2);</span>
-      <span class="kt">float</span> <span class="n">xDist</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">yDist</span> <span class="o">=</span>  <span class="n">j</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">xDist</span><span class="o">*</span><span class="n">xDist</span> <span class="o">+</span> <span class="n">yDist</span><span class="o">*</span><span class="n">yDist</span><span class="o">)</span> <span class="o">/</span> <span class="n">halfsize</span><span class="o">;</span>
-      <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">scale</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-      <span class="o">}</span>
-      <span class="kt">float</span> <span class="n">transparency</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="o">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span><span class="o">);</span>
-      <span class="kt">int</span> <span class="n">thisColour</span> <span class="o">=</span> <span class="n">color</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kt">int</span><span class="o">(</span><span class="n">transparency</span><span class="o">));</span>
-      <span class="n">pg</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">thisColour</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-
-  <span class="n">pg</span><span class="o">.</span><span class="na">endDraw</span><span class="o">();</span>
-  <span class="n">imageMode</span><span class="o">(</span><span class="n">CENTER</span><span class="o">);</span>
-  <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
+<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it ...</p>
                         <a class="btn btn-default btn-xs" href="../radial-transparent-gradients-in-processingorg.html">more ...</a>
     
                 </div>
@@ -181,59 +151,7 @@ mojones.net            </a>
 	<a href="../tag/metaprogramming.html">metaprogramming</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
-<div class="highlight"><pre><span class="n">myNoisyNumber</span>  <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="o">(</span><span class="n">myNumber</span> <span class="o">-</span> <span class="mi">10</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">)</span>
-</pre></div>
-
-
-<p>which is not exactly concise. If we want to call a Processing function that takes several such variables as arguments, then it gets worse:</p>
-<div class="highlight"><pre><span class="c1">// draw a slightly-random ellipse</span>
-<span class="n">ellipse</span><span class="o">(</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">)</span>
-<span class="o">)</span>
-</pre></div>
-
-
-<p>Thinking about a Groovy solution to the problem I remembered reading about the meta-programming features that let us dynamically add methods to core Java classes at runtime. So here’s my solution – let’s modify the <code>Integer</code>, <code>Float</code> and <code>BigDecimal</code> classes to include an extra method, <code>jiggle()</code>, that will add or subtract a bit of random variation to the number and return it as a <code>float</code>. Here is the magic code, that must be called at runtime (the <code>setup()</code> method of a processing applet does the job very nicely):</p>
-<div class="highlight"><pre><span class="n">Float</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">BigDecimal</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>The <code>jiggle()</code> method (actually it is a closure) itself is pretty straightforward. We take random number, scale it by the argument, invert it half the time, add it to the number, and cast the result to a <code>Float</code> before returning it. </p>
-<p>Two things are of interest here; firstly, we need to have a <code>Random</code> object called <code>random</code> in the scope where this code is run (we could get round this by creating a new <code>Random</code> object inside the closure, but I find it easier for debugging to have a single <code>Random</code> object for the whole sketch, making it easy to reproduce). Secondly, when we want to refer to the object to which the closure belongs (i.e. the <code>Integer</code>, <code>Float</code> or <code>BigDecimal</code>) we use <code>delegate</code>.</p>
-<p>Having run this little snippet, our little ellipse example becomes much more concise:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">y</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">))</span>
-</pre></div>
-
-
-<p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
-</pre></div>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or ...</p>
                         <a class="btn btn-default btn-xs" href="../extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
     
                 </div>

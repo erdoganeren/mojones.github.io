@@ -130,25 +130,7 @@ mojones.net            </a>
         <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;savedata&quot;</span><span class="p">,</span>
         <span class="nx">contentType</span> <span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
         <span class="nx">dataType</span><span class="o">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
-        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">tree</span><span class="p">.</span><span class="nx">focused</span><span class="p">().</span><span class="nx">get</span><span class="p">()),</span>
-        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">){</span>
-            <span class="nx">alert</span><span class="p">(</span> <span class="s2">&quot;Data Saved: &quot;</span> <span class="o">+</span> <span class="nx">msg</span> <span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>And on the server end, here’s the code from the relevant controller.</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="n">savedata</span> <span class="o">=</span> <span class="o">{</span>
-        <span class="kt">def</span> <span class="n">json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">JSON</span>
-        <span class="c1">// do something useful with the data</span>
-        <span class="n">text</span><span class="o">.</span><span class="na">children</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
-               <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">data</span><span class="o">.</span><span class="na">title</span>
-         <span class="o">}</span>
-         <span class="n">render</span> <span class="s2">&quot;OK&quot;</span>
- <span class="o">}</span>
-</pre></div>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON ...</span></pre></div>
                         <a class="btn btn-default btn-xs" href="../how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
     
                 </div>
@@ -207,80 +189,7 @@ mojones.net            </a>
 </pre></div>
 
 
-<p>Now we’ll turn on SQL logging in <code>Datasource.groovy</code>, so we can see exactly when hibernate is issuing SQL queries:</p>
-<div class="highlight"><pre><span class="n">dataSource</span> <span class="o">{</span>  
-    <span class="n">dbCreate</span> <span class="o">=</span> <span class="s2">&quot;create-drop&quot;</span> <span class="c1">// one of &#39;create&#39;, &#39;create-drop&#39;,&#39;update&#39;  </span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:hsqldb:mem:devDB&quot;</span>  
-    <span class="n">loggingSql</span> <span class="o">=</span> <span class="kc">true</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>Now let’s create a controller to hold our test code (just for convenience, this could also be done in a groovy console):</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">class</span> <span class="nc">TestController</span> <span class="o">{</span>
-
-    <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="o">{</span>
-
-        <span class="n">println</span> <span class="s2">&quot;starting controller&quot;</span>  
-        <span class="kt">def</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">Author</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="s1">&#39;alice&#39;</span><span class="o">)</span>  
-        <span class="n">println</span> <span class="s2">&quot;author name is $alice.name&quot;</span>  
-        <span class="kt">def</span> <span class="n">myBooks</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="na">books</span>  
-        <span class="n">println</span> <span class="s2">&quot;books are now stored in a variable&quot;</span>  
-        <span class="n">myBooks</span><span class="o">.</span><span class="na">each</span><span class="o">({</span><span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">title</span><span class="o">})</span>  
-        <span class="n">println</span> <span class="n">myBooks</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">name</span>  
-        <span class="n">render</span> <span class="s2">&quot;OK!&quot;</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-</pre></div>
-</td></tr></table>
-
-<p>This is pretty straightforward – we’re using a dynamic finder to retrieve the <code>Author</code> we added in the bootstrap script, then getting the list of <code>Books</code> and storing them in a variable, then printing the title of each book.</p>
-<p>Question: when do we expect to see the SQL query issued to retrieve the books? Grails uses lazy evaluation by default, so it won’t be at line 6, because we haven’t actually asked for the <code>books</code> field yet. I expected to see it at line 8 – here we are asking for the <code>books</code> field, so surely this is where hibernate will retrieve them. I was wrong – in fact the books are not retrieved until line 10, where we actually want to do something with the books. The output make this clear:</p>
-<div class="highlight"><pre>starting controller  
-Hibernate:  
-select  
-this_.id as id0_0_,  
-this_.version as version0_0_,  
-this_.name as name0_0_  
-from  
-author this_  
-where  
-this_.name=?  
-author name is alice  
-books are now stored in a variable  
-Hibernate:  
-select  
-books0_.author_id as author3_1_,  
-books0_.id as id1_,  
-books0_.id as id1_0_,  
-books0_.version as version1_0_,  
-books0_.author_id as author3_1_0_,  
-books0_.title as title1_0_  
-from  
-book books0_  
-where  
-books0_.author_id=?  
-book2  
-book1  
-org.hibernate.collection.PersistentSet  
-</pre></div>
-
-
-<p>So hibernate does not actually execute the SQL query to get the books when we ask for <code>alice.books</code>, but it is lazy enough to wait until we actually we try to iterate over the results. The last line of the output reveals how the magic happens – the object that <code>myBooks</code> points to is not a straightforward <code>List</code>, but a <a href="https://web.archive.org/web/20130624115433/https://www.hibernate.org/hib_docs/v3/api/org/hibernate/collection/PersistentSet.html"><code>PersistentSet</code></a>.</p>
-<p>This caused me a fair amount of confusion when I was trying to optimise a Grails action by minimising the number of SQL queries issued when retrieving a large number of objects from a database. Now that I know the way that it really works, I find it both cool, and a little bit scary that this is going on behind the scenes. A nice illustration of the trade-offs involved in using an ORM framework.</p>
+<p>Now we’ll ...</p>
                         <a class="btn btn-default btn-xs" href="../hibernate-magic-with-lazy-evaluation.html">more ...</a>
     
                 </div>
@@ -316,175 +225,7 @@ org.hibernate.collection.PersistentSet
                 <div class="summary"><p>I've been checking out the legendary MIT <a href="http://www.youtube.com/watch?v=2Op3QLzMgSY&amp;feature=list_related&amp;playnext=1&amp;list=SPE18841CABEA24090">Structure and Interpretation of Computer Programs</a> course from 1986 on YouTube, and it's fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don't think I will ever be able to hear <em>Jesu, joy of man's desiring</em> again without seeing that purple wizard. What's really striking to me is how quickly the course gets into territory that I (coming from a self-taught Perl/Java background) think of as pretty advanced. In the first three lectures we are introduced to:</p>
 <ul>
 <li>Recursive subroutines</li>
-<li>big-O notation</li>
-<li>passing functions around as variables</li>
-<li>building functions using higher-order programming</li>
-</ul>
-<p>Anyway, I thought that the example used to illustrate higher-order programming was pretty cool, so I decided to see if I could implement it in Groovy. The example involves writing a function to calculate the square root of a number using the <a href="http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method">Babylonian method </a>- start with a guess and repeatedly average the guess with the number divided by the guess, until the answer is close enough.</p>
-<p>Here it is in Groovy:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">abs</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>  
-        <span class="o">-</span><span class="n">x</span>  
-    <span class="k">else</span>  
-        <span class="n">x</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
-        <span class="k">return</span> <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="mi">2</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-        <span class="k">return</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="n">sqrt2</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
-</pre></div>
-
-
-<p>and the output:</p>
-<div class="highlight"><pre>guess is 1  
-guess is 1.5  
-guess is 1.41666666665  
-guess is 1.414215686275 
-</pre></div>
-
-
-<p>I've defined an <code>abs()</code> closure because the built-in <code>.abs()</code> method complains about different types of numbers. The <code>sqrt2()</code> method itself is easy to read – given a guess, calculate how far off it is by squaring it, and either return the guess (it it's close enough) or use the averaging procedure to make a new guess and call <code>sqrt2()</code> again. We could make it a bit more concise by leaving off the explicit return statements – a Groovy method returns the value of the last expression that was evaluated, so we don't really need them (this is what I've done with my <code>abs()</code> method). Note that when we call the method in the last line, we have to supply it with an initial guess.</p>
-<p>The first step in abstraction is pretty obvious – let's do away with the hard-coded 2 and let the method take the number for which we want to take the square root as an argument.</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span> <span class="o">-&gt;</span>  
-    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>To make things a a little more convenient I’ve moved the iterative code to a closure called <code>sqrt_iter()</code>; the job of <code>sqrt()</code> now is just to supply the initial guess. Now we can ask for the square root of exotic numbers like five:</p>
-<div class="highlight"><pre>guess is 1  
-guess is 3  
-guess is 2.33333333335  
-guess is 2.238095238095  
-guess is 2.2360688956435
-</pre></div>
-
-
-<p>Up to this point there’s no higher-order programming going on. But now it starts to get interesting; we can extract the bits of code that are responsible for checking if the answer is good enough and for generating the next guess:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>Now, what we are left with in <code>sqrt_iter()</code> is a generic procedure for solving a problem by generating successively better guesses until we get close enough. We can make this abstraction explicit by turning our improve / good enough methods into closures and having them as arguments to the main iteration method:</p>
-<div class="highlight"><pre><span class="n">sqrt_improve</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-<span class="o">}</span>
-
-<span class="n">sqrt_goodEnough</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-        <span class="n">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>I’ve changed the names of the closures to make things clearer. <code>sqrt_improve()</code> and <code>sqrt_goodEnough()</code> are the particular type of <code>improve</code> and <code>goodEnough</code> routines that are for solving square roots. Our iteration routine is now a generic one that take four arguments – a closure that can tell if a guess is good enough; a closure that can improve an existing guess, a number for which we’re trying to find the answer, and a guess. Note that the <code>generic_iter()</code> method now contains absolutely no logic to do with calculating square roots – it is completely generic. We can use it to solve any problem which we can express in terms of a way of checking if a guess is good enough, and a way of improving a guess.</p>
-<p>Here’s a completely brain-dead example; using the <code>generic_iter()</code> method to solve the problem of finding the smallest integer that is bigger than a given number:</p>
-<div class="highlight"><pre><span class="n">biggerThan_improve</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="n">guess</span> <span class="o">+</span> <span class="mi">1</span>  
-<span class="o">}</span>
-
-<span class="n">biggerThan_goodEnough</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-   <span class="n">guess</span> <span class="o">&gt;</span> <span class="n">x</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">biggerThan</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">generic_iter</span><span class="o">(</span><span class="n">biggerThan_goodEnough</span><span class="o">,</span> <span class="n">biggerThan_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>  
-<span class="o">}</span>
-
-<span class="n">biggerThan</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>The <code>improve</code> closure just increments the guess by one; the good enough closure just checks whether the guess is bigger than the target number. The output is not particularly surprising:</p>
-<div class="highlight"><pre>guess is 0  
-guess is 1  
-guess is 2  
-guess is 3  
-guess is 4  
-guess is 5  
-guess is 6 
-</pre></div>
-
-
-<p>One final point: because we can return closures as values from methods in Groovy, we can redefine <code>generic_iter</code> so that rather than executing the iteration procedure, it returns it. So we can assign the result to another variable and use it later on:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">){</span>  
-    <span class="kt">def</span> <span class="n">returnClosure</span>  
-    <span class="n">returnClosure</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-        <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-        <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-            <span class="n">guess</span>  
-        <span class="o">}</span>  
-        <span class="k">else</span><span class="o">{</span>  
-            <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-            <span class="n">returnClosure</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-        <span class="o">}</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">)</span>
-
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">1 ...</span></pre></div>
+<li>big-O notation ...</li></ul>
                         <a class="btn btn-default btn-xs" href="../functional-abstraction-examples-from-scip-in-groovy.html">more ...</a>
     
                 </div>
@@ -517,59 +258,7 @@ guess is 6
 	<a href="../tag/metaprogramming.html">metaprogramming</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
-<div class="highlight"><pre><span class="n">myNoisyNumber</span>  <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="o">(</span><span class="n">myNumber</span> <span class="o">-</span> <span class="mi">10</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">)</span>
-</pre></div>
-
-
-<p>which is not exactly concise. If we want to call a Processing function that takes several such variables as arguments, then it gets worse:</p>
-<div class="highlight"><pre><span class="c1">// draw a slightly-random ellipse</span>
-<span class="n">ellipse</span><span class="o">(</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">)</span>
-<span class="o">)</span>
-</pre></div>
-
-
-<p>Thinking about a Groovy solution to the problem I remembered reading about the meta-programming features that let us dynamically add methods to core Java classes at runtime. So here’s my solution – let’s modify the <code>Integer</code>, <code>Float</code> and <code>BigDecimal</code> classes to include an extra method, <code>jiggle()</code>, that will add or subtract a bit of random variation to the number and return it as a <code>float</code>. Here is the magic code, that must be called at runtime (the <code>setup()</code> method of a processing applet does the job very nicely):</p>
-<div class="highlight"><pre><span class="n">Float</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">BigDecimal</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>The <code>jiggle()</code> method (actually it is a closure) itself is pretty straightforward. We take random number, scale it by the argument, invert it half the time, add it to the number, and cast the result to a <code>Float</code> before returning it. </p>
-<p>Two things are of interest here; firstly, we need to have a <code>Random</code> object called <code>random</code> in the scope where this code is run (we could get round this by creating a new <code>Random</code> object inside the closure, but I find it easier for debugging to have a single <code>Random</code> object for the whole sketch, making it easy to reproduce). Secondly, when we want to refer to the object to which the closure belongs (i.e. the <code>Integer</code>, <code>Float</code> or <code>BigDecimal</code>) we use <code>delegate</code>.</p>
-<p>Having run this little snippet, our little ellipse example becomes much more concise:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">y</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">))</span>
-</pre></div>
-
-
-<p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
-</pre></div>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or ...</p>
                         <a class="btn btn-default btn-xs" href="../extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
     
                 </div>
@@ -603,15 +292,7 @@ guess is 6
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the acegi plugin will, by default, create a domain class with the name <code>User</code>.  When you try to run the application with a postgresql datasource, GORM will try to create a table with the name <code>user</code>, which postgresql will not like as it is a reserved word.</p>
-<p>This is a particularly annoying bug, because <code>user</code> is <strong>not</strong> a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to <code>Users</code> scattered throughout your application.</p>
-<p>Thankfully, the fix is not too onerous; either rename your <code>User</code> class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping:</p>
-<div class="highlight"><pre><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
-  <span class="o">..</span>
-  <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
-      <span class="n">table</span> <span class="s1">&#39;myappname_user&#39;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
+<p>This is a particularly ...</p>
                         <a class="btn btn-default btn-xs" href="../beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
     
                 </div>

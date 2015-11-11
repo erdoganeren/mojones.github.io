@@ -124,31 +124,7 @@ mojones.net            </a>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><h2>Preface</h2>
 <p>This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as <strong>hashes</strong>, <strong>HashMaps</strong>, <strong>dictionaries</strong>, <strong>dicts</strong>, <strong>associative arrays</strong>, or <strong>symbol tables</strong>. </p>
-<p>If you're already familiar with hash tables, you'll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved!</p>
-<h2>Introduction</h2>
-<aside>
-<p>*The manager of the nightclub is a programmer, hence the zero-indexed numbering :-)</p>
-</aside>
-<p>Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. </p>
-<p><img alt="fig1" src="/images/coat_1.png" /></p>
-<p>When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook.</p>
-<p><img alt="fig1" src="/images/coat_2.png" /></p>
-<p>The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let's say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number.</p>
-<h2>The problem with this system</h2>
-<p>The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer's description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you'll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket.</p>
-<h2>The name tag system</h2>
-<p>One night you decide that you've had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you'll write their name down on a tag and attach it to the coat before you put it on a hook. </p>
-<p><img alt="fig1" src="/images/coat_3.png" /></p>
-<p>Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can't forget that!) and go through the coats one-at-a-time until you find the one with the correct name. </p>
-<p><img alt="fig1" src="/images/coat_4.png" /></p>
-<p>We'll assume, for the purposes of this story, that you never get two customers with the same name.</p>
-<p>How does this new process compare to the old one, speed-wise? Let's say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let's also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you'll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn't as fast as the numbered-ticket system if the customer has their ticket, but it's much faster than the numbered-tickets system if the customer loses their ticket!</p>
-<h2>The first letter system</h2>
-<p>One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don't correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You'll still attach a name tag, just like before.</p>
-<p><img alt="fig1" src="/images/coat_5.png" /></p>
-<p>Here's where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. </p>
-<p><img alt="fig1" src="/images/coat_6.png" /></p>
-<p>It's likely that there will be more than one coat on the hook, but it's also likely that there will be ...</p>
+<p>If you're already familiar with hash tables, you'll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help ...</p>
                         <a class="btn btn-default btn-xs" href="./how-dictionaries-really-work.html">more ...</a>
     
                 </div>
@@ -183,134 +159,7 @@ mojones.net            </a>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Heads up to readers: this is a long article with lots of code samples and interactive charts. If you're reading on a mobile device, you might want to save this one until you can get to a wider screen! It may take a while to load all the charts. </p>
 <h2>Introduction</h2>
-<p>This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner's Dilemma game (actually, the version known as Iterated Prisoner's Dilemma, hereafter referred to as IPD). If you're not already familiar with the Prisoner's Dilemma, take a look at the first bit of <a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">the Wikipedia page</a> and the section on <a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma#The_iterated_prisoners.27_dilemma">Iterated Prisoner's Dilemma</a>. You might also want to watch <a href="https://www.youtube.com/watch?v=t9Lo2fgxWHw">this short video</a> and take a look at <a href="https://egtheory.wordpress.com/2015/03/02/ipd/">this blog post</a>. </p>
-<p>The impetus for this project was hearing about (and then working on a code sprint for) the <a href="https://github.com/Axelrod-Python/Axelrod">Axelrod library</a> at PyConUk 2015. Axelrod is a Python library which provides a framework for running IPD tournaments. This makes it very easy to play around with different strategies. </p>
-<p>Strategies are implemented as classes which have a single method, <code>strategy()</code> which takes as its argument an opponent object, and returns an action. Actions are represented by <code>C</code> for cooperate and <code>D</code> for defect. For example, here's the famous <strong>Tit for tat</strong> strategy that won the original Axelrod tournament in 1980, which can be summarized as "co-operate on the first turn, then copy the opponent's last action":</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This is the actual strategy&quot;&quot;&quot;</span>
-    <span class="c"># First move</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">C</span>
-    <span class="c"># React to the opponent&#39;s last move</span>
-    <span class="k">if</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">D</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">D</span>
-    <span class="k">return</span> <span class="n">C</span>
-</pre></div>
-
-
-<aside>
-<p>*So-called because it appears to cooperate for a long time, then defects near the end of the match.</p>
-</aside>
-<p>As we can see, the player has access to its own history through the <code>self.history</code> variable and to the opponent's history though the <code>opponent.history</code> variable. Players can implement more sophisticated strategies by examining these variables, and they also have access to the length of the match. For example, when I first encountered the Axelrod library the winning strategy was called <strong>DoubleCrosser</strong>* and worked like this (edited slightly for clarity):</p>
-<div class="highlight"><pre> <span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
-
-    <span class="c"># if there is no history, then this is the first turn, so cooperate</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">C</span>
-
-    <span class="c"># if this is either the last or second-to-last turn, defect</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tournament_attributes</span><span class="p">[</span><span class="s">&#39;length&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">D</span>
-
-    <span class="c"># if the opponent did not defect on any of the first six turns,</span>
-    <span class="c"># and we are not in the last 20 turns, cooperate</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">D</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[:</span><span class="mi">7</span><span class="p">]:</span>
-                 <span class="k">return</span> <span class="n">C</span>
-
-    <span class="c"># if the total number of defections by the opponent is </span>
-    <span class="c"># greater than three, always defect</span>
-    <span class="k">if</span> <span class="n">opponent</span><span class="o">.</span><span class="n">defections</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">D</span>
-
-    <span class="c"># failsafe; if none of the other conditions are true,</span>
-    <span class="c"># cooperate</span>
-    <span class="k">return</span> <span class="n">C</span>
-</pre></div>
-
-
-<aside>*This is because the best strategies mostly score through mutual cooperation, which scores 3 points</aside>
-
-<p>The library takes care of matching up players in pairwise combinations, running the tournament for a given number of turns, and keeping score. For the sake of convenience, scores are usually expressed as average score per turn. The best possible outcome for a given turn is that a player defects and their opponent cooperates giving a score of 5 in the standard payoff matrix, so that's the theoretical best average score per turn. The best strategies in the Axelrod library currently score around 3*. Here's a chart showing the ten best strategies, plus <strong>Tit for Tat</strong>, <strong>Cooperator</strong>, and <strong>Defector</strong> for reference:</p>
-<aside>
-<p>Spoiler alert: these strategies are going to get soundly thrashed by the end of this article :-)</p>
-</aside>
-<p><img alt="fig1" src="/images/best_10_strategies.png" /></p>
-<p>The reason that we're looking at a box plot here is that some of the strategies are <strong>stochastic</strong>, i.e. there's some random variation in the action they take. When calculating the scores, the Axelrod library takes care of running the tournament multiple times (100 by default) to get an average score for each strategy. </p>
-<hr />
-<h2>Using lookup tables to define a strategy</h2>
-<p>Many of the strategies in the Axelrod library choose their action based on what happened on the previous turn (or possibly earlier in the history). <strong>Tit for Tat</strong> is a good example; its action on a given turn depends entirely on the opponent's action on the previous one. We can think of this as a lookup table:</p>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Opponent's previous action</th>
-      <th>My action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Cooperate</td>
-      <td>Cooperate</td>
-    </tr>
-    <tr>
-      <td>Defect</td>
-      <td>Defect</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>or, in Python, as a dict where the keys are opponent's previous action, and the values are my action:</p>
-<div class="highlight"><pre><span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
-    <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>If we wanted to write a strategy that used this lookup table to decide what action to take, we could just grab the opponent's last action from its history like this:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
-    <span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
-        <span class="p">}</span>
-
-    <span class="c"># First move</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">C</span>
-
-    <span class="c"># Get the opponent&#39;s last action</span>
-    <span class="n">last_action</span> <span class="o">=</span> <span class="n">opponent</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c"># Use it to look up my action</span>
-    <span class="n">my_action</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="n">last_action</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">my_action</span>
-</pre></div>
-
-
-<p>Notice that we still need a special case for the first turn; obviously if there is no history then we can't use the lookup table!</p>
-<p>The nice thing about expressing a strategy in this was is that we can get different behaviours by changing the lookup table and leaving the strategy code exactly the same. In other words, the strategy is completely determined by the lookup table. For our current example, this isn't very exciting - given that there are only two possibilities for the dict key there are only three other strategies that we can describe: <strong>Cooperator</strong>:</p>
-<div class="highlight"><pre><span class="c"># always cooperate</span>
-<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span>
-        <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;C&#39;</span>
-    <span class="p">}</span>
-</pre></div>
-
-
-<p>, <strong>Defector</strong>:</p>
-<div class="highlight"><pre><span class="c"># always defect</span>
-<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
-        <span class="s">&#39;D&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span>
-    <span class="p">}</span>
-</pre></div>
-
-
-<p>, and <strong>Inverse Tit for Tat</strong>, which always does the opposite of the opponent's last action:</p>
-<div class="highlight"><pre><span class="c"># do the opposite of my opponent&#39;s last action</span>
-<span class="n">lookup_table</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
-        <span class="s">&#39;D ...</span></pre></div>
+<p>This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner's Dilemma game (actually, the version known as Iterated Prisoner's Dilemma, hereafter referred to as IPD). If you're not already familiar with the Prisoner's ...</p>
                         <a class="btn btn-default btn-xs" href="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">more ...</a>
     
                 </div>
@@ -344,13 +193,7 @@ mojones.net            </a>
 <h3>Instructions</h3>
 <ol>
 <li>Log in to Flickr.</li>
-<li>Go go "Camera roll" (under <strong>You</strong> in the menu or <a href="https://www.flickr.com/cameraroll">click here</a> ).</li>
-<li>Click the first photo to select it.</li>
-<li>Scroll down to the very bottom of the page (this will take a while if you have lots of photos).</li>
-<li>Hold down Shift and click on the very last photo. This will select everything between the first and last photo i.e. all of them.</li>
-<li>Click "Download" near the bottom of the page.</li>
-</ol>
-<p>If you have a large number of photos, they'll be split into multiple <strong>.zip</strong> files. Download them one at a time and unzip them wherever you like. </p>
+<li>Go go "Camera roll" (under <strong>You</strong> in the menu or ...</li></ol>
                         <a class="btn btn-default btn-xs" href="./how-to-download-all-your-photos-from-flickr.html">more ...</a>
     
                 </div>
@@ -383,103 +226,7 @@ mojones.net            </a>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I teach a lot of beginner-targeted programming courses, and something that I've experimented with recently is trying to introduce the idea of self-documenting code early on in the learning process. I usually start off by talking about the difference between good and bad names for things (mostly functions and variables, though many of the same arguments apply to class names) , and I've noticed a few common patterns that tend to crop up in beginners code. I thought it might be useful to lay out these common errors in one place.</p>
 <h2>Single-letter names</h2>
-<p>OK, we're writing a program and we need to create a new variable, but we can't think of a good name....let's just start with `a and work our way through the alphabet. Later on we find that we have a bit of code like this:</p>
-<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="s">&#39;acgatagc&#39;</span>
-<span class="n">b</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
-<span class="n">d</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
-    <span class="n">g</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">:</span><span class="n">e</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s">&#39;X&#39;</span><span class="p">)</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">h</span>
-</pre></div>
-
-
-<p>Which is well on its way to becoming completely incomprehensible. Sometimes single-letter names are the result of a desire to avoid typing or a worry about running out of space in your text editor. Neither of these are good enough reasons to write code as unreadable as the example above! Rest assured that using longer, more descriptive names will not make your program slow, or make any appreciable difference to the time it takes to type a line. Here's a sane version:</p>
-<div class="highlight"><pre><span class="n">dna</span> <span class="o">=</span> <span class="s">&#39;acgatagc&#39;</span>
-<span class="n">last_codon_start</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
-<span class="n">protein</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-<span class="k">for</span> <span class="n">codon_start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">last_codon_start</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
-    <span class="n">codon</span> <span class="o">=</span> <span class="n">dna</span><span class="p">[</span><span class="n">codon_start</span><span class="p">:</span><span class="n">codon_start</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">amino_acid</span> <span class="o">=</span> <span class="n">genetic_code</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codon</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s">&#39;X&#39;</span><span class="p">)</span>
-    <span class="n">protein</span> <span class="o">=</span> <span class="n">protein</span> <span class="o">+</span> <span class="n">amino_acid</span>
-</pre></div>
-
-
-<p>which might now be interpretable as part of a program that translates DNA sequences.</p>
-<p>Sometimes we might want to use non-meaningful variable names to illustrate a very generic bit of code: for example, if we want to demonstrate how to append a value to a list:</p>
-<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-</pre></div>
-
-
-<aside>
-<p>*Delightfully, there are versions of these in many languagues - take a look <a href="https://en.wikipedia.org/wiki/Metasyntactic_variable#Words_commonly_used_as_metasyntactic_variables">here</a>.</p>
-</aside>
-<p>but for these purposes it's better to use the well-known set of <a href="http://en.wikipedia.org/wiki/Metasyntactic_variable">metasyntatic variables</a>*:</p>
-<div class="highlight"><pre><span class="n">foo</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">foo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span>
-</pre></div>
-
-
-<p>There are a couple of situations where single-letter variables do make sense; mostly where there are strong conventions for their use. For example, if we're writing a program to deal with Cartesian co-ordinates then I won't be too upset to see variables called <code>x</code> and <code>y</code> (though I might make a case for <code>x_pos</code> and <code>y_pos</code>). Similarly, <code>i</code> and <code>j</code> are the traditional names for variables used as counters in a loop:</p>
-<div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="c"># do something</span>
-</pre></div>
-
-
-<p>but remember that the most common use for these variables - to hold an index when iterating over a list - doesn't often occur in Python because we generally iterate over the elements of lists directly, in which case there's no excuse for not picking a meaningful variable name.</p>
-<h2>Naming thing after their type</h2>
-<p>This is a habit that people are most likely to fall into shortly after having learned of the existence of types, or shortly after having learned about a new type. The logic goes something like this: I've just been told that it's important to remember whether a variable is a string or a number, so I'll make that fact part of the name. This is not necessarily a terrible idea - in fact there is <a href="http://en.wikipedia.org/wiki/Hungarian_notation">an entire system of variable naming</a> based on it. Where it becomes a problem is when the type becomes the most important part of the name:</p>
-<div class="highlight"><pre><span class="n">my_number</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="n">my_string</span> <span class="o">=</span> <span class="s">&quot;Homo sapiens&quot;</span>
-<span class="n">the_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">a_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;foo.txt&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
-
-
-<p>This is obviously problematic: it's generally much more important to know what values are stored in a variable:</p>
-<div class="highlight"><pre><span class="n">minimum_name_length</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="n">species_name</span> <span class="o">=</span> <span class="s">&quot;Homo sapiens&quot;</span>
-<span class="n">reading_frames</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;foo.txt&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate_average</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
-
-
-<aside>
-<p>*See <a href="http://en.wikipedia.org/wiki/Duck_typing">Duck Typing</a> for more on this.</p>
-</aside>
-<p>There's a more subtle problem with types-as-variable-names - the dynamic nature of Python means that it tends to work best when we worry about the various ways that a variable can be used, rather than its type*. It's this magic that allows us, for example, to iterate over lists, strings and files using a single syntax.</p>
-<h2>Extremely vague names</h2>
-<p>Often when we create a variable, or start writing a function, we're not exactly sure what its job is going to be in our program. This is especially true when we first start writing code. Unfortunately, this can lead to some very unhelpful variable names - examples I have seen in the wild include <code>data</code>, <code>input</code>, <code>output</code>, <code>do_stuff()</code>, <code>process_files()</code>, <code>params</code>, <code>object</code>, and <code>true_or_false</code>. If you find yourself using a "placeholder" name like these during the process of coding, it's a good idea to go back and change them once you've figure out what the function or variable is actually doing.</p>
-<h2>Sequential names</h2>
-<p>This is a perennial problem in the world of naming, whether we are talking about Python variables or word processing files (how many people have a folder containing files with names like <em>final_draft.doc</em>, <em>final_draft2.doc</em>, <em>final_draft2.1.doc</em>, <em>final_draft2_update.doc</em>?) Thought of the perfect variable name, but then realized that you've already used it? No problem, just stick a "2" on the end of that bad boy:</p>
-<div class="highlight"><pre><span class="n">word</span> <span class="o">=</span> <span class="s">&#39;albatross&#39;</span>
-<span class="n">word2</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-<span class="n">word3</span> <span class="o">=</span> <span class="n">word2</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span>
-</pre></div>
-
-
-<p>Hopefully it's not necessary to point out why this can be confusing when you come back to read the code. We can rescue the above example in a couple of ways. One is to use more descriptive names:</p>
-<div class="highlight"><pre><span class="n">word</span> <span class="o">=</span> <span class="s">&#39;albatross&#39;</span>
-<span class="n">uppercase_word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-<span class="n">punctuated_word</span> <span class="o">=</span> <span class="n">uppercase_word</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span>
-</pre></div>
-
-
-<p>Another way is to recognize that we're probably not going to use <code>word</code> or <code>uppercase_word</code> in our program, and just do the whole thing in one step:</p>
-<div class="highlight"><pre><span class="n">final_word</span> <span class="o">=</span> <span class="s">&#39;albatross&#39;</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">+</span> <span class="s">&quot;!&quot;</span>
-</pre></div>
-
-
-<aside>
-<p>*The idea of a <a href="http://en.wikipedia.org/wiki/Namespace">namespace</a> nicely captures this idea.</p>
-</aside>
-<p>When we find ourselves needing to create a new ...</p>
+<p>OK, we're writing a program ...</p>
                         <a class="btn btn-default btn-xs" href="./how-to-pick-bad-function-and-variable-names.html">more ...</a>
     
                 </div>
@@ -519,25 +266,7 @@ mojones.net            </a>
         <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;savedata&quot;</span><span class="p">,</span>
         <span class="nx">contentType</span> <span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
         <span class="nx">dataType</span><span class="o">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
-        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">tree</span><span class="p">.</span><span class="nx">focused</span><span class="p">().</span><span class="nx">get</span><span class="p">()),</span>
-        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">){</span>
-            <span class="nx">alert</span><span class="p">(</span> <span class="s2">&quot;Data Saved: &quot;</span> <span class="o">+</span> <span class="nx">msg</span> <span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>And on the server end, here’s the code from the relevant controller.</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="n">savedata</span> <span class="o">=</span> <span class="o">{</span>
-        <span class="kt">def</span> <span class="n">json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">JSON</span>
-        <span class="c1">// do something useful with the data</span>
-        <span class="n">text</span><span class="o">.</span><span class="na">children</span><span class="o">.</span><span class="na">each</span><span class="o">{</span>
-               <span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">data</span><span class="o">.</span><span class="na">title</span>
-         <span class="o">}</span>
-         <span class="n">render</span> <span class="s2">&quot;OK&quot;</span>
- <span class="o">}</span>
-</pre></div>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">JSON ...</span></pre></div>
                         <a class="btn btn-default btn-xs" href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">more ...</a>
     
                 </div>
@@ -565,37 +294,7 @@ mojones.net            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I’ve been playing around a bit with Processing.org – a kinda-graphical programming language. One of the effect that I wanted to play with was a kind of radial transparency –  a blob of colour that faded out toward the edges. After playing around for a while with drawing multiple ellipses, I settled on a pixel-based subroutine. </p>
-<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it to get the distance from the edge and then use the square of that value to determine the transparency. This gives a smoother effect – if we don’t use the square then the edges don’t transition smoothly (probably something to do with the sensitivity of human vision / LCD monitors to colour being non-linear). Anyway, here’s the code:</p>
-<p>UPDATE – turns out that using <code>Math.hypot()</code> is very slow – switching to <code>Math.sqrt()</code> speeds up the code x10. The new code is below.</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">radialGradient</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">c</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">PGraphics</span> <span class="n">pg</span> <span class="o">=</span> <span class="n">createGraphics</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">JAVA2D</span><span class="o">);</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">beginDraw</span><span class="o">();</span>
-  <span class="n">pg</span><span class="o">.</span><span class="na">background</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
-  <span class="kt">int</span> <span class="n">halfsize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
-
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-      <span class="c1">// calculate distance to center</span>
-      <span class="c1">//float distance = (float) Math.hypot(i - size / 2, j - size / 2) / (size / 2);</span>
-      <span class="c1">//float distance = (float) sqrt(sq(i-size/2) + sq(j-size/2)) / (size/2);</span>
-      <span class="kt">float</span> <span class="n">xDist</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">yDist</span> <span class="o">=</span>  <span class="n">j</span> <span class="o">-</span> <span class="n">halfsize</span><span class="o">;</span>
-                <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">xDist</span><span class="o">*</span><span class="n">xDist</span> <span class="o">+</span> <span class="n">yDist</span><span class="o">*</span><span class="n">yDist</span><span class="o">)</span> <span class="o">/</span> <span class="n">halfsize</span><span class="o">;</span>
-      <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span><span class="o">;</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">scale</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-      <span class="o">}</span>
-      <span class="kt">float</span> <span class="n">transparency</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="o">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span><span class="o">);</span>
-      <span class="kt">int</span> <span class="n">thisColour</span> <span class="o">=</span> <span class="n">color</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kt">int</span><span class="o">(</span><span class="n">transparency</span><span class="o">));</span>
-      <span class="n">pg</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">thisColour</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-
-  <span class="n">pg</span><span class="o">.</span><span class="na">endDraw</span><span class="o">();</span>
-  <span class="n">imageMode</span><span class="o">(</span><span class="n">CENTER</span><span class="o">);</span>
-  <span class="n">image</span><span class="o">(</span><span class="n">pg</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
+<p>We create a new <code>PGraphics</code> object to hold the blob, then for each pixel calculate the distance from the centre as a proportion of the radius using the handy <code>Math.hypot()</code> method. Then, to get nice smooth fade-outs near the edges, we invert it ...</p>
                         <a class="btn btn-default btn-xs" href="./radial-transparent-gradients-in-processingorg.html">more ...</a>
     
                 </div>
@@ -654,80 +353,7 @@ mojones.net            </a>
 </pre></div>
 
 
-<p>Now we’ll turn on SQL logging in <code>Datasource.groovy</code>, so we can see exactly when hibernate is issuing SQL queries:</p>
-<div class="highlight"><pre><span class="n">dataSource</span> <span class="o">{</span>  
-    <span class="n">dbCreate</span> <span class="o">=</span> <span class="s2">&quot;create-drop&quot;</span> <span class="c1">// one of &#39;create&#39;, &#39;create-drop&#39;,&#39;update&#39;  </span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:hsqldb:mem:devDB&quot;</span>  
-    <span class="n">loggingSql</span> <span class="o">=</span> <span class="kc">true</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>Now let’s create a controller to hold our test code (just for convenience, this could also be done in a groovy console):</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">class</span> <span class="nc">TestController</span> <span class="o">{</span>
-
-    <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="o">{</span>
-
-        <span class="n">println</span> <span class="s2">&quot;starting controller&quot;</span>  
-        <span class="kt">def</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">Author</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="s1">&#39;alice&#39;</span><span class="o">)</span>  
-        <span class="n">println</span> <span class="s2">&quot;author name is $alice.name&quot;</span>  
-        <span class="kt">def</span> <span class="n">myBooks</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="na">books</span>  
-        <span class="n">println</span> <span class="s2">&quot;books are now stored in a variable&quot;</span>  
-        <span class="n">myBooks</span><span class="o">.</span><span class="na">each</span><span class="o">({</span><span class="n">println</span> <span class="n">it</span><span class="o">.</span><span class="na">title</span><span class="o">})</span>  
-        <span class="n">println</span> <span class="n">myBooks</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">name</span>  
-        <span class="n">render</span> <span class="s2">&quot;OK!&quot;</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-</pre></div>
-</td></tr></table>
-
-<p>This is pretty straightforward – we’re using a dynamic finder to retrieve the <code>Author</code> we added in the bootstrap script, then getting the list of <code>Books</code> and storing them in a variable, then printing the title of each book.</p>
-<p>Question: when do we expect to see the SQL query issued to retrieve the books? Grails uses lazy evaluation by default, so it won’t be at line 6, because we haven’t actually asked for the <code>books</code> field yet. I expected to see it at line 8 – here we are asking for the <code>books</code> field, so surely this is where hibernate will retrieve them. I was wrong – in fact the books are not retrieved until line 10, where we actually want to do something with the books. The output make this clear:</p>
-<div class="highlight"><pre>starting controller  
-Hibernate:  
-select  
-this_.id as id0_0_,  
-this_.version as version0_0_,  
-this_.name as name0_0_  
-from  
-author this_  
-where  
-this_.name=?  
-author name is alice  
-books are now stored in a variable  
-Hibernate:  
-select  
-books0_.author_id as author3_1_,  
-books0_.id as id1_,  
-books0_.id as id1_0_,  
-books0_.version as version1_0_,  
-books0_.author_id as author3_1_0_,  
-books0_.title as title1_0_  
-from  
-book books0_  
-where  
-books0_.author_id=?  
-book2  
-book1  
-org.hibernate.collection.PersistentSet  
-</pre></div>
-
-
-<p>So hibernate does not actually execute the SQL query to get the books when we ask for <code>alice.books</code>, but it is lazy enough to wait until we actually we try to iterate over the results. The last line of the output reveals how the magic happens – the object that <code>myBooks</code> points to is not a straightforward <code>List</code>, but a <a href="https://web.archive.org/web/20130624115433/https://www.hibernate.org/hib_docs/v3/api/org/hibernate/collection/PersistentSet.html"><code>PersistentSet</code></a>.</p>
-<p>This caused me a fair amount of confusion when I was trying to optimise a Grails action by minimising the number of SQL queries issued when retrieving a large number of objects from a database. Now that I know the way that it really works, I find it both cool, and a little bit scary that this is going on behind the scenes. A nice illustration of the trade-offs involved in using an ORM framework.</p>
+<p>Now we’ll ...</p>
                         <a class="btn btn-default btn-xs" href="./hibernate-magic-with-lazy-evaluation.html">more ...</a>
     
                 </div>
@@ -763,175 +389,7 @@ org.hibernate.collection.PersistentSet
                 <div class="summary"><p>I've been checking out the legendary MIT <a href="http://www.youtube.com/watch?v=2Op3QLzMgSY&amp;feature=list_related&amp;playnext=1&amp;list=SPE18841CABEA24090">Structure and Interpretation of Computer Programs</a> course from 1986 on YouTube, and it's fascinating for many reasons, not least the hypnotic synthesized Bach that bookends each lecture. I don't think I will ever be able to hear <em>Jesu, joy of man's desiring</em> again without seeing that purple wizard. What's really striking to me is how quickly the course gets into territory that I (coming from a self-taught Perl/Java background) think of as pretty advanced. In the first three lectures we are introduced to:</p>
 <ul>
 <li>Recursive subroutines</li>
-<li>big-O notation</li>
-<li>passing functions around as variables</li>
-<li>building functions using higher-order programming</li>
-</ul>
-<p>Anyway, I thought that the example used to illustrate higher-order programming was pretty cool, so I decided to see if I could implement it in Groovy. The example involves writing a function to calculate the square root of a number using the <a href="http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method">Babylonian method </a>- start with a guess and repeatedly average the guess with the number divided by the guess, until the answer is close enough.</p>
-<p>Here it is in Groovy:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">abs</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>  
-        <span class="o">-</span><span class="n">x</span>  
-    <span class="k">else</span>  
-        <span class="n">x</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
-        <span class="k">return</span> <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="mi">2</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-        <span class="k">return</span> <span class="nf">sqrt2</span><span class="o">(</span><span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="n">sqrt2</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
-</pre></div>
-
-
-<p>and the output:</p>
-<div class="highlight"><pre>guess is 1  
-guess is 1.5  
-guess is 1.41666666665  
-guess is 1.414215686275 
-</pre></div>
-
-
-<p>I've defined an <code>abs()</code> closure because the built-in <code>.abs()</code> method complains about different types of numbers. The <code>sqrt2()</code> method itself is easy to read – given a guess, calculate how far off it is by squaring it, and either return the guess (it it's close enough) or use the averaging procedure to make a new guess and call <code>sqrt2()</code> again. We could make it a bit more concise by leaving off the explicit return statements – a Groovy method returns the value of the last expression that was evaluated, so we don't really need them (this is what I've done with my <code>abs()</code> method). Note that when we call the method in the last line, we have to supply it with an initial guess.</p>
-<p>The first step in abstraction is pretty obvious – let's do away with the hard-coded 2 and let the method take the number for which we want to take the square root as an argument.</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="o">){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span> <span class="o">-&gt;</span>  
-    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>To make things a a little more convenient I’ve moved the iterative code to a closure called <code>sqrt_iter()</code>; the job of <code>sqrt()</code> now is just to supply the initial guess. Now we can ask for the square root of exotic numbers like five:</p>
-<div class="highlight"><pre>guess is 1  
-guess is 3  
-guess is 2.33333333335  
-guess is 2.238095238095  
-guess is 2.2360688956435
-</pre></div>
-
-
-<p>Up to this point there’s no higher-order programming going on. But now it starts to get interesting; we can extract the bits of code that are responsible for checking if the answer is good enough and for generating the next guess:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-        <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">sqrt_iter</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>Now, what we are left with in <code>sqrt_iter()</code> is a generic procedure for solving a problem by generating successively better guesses until we get close enough. We can make this abstraction explicit by turning our improve / good enough methods into closures and having them as arguments to the main iteration method:</p>
-<div class="highlight"><pre><span class="n">sqrt_improve</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="o">((</span><span class="n">x</span> <span class="s">/ guess) + guess) /</span> <span class="mi">2</span>  
-<span class="o">}</span>
-
-<span class="n">sqrt_goodEnough</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="kt">def</span> <span class="n">difference</span> <span class="o">=</span> <span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span><span class="o">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span>  
-    <span class="n">difference</span> <span class="o">&lt;</span> <span class="mf">0.001</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">){</span>  
-    <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-        <span class="n">guess</span>  
-    <span class="o">}</span>  
-    <span class="k">else</span><span class="o">{</span>  
-        <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-        <span class="n">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>  
-<span class="o">}</span>  
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>I’ve changed the names of the closures to make things clearer. <code>sqrt_improve()</code> and <code>sqrt_goodEnough()</code> are the particular type of <code>improve</code> and <code>goodEnough</code> routines that are for solving square roots. Our iteration routine is now a generic one that take four arguments – a closure that can tell if a guess is good enough; a closure that can improve an existing guess, a number for which we’re trying to find the answer, and a guess. Note that the <code>generic_iter()</code> method now contains absolutely no logic to do with calculating square roots – it is completely generic. We can use it to solve any problem which we can express in terms of a way of checking if a guess is good enough, and a way of improving a guess.</p>
-<p>Here’s a completely brain-dead example; using the <code>generic_iter()</code> method to solve the problem of finding the smallest integer that is bigger than a given number:</p>
-<div class="highlight"><pre><span class="n">biggerThan_improve</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-    <span class="n">guess</span> <span class="o">+</span> <span class="mi">1</span>  
-<span class="o">}</span>
-
-<span class="n">biggerThan_goodEnough</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-   <span class="n">guess</span> <span class="o">&gt;</span> <span class="n">x</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="nf">biggerThan</span><span class="o">(</span><span class="n">x</span><span class="o">){</span>  
-    <span class="n">generic_iter</span><span class="o">(</span><span class="n">biggerThan_goodEnough</span><span class="o">,</span> <span class="n">biggerThan_improve</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>  
-<span class="o">}</span>
-
-<span class="n">biggerThan</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</pre></div>
-
-
-<p>The <code>improve</code> closure just increments the guess by one; the good enough closure just checks whether the guess is bigger than the target number. The output is not particularly surprising:</p>
-<div class="highlight"><pre>guess is 0  
-guess is 1  
-guess is 2  
-guess is 3  
-guess is 4  
-guess is 5  
-guess is 6 
-</pre></div>
-
-
-<p>One final point: because we can return closures as values from methods in Groovy, we can redefine <code>generic_iter</code> so that rather than executing the iteration procedure, it returns it. So we can assign the result to another variable and use it later on:</p>
-<div class="highlight"><pre><span class="kt">def</span> <span class="nf">generic_iter</span><span class="o">(</span><span class="n">goodEnough</span><span class="o">,</span> <span class="n">improve</span><span class="o">){</span>  
-    <span class="kt">def</span> <span class="n">returnClosure</span>  
-    <span class="n">returnClosure</span> <span class="o">=</span> <span class="o">{</span> <span class="n">x</span><span class="o">,</span> <span class="n">guess</span> <span class="o">-&gt;</span>  
-        <span class="n">println</span> <span class="s2">&quot;guess is $guess&quot;</span>  
-        <span class="k">if</span> <span class="o">(</span><span class="n">goodEnough</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)){</span>  
-            <span class="n">guess</span>  
-        <span class="o">}</span>  
-        <span class="k">else</span><span class="o">{</span>  
-            <span class="kt">def</span> <span class="n">new_guess</span> <span class="o">=</span> <span class="n">improve</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">guess</span><span class="o">)</span>  
-            <span class="n">returnClosure</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">new_guess</span><span class="o">)</span>  
-        <span class="o">}</span>  
-    <span class="o">}</span>  
-<span class="o">}</span>
-
-<span class="kt">def</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="n">generic_iter</span><span class="o">(</span><span class="n">sqrt_goodEnough</span><span class="o">,</span> <span class="n">sqrt_improve</span><span class="o">)</span>
-
-<span class="n">sqrt</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">1 ...</span></pre></div>
+<li>big-O notation ...</li></ul>
                         <a class="btn btn-default btn-xs" href="./functional-abstraction-examples-from-scip-in-groovy.html">more ...</a>
     
                 </div>
@@ -964,59 +422,7 @@ guess is 6
 	<a href="./tag/metaprogramming.html">metaprogramming</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or positive, so in order to randomly nudge a number up or down we end up with something like:</p>
-<div class="highlight"><pre><span class="n">myNoisyNumber</span>  <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span> <span class="o">(</span><span class="n">myNumber</span> <span class="o">-</span> <span class="mi">10</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">)</span>
-</pre></div>
-
-
-<p>which is not exactly concise. If we want to call a Processing function that takes several such variables as arguments, then it gets worse:</p>
-<div class="highlight"><pre><span class="c1">// draw a slightly-random ellipse</span>
-<span class="n">ellipse</span><span class="o">(</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">20</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">),</span>  
-<span class="o">(</span><span class="kt">float</span><span class="o">)(</span><span class="n">size</span><span class="o">-</span><span class="mi">5</span><span class="o">)+(</span><span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()*</span><span class="mi">10</span><span class="o">)</span>
-<span class="o">)</span>
-</pre></div>
-
-
-<p>Thinking about a Groovy solution to the problem I remembered reading about the meta-programming features that let us dynamically add methods to core Java classes at runtime. So here’s my solution – let’s modify the <code>Integer</code>, <code>Float</code> and <code>BigDecimal</code> classes to include an extra method, <code>jiggle()</code>, that will add or subtract a bit of random variation to the number and return it as a <code>float</code>. Here is the magic code, that must be called at runtime (the <code>setup()</code> method of a processing applet does the job very nicely):</p>
-<div class="highlight"><pre><span class="n">Float</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">Integer</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-
-<span class="n">BigDecimal</span><span class="o">.</span><span class="na">metaClass</span><span class="o">.</span><span class="na">jiggle</span> <span class="o">=</span> <span class="o">{</span> <span class="kt">def</span> <span class="n">amount</span> <span class="o">-&gt;</span>  
-    <span class="kt">double</span> <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">()</span> <span class="o">*</span> <span class="n">amount</span>  
-    <span class="k">if</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()){</span>  
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>  
-    <span class="o">}</span>  
-    <span class="k">return</span> <span class="o">(</span><span class="n">Float</span><span class="o">)</span> <span class="n">delegate</span> <span class="o">+</span> <span class="n">rand</span>  
-<span class="o">}</span>
-</pre></div>
-
-
-<p>The <code>jiggle()</code> method (actually it is a closure) itself is pretty straightforward. We take random number, scale it by the argument, invert it half the time, add it to the number, and cast the result to a <code>Float</code> before returning it. </p>
-<p>Two things are of interest here; firstly, we need to have a <code>Random</code> object called <code>random</code> in the scope where this code is run (we could get round this by creating a new <code>Random</code> object inside the closure, but I find it easier for debugging to have a single <code>Random</code> object for the whole sketch, making it easy to reproduce). Secondly, when we want to refer to the object to which the closure belongs (i.e. the <code>Integer</code>, <code>Float</code> or <code>BigDecimal</code>) we use <code>delegate</code>.</p>
-<p>Having run this little snippet, our little ellipse example becomes much more concise:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">y</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span><span class="n">size</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">))</span>
-</pre></div>
-
-
-<p>and since we have ensured that all our new methods return <code>Floats</code>, we can happily through any type of number we like into the mix and be sure that the jiggled number will come out OK. We can even make use of Groovy’s everything-is-an-object syntax to do cool stuff like:</p>
-<div class="highlight"><pre><span class="n">ellipse</span><span class="o">(</span><span class="mi">10</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">5</span><span class="o">),</span> <span class="mf">5.5</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mi">20</span><span class="o">),</span> <span class="mi">100</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">3.1415</span><span class="o">),</span> <span class="mf">0.7</span><span class="o">.</span><span class="na">jiggle</span><span class="o">(</span><span class="mf">0.002</span><span class="o">))</span>
-</pre></div>
+                <div class="summary"><p>Recently I’ve been playing around quite a bit with <a href="http://processing.org">Processing.org</a>, and one of the things that I often want to do is add a bit of noise to variables that represent positions, sizes, colours, etc. Most of the Processing functions that actually draw something (like lines, ellipses, etc) take their arguments in the form of <code>floats</code>, but most floating number operations in Java/Groovy return <code>BigDecimal</code> data types so we have to use casts a lot. Also, there’s no concise way to get a floating random number in a certain range that can be either negative or ...</p>
                         <a class="btn btn-default btn-xs" href="./extending-java-number-classes-with-random-functions-in-groovy.html">more ...</a>
     
                 </div>
@@ -1050,15 +456,7 @@ guess is 6
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the acegi plugin will, by default, create a domain class with the name <code>User</code>.  When you try to run the application with a postgresql datasource, GORM will try to create a table with the name <code>user</code>, which postgresql will not like as it is a reserved word.</p>
-<p>This is a particularly annoying bug, because <code>user</code> is <strong>not</strong> a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to <code>Users</code> scattered throughout your application.</p>
-<p>Thankfully, the fix is not too onerous; either rename your <code>User</code> class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping:</p>
-<div class="highlight"><pre><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
-  <span class="o">..</span>
-  <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
-      <span class="n">table</span> <span class="s1">&#39;myappname_user&#39;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
+<p>This is a particularly ...</p>
                         <a class="btn btn-default btn-xs" href="./beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
     
                 </div>

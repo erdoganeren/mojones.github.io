@@ -126,13 +126,7 @@ mojones.net            </a>
 <h3>Instructions</h3>
 <ol>
 <li>Log in to Flickr.</li>
-<li>Go go "Camera roll" (under <strong>You</strong> in the menu or <a href="https://www.flickr.com/cameraroll">click here</a> ).</li>
-<li>Click the first photo to select it.</li>
-<li>Scroll down to the very bottom of the page (this will take a while if you have lots of photos).</li>
-<li>Hold down Shift and click on the very last photo. This will select everything between the first and last photo i.e. all of them.</li>
-<li>Click "Download" near the bottom of the page.</li>
-</ol>
-<p>If you have a large number of photos, they'll be split into multiple <strong>.zip</strong> files. Download them one at a time and unzip them wherever you like. </p>
+<li>Go go "Camera roll" (under <strong>You</strong> in the menu or ...</li></ol>
                         <a class="btn btn-default btn-xs" href="../how-to-download-all-your-photos-from-flickr.html">more ...</a>
     
                 </div>
@@ -166,33 +160,7 @@ mojones.net            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Whenever I set up a new site, I want to make sure that example.com points to www.example.com. This is basic SEO – check out <a href="https://web.archive.org/web/20100727065239/http://www.kalzumeus.com/2007/10/07/dont-make-my-really-elementary-seo-mistake/">this link</a> for a quick explanation. I know that this is trivial to do in Apache, but for the sake of simplicity I wanted to use Tomcat only as my web server.</p>
-<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took me a while to get it set up right, so here’s a quick howto for anyone else in the same position.</p>
-<p>The instructions on the project’s homepage will get you most of the way there. You unzip the contents of the binary download (a single .jar and a config file) into your context’s directory, then add a servlet mapping to make sure that UrlRewriteFilter gets to handle all requests. Make sure that the UrlRewriteFilter servlet mapping goes at the top of the web.xml file, to ensure that the filter gets to see HTTP requests before any other servlet.</p>
-<p>The tricky part is getting the config file <code>WEB-INF/urlrewrite.xml</code> just right, so here’s the configuration that worked for me:</p>
-<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
-<span class="nt">&lt;rule&gt;</span>
-    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
-    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
-<span class="nt">&lt;/rule&gt;</span>
-<span class="nt">&lt;/urlrewrite&gt;</span>
-</pre></div>
-
-
-<p>The <code>condition</code> element tells us that we want to trigger this rule when the HTTP request host header is not equal to <code>www.example.com</code>. Because it’s a regular expression, we escape the dots with backslashes (and use a start-anchor for good measure). The <code>from</code> element uses parentheses to capture the whole of the path the the resource that’s being asked for, minus the starting forward slash. Of course, if the request is just for <code>example.com</code> (probably the most common scenario) then this will be empty. The captured value is then used in the to element to construct that path for the redirect. So <code>example.com/tour.jsp</code> should redirect to <code>www.example.com/tour.jsp</code>.</p>
-<h2>Update</h2>
-<p>A quick update to mention a gotcha that I ran into; if you set up UrlRewriteFilter as described above then it will redirect you if you try to access your website on your development machine by going to <code>localhost:8080</code>. This can lead to very frustrating scenarios involving repeatedly hitting F5 while muttering “why aren’t you showing my changes, dammit?” and failing to notice that the address bar reads <code>www.mywebsite.com</code>. Because UrlRewriteFilter lets you have multiple conditions, it’s quite easy to get the correct behaviour:</p>
-<div class="highlight"><pre><span class="nt">&lt;urlrewrite&gt;</span>
-<span class="nt">&lt;rule&gt;</span>
-    <span class="nt">&lt;name&gt;</span>seo redirect<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^www\.example\.com<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;condition</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">operator=</span><span class="s">&quot;notequal&quot;</span><span class="nt">&gt;</span>^localhost<span class="nt">&lt;/condition&gt;</span>
-    <span class="nt">&lt;from&gt;</span>^/(.*)<span class="nt">&lt;/from&gt;</span>
-    <span class="nt">&lt;to</span> <span class="na">type=</span><span class="s">&quot;permanent-redirect&quot;</span> <span class="na">last=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>http://www.example.com/$1<span class="nt">&lt;/to&gt;</span>
-<span class="nt">&lt;/rule&gt;</span>
-<span class="nt">&lt;/urlrewrite&gt;</span>
-</pre></div>
+<p>After much searching around, it became clear that (1) Tomcat can’t do this and (2) I’m not the only person with this problem. The solution is a Java servlet filter called <a href="https://web.archive.org/web/20100727065239/http://tuckey.org/urlrewrite/">URLRewriteFilter</a>. It does the job perfectly, but it took ...</p>
                         <a class="btn btn-default btn-xs" href="../301-permanent-redirect-with-tomcat.html">more ...</a>
     
                 </div>
@@ -223,9 +191,7 @@ mojones.net            </a>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>I just ran into this problem today; thought I should post the solution in case anybody else finds themselves in the same boat.</p>
 <p>I moved a WordPress blog from one server to another which was running lighttpd with a blanket 301 redirect to from www to non-www URLs. When I fired up a browser to test it, I got the dreaded “this website is responding in a way that will never resolve” message. A quick look at the lighttpd logs confirmed that I was bouncing from <strong>www.example.com</strong> to <strong>example.com</strong> then back to <strong>www.example.com</strong>.</p>
-<p>I expected the first redirect but not the second, and checking in my lighttpd conf showed no rule that could possibly be triggering it. Thinking maybe I had left a redirection plugin running, I logged on the blog (by temporarily disabling the redirect rules) and checked, but couldn’t find anything.</p>
-<p>Turns out that WordPress itself is capable of generating 301 redirects according to the “Blog URL” field in the General settings page. If the URL is set to <strong>http://www.example.com</strong> and a request comes in for <strong>http://example.com/some/page</strong>, then WordPress will automatically respond with a 301 redirect to <strong>http://www.example.com/some/page</strong> (which in my case, would get caught by my lighttpd rule and bounced back to the original request URL, and so on).</p>
-<p>Moral of the story: make sure that your WordPress URL settings and any manual redirection you are carrying out are in agreement as to what the ‘correct’ URL should be!</p>
+<p>I expected ...</p>
                         <a class="btn btn-default btn-xs" href="../how-to-fix-an-infinite-301-redirect-loop-in-wordpress.html">more ...</a>
     
                 </div>

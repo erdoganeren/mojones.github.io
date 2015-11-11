@@ -124,15 +124,7 @@ mojones.net            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>This is firmly in the “putting it up here just in case anyone else has the same problem” category.  There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source.  The problem is that the acegi plugin will, by default, create a domain class with the name <code>User</code>.  When you try to run the application with a postgresql datasource, GORM will try to create a table with the name <code>user</code>, which postgresql will not like as it is a reserved word.</p>
-<p>This is a particularly annoying bug, because <code>user</code> is <strong>not</strong> a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to <code>Users</code> scattered throughout your application.</p>
-<p>Thankfully, the fix is not too onerous; either rename your <code>User</code> class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping:</p>
-<div class="highlight"><pre><span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
-  <span class="o">..</span>
-  <span class="kd">static</span> <span class="n">mapping</span> <span class="o">=</span> <span class="o">{</span>
-      <span class="n">table</span> <span class="s1">&#39;myappname_user&#39;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
+<p>This is a particularly ...</p>
                         <a class="btn btn-default btn-xs" href="../beware-of-the-default-acegi-grails-plugin-setup.html">more ...</a>
     
                 </div>

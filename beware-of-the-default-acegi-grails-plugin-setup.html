@@ -13,13 +13,13 @@
 
         <meta name="author" content="Martin" />
         <meta name="keywords" content="groovy,grails,webdev,postgresql,acegi" />
-        <meta name="description" content="This is firmly in the “putting it up here just in case anyone else has the same problem” category. There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source. The problem is that the acegi plugin will, by default, create a domain class with the name User. When you try to run the application with a postgresql datasource, GORM will try to create a table with the name user, which postgresql will not like as it is a reserved word. This is a particularly annoying bug, because user is not a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to Users scattered throughout your application. Thankfully, the fix is not too onerous; either rename your User class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping: class User { .. static mapping = { table &#39;myappname_user&#39; } }" />
+        <meta name="description" content="This is firmly in the “putting it up here just in case anyone else has the same problem” category. There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source. The problem is that the acegi plugin will, by default, create a domain class with the name User. When you try to run the application with a postgresql datasource, GORM will try to create a table with the name user, which postgresql will not like as it is a reserved word. This is a particularly ..." />
 
         <meta property="og:site_name" content="mojones.net" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Beware of the default acegi Grails plugin setup"/>
         <meta property="og:url" content="./beware-of-the-default-acegi-grails-plugin-setup.html"/>
-        <meta property="og:description" content="This is firmly in the “putting it up here just in case anyone else has the same problem” category. There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source. The problem is that the acegi plugin will, by default, create a domain class with the name User. When you try to run the application with a postgresql datasource, GORM will try to create a table with the name user, which postgresql will not like as it is a reserved word. This is a particularly annoying bug, because user is not a reserved word in other RDBMs, so the error will only become apparent when you switch from your development HSQLDB to postgres, by which time you will have have references to Users scattered throughout your application. Thankfully, the fix is not too onerous; either rename your User class to something else (and do a tentative find/replace in your code) or use a custom GORM table mapping: class User { .. static mapping = { table &#39;myappname_user&#39; } }"/>
+        <meta property="og:description" content="This is firmly in the “putting it up here just in case anyone else has the same problem” category. There is a gotcha that bites when writing a Grails application that uses the acegi security plugin along with a postgresql database as the data source. The problem is that the acegi plugin will, by default, create a domain class with the name User. When you try to run the application with a postgresql datasource, GORM will try to create a table with the name user, which postgresql will not like as it is a reserved word. This is a particularly ..."/>
         <meta property="article:published_time" content="2015-11-04" />
             <meta property="article:section" content="programming" />
             <meta property="article:tag" content="groovy" />
@@ -164,8 +164,8 @@ mojones.net            </a>
         <li><a href="./hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></li>
         <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
         <li><a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
-        <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
         <li><a href="./functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></li>
+        <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
     </ul>
 </section>
     <hr/>
