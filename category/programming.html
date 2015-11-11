@@ -99,6 +99,65 @@ mojones.net            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="../how-dictionaries-really-work.html">How dictionaries really work</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-11T16:47:46.681438+00:00"> Wed 11 November 2015</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="../category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="../tag/python.html">Python</a>
+        /
+	<a href="../tag/language-agnostic.html">language agnostic</a>
+        /
+	<a href="../tag/hash.html">hash</a>
+        /
+	<a href="../tag/dict.html">dict</a>
+        /
+	<a href="../tag/associative-array.html">associative array</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><h2>Preface</h2>
+<p>This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as <strong>hashes</strong>, <strong>HashMaps</strong>, <strong>dictionaries</strong>, <strong>dicts</strong>, <strong>associative arrays</strong>, or <strong>symbol tables</strong>. </p>
+<p>If you're already familiar with hash tables, you'll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved!</p>
+<h2>Introduction</h2>
+<aside>
+<p>*The manager of the nightclub is a programmer, hence the zero-indexed numbering :-)</p>
+</aside>
+<p>Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. </p>
+<p><img alt="fig1" src="/images/coat_1.png" /></p>
+<p>When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook.</p>
+<p><img alt="fig1" src="/images/coat_2.png" /></p>
+<p>The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let's say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number.</p>
+<h2>The problem with this system</h2>
+<p>The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer's description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you'll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket.</p>
+<h2>The name tag system</h2>
+<p>One night you decide that you've had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you'll write their name down on a tag and attach it to the coat before you put it on a hook. </p>
+<p><img alt="fig1" src="/images/coat_3.png" /></p>
+<p>Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can't forget that!) and go through the coats one-at-a-time until you find the one with the correct name. </p>
+<p><img alt="fig1" src="/images/coat_4.png" /></p>
+<p>We'll assume, for the purposes of this story, that you never get two customers with the same name.</p>
+<p>How does this new process compare to the old one, speed-wise? Let's say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let's also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you'll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn't as fast as the numbered-ticket system if the customer has their ticket, but it's much faster than the numbered-tickets system if the customer loses their ticket!</p>
+<h2>The first letter system</h2>
+<p>One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don't correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You'll still attach a name tag, just like before.</p>
+<p><img alt="fig1" src="/images/coat_5.png" /></p>
+<p>Here's where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. </p>
+<p><img alt="fig1" src="/images/coat_6.png" /></p>
+<p>It's likely that there will be more than one coat on the hook, but it's also likely that there will be ...</p>
+                        <a class="btn btn-default btn-xs" href="../how-dictionaries-really-work.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="../evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">Evolving strategies for an Iterated Prisoner's Dilemma tournament</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
@@ -256,65 +315,6 @@ mojones.net            </a>
         <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span>
         <span class="s">&#39;D ...</span></pre></div>
                         <a class="btn btn-default btn-xs" href="../evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">more ...</a>
-    
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="../how-dictionaries-really-work.html">How dictionaries really work</a></h2>
-                    <div class="well well-sm">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-09T17:45:17.708286+00:00"> Mon 09 November 2015</time>
-    </span>
-
-
-
-        <span class="label label-default">Category</span>
-        <a href="../category/programming.html">programming</a>
-
-
-<span class="label label-default">Tags</span>
-	<a href="../tag/python.html">Python</a>
-        /
-	<a href="../tag/language-agnostic.html">language agnostic</a>
-        /
-	<a href="../tag/hash.html">hash</a>
-        /
-	<a href="../tag/dict.html">dict</a>
-        /
-	<a href="../tag/associative-array.html">associative array</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                <div class="summary"><h2>Preface</h2>
-<p>This rather long post is my attempt to explain to novice programmers how hash tables work. A hash table is a data structure for storing key-value pairs and is part of the standard library of many languages. Depending on your language of choice, you might know hash tables as <strong>hashes</strong>, <strong>HashMaps</strong>, <strong>dictionaries</strong>, <strong>dicts</strong>, <strong>associative arrays</strong>, or <strong>symbol tables</strong>. </p>
-<p>If you're already familiar with hash tables, you'll probably spot many points in this post where I have either simplified things, or avoided talking about them entirely. If you think that any of these simplifications hinder rather than help understanding, then please leave a comment or drop me an email - I have not doubt that this post could probably be improved!</p>
-<h2>Introduction</h2>
-<aside>
-<p>*The manager of the nightclub is a programmer, hence the zero-indexed numbering :-)</p>
-</aside>
-<p>Imagine that you have a job as a coat check attendant at a nightclub. The set up is pretty straightforward: you have a desk and one hundred coat hooks labeled from 0 to 99*. When a customer wants to drop off their coat, you put it on the lowest-numbered empty hook and give them a ticket with that number written on it. </p>
-<p><img alt="fig1" src="images/coat_1.png" /></p>
-<p>When they want to pick up their coat, they give you the ticket, and you give them the coat from the corresponding hook.</p>
-<p><img alt="fig1" src="images/coat_2.png" /></p>
-<p>The system works nice and smoothly and allows customers to drop off and pick up their coats very efficiently. Let's say that the coat hooks are laid out in a sensible pattern that means that you can get to any given hook in two seconds. So the time it takes to drop off a coat is always two seconds - you can glance at the hooks, spot the next available one, and go directly to it. The time it takes to pick up a coat is also two seconds - the customer hands you their ticket, and you can go directly to the hook with that number.</p>
-<h2>The problem with this system</h2>
-<p>The only problem with this is that customers keep losing their tickets. Once somebody has lost their ticket, the whole system breaks down - the only way to reunite the customer with their coat is to get a description of it, then go hunting through all the coats currently on the rack to try to find it. Even if it only takes five seconds to compare a given coat to the customer's description, it also takes two seconds to get between hooks, for a total of seven seconds to check each coat. If all one hundred hooks are occupied, then on average you'll have to check fifty coats before you find the right one (assuming that the customer can give you an unambiguous description!), which means that it takes you three hundred and fifty seconds, or just under six minutes, to find a coat for which the customer has forgotten their ticket.</p>
-<h2>The name tag system</h2>
-<p>One night you decide that you've had enough - a whole bunch of customers lose their tickets, and you end up spending the whole night searching for coats that match some vague description. You decide to implement a new system: from now on, whenever you take a coat from a customer, you'll write their name down on a tag and attach it to the coat before you put it on a hook. </p>
-<p><img alt="fig1" src="images/coat_3.png" /></p>
-<p>Then, when a customer wants to pick up their coat, you can just ask them their name (surely they can't forget that!) and go through the coats one-at-a-time until you find the one with the correct name. </p>
-<p><img alt="fig1" src="images/coat_4.png" /></p>
-<p>We'll assume, for the purposes of this story, that you never get two customers with the same name.</p>
-<p>How does this new process compare to the old one, speed-wise? Let's say that it takes a couple of seconds to write the customers name down, so the total time it takes to drop off a coat is four seconds. Let's also say that it takes just one second to check the name on a tag, so it takes a total of three seconds to check a given coat to see if it belongs to a particular customer (one to check the name, and two to move between hooks). On average, you'll have to check fifty coats to find the correct one, so the average time to pick up a coat is two and a half minutes. This system isn't as fast as the numbered-ticket system if the customer has their ticket, but it's much faster than the numbered-tickets system if the customer loses their ticket!</p>
-<h2>The first letter system</h2>
-<p>One night when you are particularly bored, you start thinking about how your system could be improved - as it stands, the numbers on the hooks are kind of useless, since they don't correspond to any useful bit of information. You realize that you can actually fit more than one coat on each hook, and you wonder whether you might be able to use that fact to your advantage. You decide to try another new system: first you get some sticky labels and a pen, and you label the first 26 hooks with the 26 letters of the alphabet. When a customer drops off their coat, you will now use the first letter of their name to decide which hook to put it on - if their name begins with A you will put it on the first hook, if it begins with B on the second, etc. You'll still attach a name tag, just like before.</p>
-<p><img alt="fig1" src="images/coat_5.png" /></p>
-<p>Here's where it gets interesting; when a customer comes to pick up their coat, you can now to straight to the hook which matches the first letter of their name, and start checking the coats on that hook to find the one with their name tag. </p>
-<p><img alt="fig1" src="images/coat_6.png" /></p>
-<p>It's likely that there will be more than one coat on the hook, but it's also likely that there will be ...</p>
-                        <a class="btn btn-default btn-xs" href="../how-dictionaries-really-work.html">more ...</a>
     
                 </div>
             </article>
@@ -1156,13 +1156,13 @@ Coding, writing and teaching<br>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="../evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
-                            Evolving strategies for an Iterated Prisoner's Dilemma tournament
+                        <a href="../how-dictionaries-really-work.html">
+                            How dictionaries really work
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="../how-dictionaries-really-work.html">
-                            How dictionaries really work
+                        <a href="../evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
+                            Evolving strategies for an Iterated Prisoner's Dilemma tournament
                         </a>
                     </li>
                     <li class="list-group-item">
