@@ -42,3 +42,7 @@ article {
     overflow: auto; 
     word-wrap: normal;
 }
+
+.highlight pre {
+  word-wrap: normal;
+}
