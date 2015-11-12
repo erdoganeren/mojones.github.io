@@ -147,6 +147,12 @@ mojones.net            </a>
 <p>I expected the first redirect but not the second, and checking in my lighttpd conf showed no rule that could possibly be triggering it. Thinking maybe I had left a redirection plugin running, I logged on the blog (by temporarily disabling the redirect rules) and checked, but couldn’t find anything.</p>
 <p>Turns out that WordPress itself is capable of generating 301 redirects according to the “Blog URL” field in the General settings page. If the URL is set to <strong>http://www.example.com</strong> and a request comes in for <strong>http://example.com/some/page</strong>, then WordPress will automatically respond with a 301 redirect to <strong>http://www.example.com/some/page</strong> (which in my case, would get caught by my lighttpd rule and bounced back to the original request URL, and so on).</p>
 <p>Moral of the story: make sure that your WordPress URL settings and any manual redirection you are carrying out are in agreement as to what the ‘correct’ URL should be!</p>
+                <hr/>
+                <img src="/images/rss.png"/>
+                Subscribe to articles from the web category via
+                <a href="./feeds/web.rss.xml" type="application/rss+xml" rel="alternate"  title="mojones.net web RSS Feed">RSS</a> or
+                <a href="./feeds/web.atom.xml" type="application/atom+xml" rel="alternate"  title="mojones.net web ATOM Feed">ATOM</a>
+                <hr/>
             </div>
             <!-- /.entry-content -->
     <hr/>

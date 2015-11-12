@@ -950,14 +950,20 @@ mojones.net            </a>
 <p>There are a few obvious extensions to this idea. We could simply increase the memory depth of the table by, for instance, taking into account the last three turns rather than the last two. The problem with this is that we very quickly run into scaling issues: a lookup table with these dimensions will have 256 keys (four times as many as our current table), which means that the number of possible value patterns will be around 10^77, or around 10^57 times bigger than our current table. It's hard to see how the evolutionary algorithm could cope with that increase in search space.</p>
 <p>Another idea would be to incorporate other information into the lookup table key. We could easily imagine, for example, a lookup table where the key includes the number of turns left in the match, or the total number of defections from the opponent. That leads to exactly the same kind of scaling problem, but worse!</p>
 <p>Finally, it will be interesting to see how the winning pattern changes as new strategies are added to the Axelrod library. It's quite straightforwards, given enough cores, to re-run the evolutionary algorithm against new strategies, so the pattern for the winning strategy will continue to evolve in more ways than one. </p>
+                <hr/>
+                <img src="/images/rss.png"/>
+                Subscribe to articles from the programming category via
+                <a href="./feeds/programming.rss.xml" type="application/rss+xml" rel="alternate"  title="mojones.net programming RSS Feed">RSS</a> or
+                <a href="./feeds/programming.atom.xml" type="application/atom+xml" rel="alternate"  title="mojones.net programming ATOM Feed">ATOM</a>
+                <hr/>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="./how-dictionaries-really-work.html">How dictionaries really work</a></li>
         <li><a href="./how-to-pick-bad-function-and-variable-names.html">How to pick bad function and variable names</a></li>
         <li><a href="./which-is-harder-walking-or-flying.html">Which is harder, walking or flying?</a></li>
-        <li><a href="./how-dictionaries-really-work.html">How dictionaries really work</a></li>
     </ul>
 </section>
     <hr/>

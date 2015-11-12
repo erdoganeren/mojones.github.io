@@ -247,14 +247,20 @@ org.hibernate.collection.PersistentSet
 
 <p>So hibernate does not actually execute the SQL query to get the books when we ask for <code>alice.books</code>, but it is lazy enough to wait until we actually we try to iterate over the results. The last line of the output reveals how the magic happens – the object that <code>myBooks</code> points to is not a straightforward <code>List</code>, but a <a href="https://web.archive.org/web/20130624115433/https://www.hibernate.org/hib_docs/v3/api/org/hibernate/collection/PersistentSet.html"><code>PersistentSet</code></a>.</p>
 <p>This caused me a fair amount of confusion when I was trying to optimise a Grails action by minimising the number of SQL queries issued when retrieving a large number of objects from a database. Now that I know the way that it really works, I find it both cool, and a little bit scary that this is going on behind the scenes. A nice illustration of the trade-offs involved in using an ORM framework.</p>
+                <hr/>
+                <img src="/images/rss.png"/>
+                Subscribe to articles from the programming category via
+                <a href="./feeds/programming.rss.xml" type="application/rss+xml" rel="alternate"  title="mojones.net programming RSS Feed">RSS</a> or
+                <a href="./feeds/programming.atom.xml" type="application/atom+xml" rel="alternate"  title="mojones.net programming ATOM Feed">ATOM</a>
+                <hr/>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
-        <li><a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
         <li><a href="./beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
+        <li><a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
         <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
         <li><a href="./functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></li>
     </ul>
