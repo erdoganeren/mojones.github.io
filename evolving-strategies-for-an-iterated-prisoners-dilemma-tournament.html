@@ -20,7 +20,7 @@
         <meta property="og:title" content="Evolving strategies for an Iterated Prisoner&#39;s Dilemma tournament"/>
         <meta property="og:url" content="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html"/>
         <meta property="og:description" content="Heads up to readers: this is a long article with lots of code samples and interactive charts. If you&#39;re reading on a mobile device, you might want to save this one until you can get to a wider screen! It may take a while to load all the charts. Introduction This is a longish post about using a simple evolutionary algorithm in Python to create a strategy for playing the famous Prisoner&#39;s Dilemma game (actually, the version known as Iterated Prisoner&#39;s Dilemma, hereafter referred to as IPD). If you&#39;re not already familiar with the Prisoner&#39;s ..."/>
-        <meta property="article:published_time" content="2015-11-11" />
+        <meta property="article:published_time" content="2015-12-01" />
             <meta property="article:section" content="programming" />
             <meta property="article:tag" content="python" />
             <meta property="article:tag" content="evolution" />
@@ -126,7 +126,7 @@ mojones.net            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-11T16:45:54.005438+00:00"> Wed 11 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-12-01T13:15:12.328544+00:00"> Tue 01 December 2015</time>
     </span>
 
 
@@ -843,7 +843,7 @@ mojones.net            </a>
     <span class="c"># flip one key</span>
     <span class="n">new_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">current_table</span><span class="p">)</span>
     <span class="n">key_to_change</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">new_table</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;C&#39;</span> <span class="k">if</span> <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;D&#39;</span> <span class="k">else</span> <span class="s">&#39;C&#39;</span>
+    <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;C&#39;</span> <span class="k">if</span> <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;D&#39;</span> <span class="k">else</span> <span class="s">&#39;D&#39;</span>
 
     <span class="n">new_score</span> <span class="o">=</span> <span class="n">axelrod_utils</span><span class="o">.</span><span class="n">do_table</span><span class="p">(</span><span class="n">new_table</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -863,7 +863,7 @@ mojones.net            </a>
 </pre></div>
 
 
-<p>This first attempt is very bad at exploring the space of possible tables: if we plot the score at each iteration we can see that the changes introduced by flipping a key are very seldom accepted:</p>
+<p>This approach does pretty well; the best solution that it finds is comparable with <code>DoubleCrosser</code> with a mean score of around 3.1. </p>
 <p><img alt="fig1" src="/images/hillclimb1.png" /></p>
 <p>The score remains the same for long stretches, with only occasional jumps. We can try various things to fix it - how about flipping more than one key at a time?</p>
 <div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
@@ -872,16 +872,16 @@ mojones.net            </a>
     <span class="c"># flip several keys</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">key_to_change</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">new_table</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;C&#39;</span> <span class="k">if</span> <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;D&#39;</span> <span class="k">else</span> <span class="s">&#39;C&#39;</span>
+        <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;C&#39;</span> <span class="k">if</span> <span class="n">new_table</span><span class="p">[</span><span class="n">key_to_change</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;D&#39;</span> <span class="k">else</span> <span class="s">&#39;Do&#39;</span>
 
     <span class="n">new_score</span> <span class="o">=</span> <span class="n">axelrod_utils</span><span class="o">.</span><span class="n">do_table</span><span class="p">(</span><span class="n">new_table</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="o">...</span>
 </pre></div>
 
 
-<p>This certainly speeds up the improvement in scores at the beginning - note that this chart is just 100 iterations long:</p>
+<p>This doesn't make much difference, at least for this run:</p>
 <p><img alt="fig1" src="/images/hillclimb2.png" /></p>
-<p>but it still tops out way lower than our current best table. The problem with this approach (as with pretty much all naive hill-climbing algorithms) is that it's just too easy to get stuck in a local maximum: a pattern that's nowhere near the best, but where any small change is likely to make it worse. </p>
+<p>The problem with this approach (as with pretty much all naive hill-climbing algorithms) is that it's just too easy to get stuck in a local maximum: a pattern that's nowhere near the best, but where any small change is likely to make it worse. </p>
 <p>If we wanted to pursue this hill-climbing idea further then we'd probably want to explore options like accepting changes that decrease the score with some probability, or starting with big changes (e.g. flipping half the keys) and making the changes smaller as we go on. We'd likely end up with something that resembled simulated annealing, or Monte Carlo sampling. However, we're not going to, because I want to talk about a completely different approach.</p>
 <h3>Search method four: an evolutionary algorithm</h3>
 <p>The idea behind an evolutionary algorithm is to find solutions to a complex, non-linear problem like ours by mimicking the process of natural selection. Rather than looking at a single lookup table at a time, we'll maintain a population of many lookup tables. In each generation, we'll mate pairs of tables to produce offspring that share properties of both (simulating the process of recombination) and also randomly flip some of the keys (simulating the process of mutation). We'll also throw in some more randomly-generated tables as a source of new variation. These processes will give us a bunch of new tables, which we'll calculate the scores for, and keep only the best individual tables for the next generation. </p>
@@ -961,8 +961,8 @@ mojones.net            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="./how-dictionaries-really-work.html">How dictionaries really work</a></li>
         <li><a href="./how-to-pick-bad-function-and-variable-names.html">How to pick bad function and variable names</a></li>
+        <li><a href="./how-dictionaries-really-work.html">How dictionaries really work</a></li>
         <li><a href="./which-is-harder-walking-or-flying.html">Which is harder, walking or flying?</a></li>
     </ul>
 </section>
@@ -1061,13 +1061,13 @@ Coding, writing and teaching<br>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="./how-dictionaries-really-work.html">
-                            How dictionaries really work
+                        <a href="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
+                            Evolving strategies for an Iterated Prisoner's Dilemma tournament
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
-                            Evolving strategies for an Iterated Prisoner's Dilemma tournament
+                        <a href="./how-dictionaries-really-work.html">
+                            How dictionaries really work
                         </a>
                     </li>
                     <li class="list-group-item">
