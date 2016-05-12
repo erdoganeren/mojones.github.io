@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>division - mojones.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+    <meta name="author" content="Martin Jones" />
+    <meta name="keywords" content="division" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="mojones.net" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="mojones.net"/>
+        <meta property="og:url" content=".."/>
+        <meta property="og:description" content="mojones.net"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="../theme/css/bootstrap.simplex.min.css" type="text/css"/>
+    <link href="../theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="../theme/css/pygments/autumn.css" rel="stylesheet">
+    <link rel="stylesheet" href="../theme/css/style.css" type="text/css"/>
+        <link href="../static/custom.css" rel="stylesheet">
+
+        <link href="../feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="mojones.net ATOM Feed"/>
+
+        <link href="../feeds/all.rss.xml" type="application/rss+xml" rel="alternate"
+              title="mojones.net RSS Feed"/>
+
+
+
+        <script src="../theme/js/jquery.min.js"></script>
+
+        <script src="../theme/js/jquery.sidenotes.js"></script>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../" class="navbar-brand">
+mojones.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="../category/diy.html">Diy</a>
+                        </li>
+                        <li >
+                            <a href="../category/photos.html">Photos</a>
+                        </li>
+                        <li >
+                            <a href="../category/programming.html">Programming</a>
+                        </li>
+                        <li >
+                            <a href="../category/science.html">Science</a>
+                        </li>
+                        <li >
+                            <a href="../category/tech.html">Tech</a>
+                        </li>
+                        <li >
+                            <a href="../category/web.html">Web</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="../archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<style>
+	#banner{
+	    background-image:url("../images/header.jpg");
+	}
+</style>
+
+<div id="banner">
+	<div class="container">
+		<div class="copy">
+			<h1>mojones.net</h1>
+		</div>
+	</div>
+</div><!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <article>
+                <h2><a href="../import-future-pdb.html">Importing from __future__ under the Python debugger pdb</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2016-05-12T13:52:43.157323+01:00"> Thu 12 May 2016</time>
+    </span>
+
+
+
+        <span class="label label-default">Category</span>
+        <a href="../category/programming.html">programming</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="../tag/python.html">Python</a>
+        /
+	<a href="../tag/pdb.html">pdb</a>
+        /
+	<a href="../tag/debugging.html">debugging</a>
+        /
+	<a href="../tag/division.html">division</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>This is mostly a quick note to aid other programmers who end up searching for something along the lines of "why doesn't floating point division work in pdb". </p>
+<p>Short version: the <code>from __future__ import</code> magic doesn't work in pdb. </p>
+<p>Long version: when debugging a program that (a) runs under Python 2 and (b) relies on <code>from __future__ import division</code> to get floating point rather than integer division, it would be nice to have expressions typed at the pdb prompt behave the same way as expression evaluated in the file. However, this doesn't work:</p>
+<div class="highlight"><pre><span class="nv">$ </span>python -m pdb test ...</pre></div>
+                        <a class="btn btn-default btn-xs" href="../import-future-pdb.html">more ...</a>
+    
+                </div>
+            </article>
+            <hr/>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="/images/avatar.jpg"/>
+        </p>
+    <p>
+        <strong>About Martin Jones</strong><br/>
+        
+Coding, writing and teaching<br>
+
+<h3>My books</h3>
+
+<a href="http://www.amazon.com/Python-Biologists-complete-programming-beginners/dp/1492346136/">
+    <h5>Python for Biologists</h5>
+    <img src="/images/p4b.png"> 
+</a>
+
+<a href="http://www.amazon.com/Advanced-Python-Biologists-Martin-Jones/dp/1495244377/">
+    <h5>Advanced Python for Biologists</h5>
+    <img src="/images/ap4b.png"> 
+</a>
+
+<a href="http://www.amazon.com/Python-complete-beginners-friendly-experience/dp/1514376989/">
+    <h5>Python for complete beginners</h5>
+    <img src="/images/p4begin.png"> 
+</a>
+
+
+    </p>
+</div>
+<section class="well well-sm">
+
+
+
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pythonforbiologists.com" target="_blank">
+                Python for Biologists
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&field-keywords=&field-author=&field-title=&field-isbn=1514376989+%7C+1492346136+%7C+1495244377&field-publisher=&node=&field-p_n_condition-type=&p_n_feature_browse-bin=&field-subject=&field-language=&field-dateop=During&field-datemod=&field-dateyear=&sort=relevanceexprank&Adv-Srch-Books-Submit.x=20&Adv-Srch-Books-Submit.y=19" target="_blank">
+                My Python books
+            </a>
+        </li>
+      </ul>
+    </li>
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="http://twitter.com/martinthecoder"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="http://github.com/mojones"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+              </ul>
+            </li>
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="../import-future-pdb.html">
+                            Importing from __future__ under the Python debugger pdb
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="../"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="../category/diy.html">
+                            <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../category/photos.html">
+                            <i class="fa fa-folder-open fa-lg"></i> photos
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../category/programming.html">
+                            <i class="fa fa-folder-open fa-lg"></i> programming
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../category/science.html">
+                            <i class="fa fa-folder-open fa-lg"></i> science
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../category/tech.html">
+                            <i class="fa fa-folder-open fa-lg"></i> tech
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="../category/web.html">
+                            <i class="fa fa-folder-open fa-lg"></i> web
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub Repos</span></h4>
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/mojones">@mojones</a> on GitHub
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 Martin Jones
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="../theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="../theme/js/respond.min.js"></script>
+
+    <script src="../theme/js/bodypadding.js"></script>
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = '../theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'mojones',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="../theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mojonesnet'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-2758363-36']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>
