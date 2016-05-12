@@ -20,7 +20,7 @@
         <meta property="og:title" content="How to use jQuery to send JSON data to a Grails app"/>
         <meta property="og:url" content="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html"/>
         <meta property="og:description" content="This took me a while to figure out, so here it is for anyone else who’d like to know. Firstly, I was quite surprised to learn that jQuery doesn’t have a built in method for turning objects into JSON, so you’ll need the JSON parser/creator from json.org. Then you can write your javascript POST function using the jQuery ajax method. Here I’ve left the content type as text/plain, which is not strictly correct but works with the Groovy code. function postTreeData(){ $.ajax({ type: &#34;POST&#34;, url: &#34;savedata&#34;, contentType : &#34;text/plain&#34;, dataType: &#39;json&#39;, data: JSON ..."/>
-        <meta property="article:published_time" content="2015-11-04" />
+        <meta property="article:published_time" content="2015-11-05" />
             <meta property="article:section" content="programming" />
             <meta property="article:tag" content="groovy" />
             <meta property="article:tag" content="grails" />
@@ -71,6 +71,9 @@ mojones.net            </a>
             <ul class="nav navbar-nav">
                         <li >
                             <a href="./category/diy.html">Diy</a>
+                        </li>
+                        <li >
+                            <a href="./category/photos.html">Photos</a>
                         </li>
                         <li class="active">
                             <a href="./category/programming.html">Programming</a>
@@ -126,7 +129,7 @@ mojones.net            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-04T18:17:01.135980+00:00"> Wed 04 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-05T21:34:32.339645+00:00"> Thu 05 November 2015</time>
     </span>
 
 
@@ -185,8 +188,8 @@ mojones.net            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
         <li><a href="./hibernate-magic-with-lazy-evaluation.html">Hibernate magic with lazy evaluation</a></li>
+        <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
         <li><a href="./beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
         <li><a href="./functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></li>
         <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
@@ -287,6 +290,16 @@ Coding, writing and teaching<br>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="./import-future-pdb.html">
+                            Importing from __future__ under the Python debugger pdb
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./lights-on-the-high-street-in-edinburgh.html">
+                            Lights on the high street in Edinburgh
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
                             Evolving strategies for an Iterated Prisoner's Dilemma tournament
                         </a>
@@ -301,16 +314,6 @@ Coding, writing and teaching<br>
                             How to download all your photos from Flickr
                         </a>
                     </li>
-                    <li class="list-group-item">
-                        <a href="./how-to-pick-bad-function-and-variable-names.html">
-                            How to pick bad function and variable names
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">
-                            How to use jQuery to send JSON data to a Grails app
-                        </a>
-                    </li>
                 </ul>
             </li>
 
@@ -319,6 +322,11 @@ Coding, writing and teaching<br>
                     <li class="list-group-item">
                         <a href="./category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/photos.html">
+                            <i class="fa fa-folder-open fa-lg"></i> photos
                         </a>
                     </li>
                     <li class="list-group-item">
@@ -363,7 +371,7 @@ Coding, writing and teaching<br>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Martin Jones
+         <div class="col-xs-10">&copy; 2016 Martin Jones
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

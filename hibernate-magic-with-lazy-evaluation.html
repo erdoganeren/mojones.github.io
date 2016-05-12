@@ -20,7 +20,7 @@
         <meta property="og:title" content="Hibernate magic with lazy evaluation"/>
         <meta property="og:url" content="./hibernate-magic-with-lazy-evaluation.html"/>
         <meta property="og:description" content="I’ve just run across this phenomenon for the first time and it turns out that hibernate can be even lazier than I thought! To illustrate lets use this time-honoured example in Grails. Here are our domain objects: class Book { String title static belongsTo = [author : Author] static constraints = { } } class Author { String name static hasMany = [books : Book] static constraints = { } } and we’ll add some sample data in our bootstrap.groovy: def init = { servletContext -&gt; def alice = new Author(name: &#39;alice&#39;).save() def book1 = new Book(title: &#39;book1&#39;) def book2 = new Book(title: &#39;book2&#39;) alice.addToBooks(book1) alice.addToBooks(book2) } Now we’ll ..."/>
-        <meta property="article:published_time" content="2015-11-04" />
+        <meta property="article:published_time" content="2015-11-05" />
             <meta property="article:section" content="programming" />
             <meta property="article:tag" content="grails" />
             <meta property="article:tag" content="groovy" />
@@ -70,6 +70,9 @@ mojones.net            </a>
             <ul class="nav navbar-nav">
                         <li >
                             <a href="./category/diy.html">Diy</a>
+                        </li>
+                        <li >
+                            <a href="./category/photos.html">Photos</a>
                         </li>
                         <li class="active">
                             <a href="./category/programming.html">Programming</a>
@@ -125,7 +128,7 @@ mojones.net            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-04T18:15:59.979979+00:00"> Wed 04 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-05T21:34:14.071644+00:00"> Thu 05 November 2015</time>
     </span>
 
 
@@ -258,8 +261,8 @@ org.hibernate.collection.PersistentSet
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
         <li><a href="./a-pitfall-to-avoid-when-using-the-grails-uiperformance-plugin.html">A pitfall to avoid when using the Grails UIPerformance plugin</a></li>
+        <li><a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">How to use jQuery to send JSON data to a Grails app</a></li>
         <li><a href="./beware-of-the-default-acegi-grails-plugin-setup.html">Beware of the default acegi Grails plugin setup</a></li>
         <li><a href="./functional-abstraction-examples-from-scip-in-groovy.html">Functional Abstraction examples from SCIP in Groovy</a></li>
         <li><a href="./extending-java-number-classes-with-random-functions-in-groovy.html">Extending Java number classes with random functions in Groovy</a></li>
@@ -360,6 +363,16 @@ Coding, writing and teaching<br>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="./import-future-pdb.html">
+                            Importing from __future__ under the Python debugger pdb
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./lights-on-the-high-street-in-edinburgh.html">
+                            Lights on the high street in Edinburgh
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="./evolving-strategies-for-an-iterated-prisoners-dilemma-tournament.html">
                             Evolving strategies for an Iterated Prisoner's Dilemma tournament
                         </a>
@@ -374,16 +387,6 @@ Coding, writing and teaching<br>
                             How to download all your photos from Flickr
                         </a>
                     </li>
-                    <li class="list-group-item">
-                        <a href="./how-to-pick-bad-function-and-variable-names.html">
-                            How to pick bad function and variable names
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="./how-to-use-jquery-to-send-json-data-to-a-grails-app.html">
-                            How to use jQuery to send JSON data to a Grails app
-                        </a>
-                    </li>
                 </ul>
             </li>
 
@@ -392,6 +395,11 @@ Coding, writing and teaching<br>
                     <li class="list-group-item">
                         <a href="./category/diy.html">
                             <i class="fa fa-folder-open fa-lg"></i> diy
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./category/photos.html">
+                            <i class="fa fa-folder-open fa-lg"></i> photos
                         </a>
                     </li>
                     <li class="list-group-item">
@@ -436,7 +444,7 @@ Coding, writing and teaching<br>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Martin Jones
+         <div class="col-xs-10">&copy; 2016 Martin Jones
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
